@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Hash;
@@ -40,7 +41,7 @@ class UserController extends Controller
         return Inertia::render('Users/Create', ['user_roles' => $user_roles]);
     }
 
-    public function store(StoreUserRequest $request)
+    public function store(UserRequest $request)
     {
         $data = $request->validated();
         $data['role'] = $request->role['value'];
@@ -59,7 +60,7 @@ class UserController extends Controller
 
     public function edit(User $user) {}
 
-    public function update(Request $request, User $user) {}
+    public function update(UserRequest $request, User $user) {}
 
     public function destroy(User $user) {}
 
