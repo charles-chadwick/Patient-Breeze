@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUndefinedFieldInspection */
 
 namespace App\Http\Resources;
 
@@ -12,8 +13,23 @@ class UserResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray(Request $request) : array
     {
-        return parent::toArray($request);
+        return [
+            'type'          => 'user',
+            'id'            => $this?->id,
+            'attributes'    => [
+                'id'         => $this->id,
+                'role'       => $this->role,
+                'prefix'     => $this->prefix,
+                'first_name' => $this->first_name,
+                'last_name'  => $this->last_name,
+                'suffix'     => $this->suffix,
+                'created_at' => $this->created_at->format('m/d/Y h:i A'),
+            ],
+            'relationships' => [
+                'created_by' => new UserResource($this->createdBy),
+            ]
+        ];
     }
 }
