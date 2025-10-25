@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\PatientController::remove
-* @see app/Http/Controllers/PatientController.php:84
+* @see app/Http/Controllers/PatientController.php:85
 * @route '/patients/{patient}/avatar/remove'
 */
 export const remove = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ remove.definition = {
 
 /**
 * @see \App\Http\Controllers\PatientController::remove
-* @see app/Http/Controllers/PatientController.php:84
+* @see app/Http/Controllers/PatientController.php:85
 * @route '/patients/{patient}/avatar/remove'
 */
 remove.url = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ remove.url = (args: { patient: number | { id: number } } | [patient: number | { 
 
 /**
 * @see \App\Http\Controllers\PatientController::remove
-* @see app/Http/Controllers/PatientController.php:84
+* @see app/Http/Controllers/PatientController.php:85
 * @route '/patients/{patient}/avatar/remove'
 */
 remove.post = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ remove.post = (args: { patient: number | { id: number } } | [patient: number | {
 
 /**
 * @see \App\Http\Controllers\PatientController::upload
-* @see app/Http/Controllers/PatientController.php:67
+* @see app/Http/Controllers/PatientController.php:68
 * @route '/patients/{patient}/avatar/upload'
 */
 export const upload = (args: { patient: string | number } | [patient: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -74,7 +74,7 @@ upload.definition = {
 
 /**
 * @see \App\Http\Controllers\PatientController::upload
-* @see app/Http/Controllers/PatientController.php:67
+* @see app/Http/Controllers/PatientController.php:68
 * @route '/patients/{patient}/avatar/upload'
 */
 upload.url = (args: { patient: string | number } | [patient: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -101,7 +101,7 @@ upload.url = (args: { patient: string | number } | [patient: string | number ] |
 
 /**
 * @see \App\Http\Controllers\PatientController::upload
-* @see app/Http/Controllers/PatientController.php:67
+* @see app/Http/Controllers/PatientController.php:68
 * @route '/patients/{patient}/avatar/upload'
 */
 upload.post = (args: { patient: string | number } | [patient: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({

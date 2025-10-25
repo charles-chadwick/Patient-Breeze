@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
 
 class AuthController extends Controller
 {
-    public function login(Request $request) : Response|RedirectResponse
+    public function login(Request $request): Response|RedirectResponse
     {
         if ($request->isMethod('get')) {
             return Inertia::render('Users/Login');
         }
 
         $credentials = $request->validate([
-            'email'    => [
+            'email' => [
                 'required',
-                'email'
+                'email',
             ],
             'password' => ['required'],
         ]);
@@ -36,7 +36,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request) : RedirectResponse
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
 

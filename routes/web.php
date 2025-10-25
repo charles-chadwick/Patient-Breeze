@@ -8,15 +8,15 @@ use Inertia\Inertia;
 
 Route::match([
     'get',
-    'post'
+    'post',
 ], '/login', [
     AuthController::class,
-    'login'
+    'login',
 ])
     ->name('login');
 Route::post('/logout', [
     AuthController::class,
-    'logout'
+    'logout',
 ])
     ->name('logout');
 
@@ -42,37 +42,37 @@ Route::middleware('auth')
             ->name('users.avatar.upload');
         Route::get('/', [
             UserController::class,
-            'index'
+            'index',
         ])
             ->name('users.index');
         Route::get('/{user}/profile', [
             UserController::class,
-            'profile'
+            'profile',
         ])
             ->name('users.profile');
         Route::get('/create', [
             UserController::class,
-            'create'
+            'create',
         ])
             ->name('users.create');
         Route::post('/store', [
             UserController::class,
-            'store'
+            'store',
         ])
             ->name('users.store');
         Route::get('/edit/{user}', [
             UserController::class,
-            'edit'
+            'edit',
         ])
             ->name('users.edit');
         Route::post('/update/{user}', [
             UserController::class,
-            'update'
+            'update',
         ])
             ->name('users.update');
         Route::get('/delete/{user}', [
             UserController::class,
-            'destroy'
+            'destroy',
         ])
             ->name('users.delete');
     });
@@ -93,37 +93,37 @@ Route::middleware('auth')
             ->name('patients.avatar.upload');
         Route::get('/', [
             PatientController::class,
-            'index'
+            'index',
         ])
             ->name('patients.index');
         Route::get('/{patient}/profile', [
             PatientController::class,
-            'profile'
+            'profile',
         ])
             ->name('patients.profile');
         Route::get('/create', [
             PatientController::class,
-            'create'
+            'create',
         ])
             ->name('patients.create');
         Route::post('/store', [
             PatientController::class,
-            'store'
+            'store',
         ])
             ->name('patients.store');
         Route::get('/edit/{patient}', [
             PatientController::class,
-            'edit'
+            'edit',
         ])
             ->name('patients.edit');
         Route::post('/update/{patient}', [
             PatientController::class,
-            'update'
+            'update',
         ])
             ->name('patients.update');
         Route::get('/delete/{patient}', [
             PatientController::class,
-            'destroy'
+            'destroy',
         ])
             ->name('patients.delete');
     });

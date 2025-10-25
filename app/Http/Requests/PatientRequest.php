@@ -9,38 +9,38 @@ use Illuminate\Validation\Rule;
 
 class PatientRequest extends FormRequest
 {
-    public function rules() : array
+    public function rules(): array
     {
         return [
-            'status'          => [
+            'status' => [
                 'required',
-                Rule::in(PatientStatus::cases())
+                Rule::in(PatientStatus::cases()),
             ],
-            'prefix'          => ['nullable'],
-            'first_name'      => ['required'],
-            'middle_name'     => ['nullable'],
-            'last_name'       => ['required'],
-            'suffix'          => ['nullable'],
-            'dob'             => [
+            'prefix' => ['nullable'],
+            'first_name' => ['required'],
+            'middle_name' => ['nullable'],
+            'last_name' => ['required'],
+            'suffix' => ['nullable'],
+            'dob' => [
                 'required',
-                'date'
+                'date',
             ],
-            'gender'          => [
+            'gender' => [
                 'required',
-                Rule::in(Gender::cases())
+                Rule::in(Gender::cases()),
             ],
             'gender_identity' => ['nullable'],
-            'email'           => [
+            'email' => [
                 'nullable',
                 'email',
-                'max:254'
+                'max:254',
             ],
-            'password'        => ['nullable'],
+            'password' => ['nullable'],
 
         ];
     }
 
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }

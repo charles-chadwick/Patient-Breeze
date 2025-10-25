@@ -31,7 +31,7 @@ class PatientController extends Controller
             ->map(function ($role) {
                 return [
                     'value' => $role->value,
-                    'name'  => $role->name,
+                    'name' => $role->name,
                 ];
             })
             ->toArray();
@@ -51,6 +51,7 @@ class PatientController extends Controller
     public function profile(Patient $patient)
     {
         $patient->load('created_by');
+
         return Inertia::render('Patients/Show', ['patient' => new PatientResource($patient)]);
     }
 

@@ -35,7 +35,7 @@ class Patient extends Base implements AuthenticatableContract, AuthorizableContr
         'password',
     ];
 
-    protected function casts() : array
+    protected function casts(): array
     {
         return [
             'dob' => 'date',

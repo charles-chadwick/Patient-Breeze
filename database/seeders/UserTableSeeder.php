@@ -7,8 +7,7 @@ namespace Database\Seeders;
 use App\Enums\Gender;
 use App\Enums\PatientStatus;
 use App\Enums\UserRole;
-
-# use App\Models\Patient;
+// use App\Models\Patient;
 use App\Models\Patient;
 use App\Models\User;
 use GuzzleHttp\Client;
@@ -19,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\Facades\CauserResolver;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+
 use function fake;
 
 class UserTableSeeder extends Seeder
@@ -34,7 +34,7 @@ class UserTableSeeder extends Seeder
      *
      * @throws GuzzleException
      */
-    public function run() : void
+    public function run(): void
     {
         DB::table('media')
             ->truncate();
@@ -47,10 +47,10 @@ class UserTableSeeder extends Seeder
         //
         $admin_user = User::factory()
             ->create([
-                'role'       => UserRole::SuperAdmin,
+                'role' => UserRole::SuperAdmin,
                 'first_name' => 'Doofus',
-                'last_name'  => 'Rick',
-                'email'      => 'doofus.rick@example.com',
+                'last_name' => 'Rick',
+                'email' => 'doofus.rick@example.com',
                 'created_at' => '2020-01-01 00:00:00',
             ]);
 
@@ -77,18 +77,18 @@ class UserTableSeeder extends Seeder
             $last_name = str($name_parts->pop())->title();
 
             $role = match (true) {
-                $index <= 3  => UserRole::Doctor,
-                $index <= 7  => UserRole::Nurse,
+                $index <= 3 => UserRole::Doctor,
+                $index <= 7 => UserRole::Nurse,
                 $index <= 10 => UserRole::Admin,
-                default      => UserRole::Staff,
+                default => UserRole::Staff,
             };
 
             $staff_user = User::factory()
                 ->create([
-                    'role'          => $role,
-                    'first_name'    => $first_name,
-                    'last_name'     => $last_name,
-                    'email'         => str($first_name.'.'.$last_name.rand(100, 999).'@example.com')
+                    'role' => $role,
+                    'first_name' => $first_name,
+                    'last_name' => $last_name,
+                    'email' => str($first_name.'.'.$last_name.rand(100, 999).'@example.com')
                         ->lower()
                         ->remove([
                             ' ',
@@ -96,8 +96,8 @@ class UserTableSeeder extends Seeder
                         ]),
                     'created_by_id' => $admin_user,
                     'updated_by_id' => $admin_user,
-                    'created_at'    => $created_at,
-                    'updated_at'    => $created_at,
+                    'created_at' => $created_at,
+                    'updated_at' => $created_at,
                 ]);
 
             $this->addMedia($staff_user, $character['image']);
@@ -122,52 +122,52 @@ class UserTableSeeder extends Seeder
             $middle_name = count($name_parts) > 0 ? str($name_parts->implode(' '))->title() : '';
 
             $role = match (true) {
-                $index <= 3  => UserRole::Doctor,
-                $index <= 7  => UserRole::Nurse,
+                $index <= 3 => UserRole::Doctor,
+                $index <= 7 => UserRole::Nurse,
                 $index <= 10 => UserRole::Admin,
-                default      => UserRole::Staff,
+                default => UserRole::Staff,
             };
 
             $gender = $character['gender'];
 
             $patient = Patient::factory()
                 ->create([
-                    'status'          => fake()->randomElement(PatientStatus::cases()),
-                    'prefix'          => match ($gender) {
-                        'Male'   => 'Mr.',
+                    'status' => fake()->randomElement(PatientStatus::cases()),
+                    'prefix' => match ($gender) {
+                        'Male' => 'Mr.',
                         'Female' => fake()->randomElement([
                             'Ms.',
-                            'Mrs.'
+                            'Mrs.',
                         ]),
-                        default  => ''
+                        default => ''
                     },
-                    'first_name'      => $first_name,
-                    'middle_name'     => $middle_name,
-                    'last_name'       => $last_name,
-                    'dob'             => fake()->dateTimeBetween('-90 years', '-18 months'),
-                    'gender'          => match ($gender) {
-                        'Male'   => Gender::Male,
+                    'first_name' => $first_name,
+                    'middle_name' => $middle_name,
+                    'last_name' => $last_name,
+                    'dob' => fake()->dateTimeBetween('-90 years', '-18 months'),
+                    'gender' => match ($gender) {
+                        'Male' => Gender::Male,
                         'Female' => Gender::Female,
-                        default  => Gender::Unknown
+                        default => Gender::Unknown
                     },
                     'gender_identity' => $gender,
-                    'suffix'          => fake()->randomElement([
+                    'suffix' => fake()->randomElement([
                         'Jr',
                         'Sr',
                         'II',
                         'III',
-                        ''
+                        '',
                     ]),
-                    'email'           => str($first_name.'.'.$last_name.rand(100, 999).'@example.com')
+                    'email' => str($first_name.'.'.$last_name.rand(100, 999).'@example.com')
                         ->lower()
                         ->remove([
                             ' ',
                             '\'',
                         ]),
-                    'created_by_id'   => $staff_user,
-                    'updated_by_id'   => $staff_user,
-                    'created_at'      => $created_at,
-                    'updated_at'      => $created_at,
+                    'created_by_id' => $staff_user,
+                    'updated_by_id' => $staff_user,
+                    'created_at' => $created_at,
+                    'updated_at' => $created_at,
                 ]);
 
             $this->addMedia($patient, $character['image']);
@@ -181,7 +181,7 @@ class UserTableSeeder extends Seeder
     /**
      * @throws GuzzleException
      */
-    private function getCharacters() : ?Collection
+    private function getCharacters(): ?Collection
     {
 
         $client = new Client;
@@ -199,7 +199,7 @@ class UserTableSeeder extends Seeder
         $new_characters = $data
             ->filter(function ($character) {
                 return count(explode(' ', $character['name'])) >= 2
-                       && !FilterData::hasBadWords($character['name']);
+                       && ! FilterData::hasBadWords($character['name']);
             })
             // just to be safe in case the above doesn't work
             ->map(function ($character) {
@@ -222,20 +222,20 @@ class UserTableSeeder extends Seeder
             ->unique('name')
             ->shuffle();
 
-        if (!isset($data['info']['next'])) {
+        if (! isset($data['info']['next'])) {
             return $characters;
         }
 
         return null;
     }
 
-    private function addMedia($model, $image) : void
+    private function addMedia($model, $image): void
     {
         $avatar_path = database_path('avatars/'.md5($image).'.jpeg');
 
-        if (!file_exists($avatar_path)) {
+        if (! file_exists($avatar_path)) {
 
-            if (!is_dir(dirname($avatar_path))) {
+            if (! is_dir(dirname($avatar_path))) {
                 mkdir(dirname($avatar_path), 0755, true);
             }
             try {

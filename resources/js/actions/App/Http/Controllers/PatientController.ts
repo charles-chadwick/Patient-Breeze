@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\PatientController::removeAvatar
-* @see app/Http/Controllers/PatientController.php:84
+* @see app/Http/Controllers/PatientController.php:85
 * @route '/patients/{patient}/avatar/remove'
 */
 export const removeAvatar = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ removeAvatar.definition = {
 
 /**
 * @see \App\Http\Controllers\PatientController::removeAvatar
-* @see app/Http/Controllers/PatientController.php:84
+* @see app/Http/Controllers/PatientController.php:85
 * @route '/patients/{patient}/avatar/remove'
 */
 removeAvatar.url = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ removeAvatar.url = (args: { patient: number | { id: number } } | [patient: numbe
 
 /**
 * @see \App\Http\Controllers\PatientController::removeAvatar
-* @see app/Http/Controllers/PatientController.php:84
+* @see app/Http/Controllers/PatientController.php:85
 * @route '/patients/{patient}/avatar/remove'
 */
 removeAvatar.post = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ removeAvatar.post = (args: { patient: number | { id: number } } | [patient: numb
 
 /**
 * @see \App\Http\Controllers\PatientController::uploadAvatar
-* @see app/Http/Controllers/PatientController.php:67
+* @see app/Http/Controllers/PatientController.php:68
 * @route '/patients/{patient}/avatar/upload'
 */
 export const uploadAvatar = (args: { patient: string | number } | [patient: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -74,7 +74,7 @@ uploadAvatar.definition = {
 
 /**
 * @see \App\Http\Controllers\PatientController::uploadAvatar
-* @see app/Http/Controllers/PatientController.php:67
+* @see app/Http/Controllers/PatientController.php:68
 * @route '/patients/{patient}/avatar/upload'
 */
 uploadAvatar.url = (args: { patient: string | number } | [patient: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -101,7 +101,7 @@ uploadAvatar.url = (args: { patient: string | number } | [patient: string | numb
 
 /**
 * @see \App\Http\Controllers\PatientController::uploadAvatar
-* @see app/Http/Controllers/PatientController.php:67
+* @see app/Http/Controllers/PatientController.php:68
 * @route '/patients/{patient}/avatar/upload'
 */
 uploadAvatar.post = (args: { patient: string | number } | [patient: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -301,7 +301,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\PatientController::edit
-* @see app/Http/Controllers/PatientController.php:57
+* @see app/Http/Controllers/PatientController.php:58
 * @route '/patients/edit/{patient}'
 */
 export const edit = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -316,7 +316,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\PatientController::edit
-* @see app/Http/Controllers/PatientController.php:57
+* @see app/Http/Controllers/PatientController.php:58
 * @route '/patients/edit/{patient}'
 */
 edit.url = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -349,7 +349,7 @@ edit.url = (args: { patient: number | { id: number } } | [patient: number | { id
 
 /**
 * @see \App\Http\Controllers\PatientController::edit
-* @see app/Http/Controllers/PatientController.php:57
+* @see app/Http/Controllers/PatientController.php:58
 * @route '/patients/edit/{patient}'
 */
 edit.get = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -359,7 +359,7 @@ edit.get = (args: { patient: number | { id: number } } | [patient: number | { id
 
 /**
 * @see \App\Http\Controllers\PatientController::edit
-* @see app/Http/Controllers/PatientController.php:57
+* @see app/Http/Controllers/PatientController.php:58
 * @route '/patients/edit/{patient}'
 */
 edit.head = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -369,7 +369,7 @@ edit.head = (args: { patient: number | { id: number } } | [patient: number | { i
 
 /**
 * @see \App\Http\Controllers\PatientController::update
-* @see app/Http/Controllers/PatientController.php:59
+* @see app/Http/Controllers/PatientController.php:60
 * @route '/patients/update/{patient}'
 */
 export const update = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -384,7 +384,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\PatientController::update
-* @see app/Http/Controllers/PatientController.php:59
+* @see app/Http/Controllers/PatientController.php:60
 * @route '/patients/update/{patient}'
 */
 update.url = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -417,7 +417,7 @@ update.url = (args: { patient: number | { id: number } } | [patient: number | { 
 
 /**
 * @see \App\Http\Controllers\PatientController::update
-* @see app/Http/Controllers/PatientController.php:59
+* @see app/Http/Controllers/PatientController.php:60
 * @route '/patients/update/{patient}'
 */
 update.post = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -427,7 +427,7 @@ update.post = (args: { patient: number | { id: number } } | [patient: number | {
 
 /**
 * @see \App\Http\Controllers\PatientController::destroy
-* @see app/Http/Controllers/PatientController.php:61
+* @see app/Http/Controllers/PatientController.php:62
 * @route '/patients/delete/{patient}'
 */
 export const destroy = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -442,7 +442,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\PatientController::destroy
-* @see app/Http/Controllers/PatientController.php:61
+* @see app/Http/Controllers/PatientController.php:62
 * @route '/patients/delete/{patient}'
 */
 destroy.url = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -475,7 +475,7 @@ destroy.url = (args: { patient: number | { id: number } } | [patient: number | {
 
 /**
 * @see \App\Http\Controllers\PatientController::destroy
-* @see app/Http/Controllers/PatientController.php:61
+* @see app/Http/Controllers/PatientController.php:62
 * @route '/patients/delete/{patient}'
 */
 destroy.get = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -485,7 +485,7 @@ destroy.get = (args: { patient: number | { id: number } } | [patient: number | {
 
 /**
 * @see \App\Http\Controllers\PatientController::destroy
-* @see app/Http/Controllers/PatientController.php:61
+* @see app/Http/Controllers/PatientController.php:62
 * @route '/patients/delete/{patient}'
 */
 destroy.head = (args: { patient: number | { id: number } } | [patient: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({

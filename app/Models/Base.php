@@ -14,7 +14,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-# #[ObservedBy([BaseObserver::class])]
+// #[ObservedBy([BaseObserver::class])]
 class Base extends Model implements HasMedia
 {
     use InteractsWithMedia, SoftDeletes;
