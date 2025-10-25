@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -74,4 +75,55 @@ Route::middleware('auth')
             'destroy'
         ])
             ->name('users.delete');
+    });
+
+Route::middleware('auth')
+    ->prefix('patients')
+    ->group(function () {
+        Route::post('/{patient}/avatar/remove', [
+            PatientController::class,
+            'removeAvatar',
+        ])
+            ->name('patients.avatar.remove');
+
+        Route::post('/{patient}/avatar/upload', [
+            PatientController::class,
+            'uploadAvatar',
+        ])
+            ->name('patients.avatar.upload');
+        Route::get('/', [
+            PatientController::class,
+            'index'
+        ])
+            ->name('patients.index');
+        Route::get('/{patient}/profile', [
+            PatientController::class,
+            'profile'
+        ])
+            ->name('patients.profile');
+        Route::get('/create', [
+            PatientController::class,
+            'create'
+        ])
+            ->name('patients.create');
+        Route::post('/store', [
+            PatientController::class,
+            'store'
+        ])
+            ->name('patients.store');
+        Route::get('/edit/{patient}', [
+            PatientController::class,
+            'edit'
+        ])
+            ->name('patients.edit');
+        Route::post('/update/{patient}', [
+            PatientController::class,
+            'update'
+        ])
+            ->name('patients.update');
+        Route::get('/delete/{patient}', [
+            PatientController::class,
+            'destroy'
+        ])
+            ->name('patients.delete');
     });

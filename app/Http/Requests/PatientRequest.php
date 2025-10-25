@@ -2,14 +2,20 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Gender;
+use App\Enums\PatientStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PatientRequest extends FormRequest
 {
     public function rules() : array
     {
         return [
-            'status'          => ['required'],
+            'status'          => [
+                'required',
+                Rule::in(PatientStatus::cases())
+            ],
             'prefix'          => ['nullable'],
             'first_name'      => ['required'],
             'middle_name'     => ['nullable'],
@@ -19,7 +25,10 @@ class PatientRequest extends FormRequest
                 'required',
                 'date'
             ],
-            'gender'          => ['required'],
+            'gender'          => [
+                'required',
+                Rule::in(Gender::cases())
+            ],
             'gender_identity' => ['nullable'],
             'email'           => [
                 'nullable',
@@ -27,7 +36,7 @@ class PatientRequest extends FormRequest
                 'max:254'
             ],
             'password'        => ['nullable'],
-            
+
         ];
     }
 

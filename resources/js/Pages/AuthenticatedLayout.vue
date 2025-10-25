@@ -6,6 +6,7 @@ import { Dialog, Message } from "primevue";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import UserController from '../actions/App/Http/Controllers/UserController';
+import PatientController from "../actions/App/Http/Controllers/PatientController";
 
 import UserProfile from "./Users/Partials/Profile.vue";
 import UserCreate from "./Users//Create.vue";
@@ -38,7 +39,7 @@ const handleDialogClose = () => {
 const navigation = [
   {
     label: 'Patients', items: [
-      { href: '#', label: 'View Patients', click: "patients.index" },
+      { href: PatientController.index().url, label: 'View Patients', click: "patients.index" },
     ]
   },
 ];
