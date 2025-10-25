@@ -4,8 +4,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PatientStatus;
 use App\Enums\UserRole;
+
 # use App\Models\Patient;
+use App\Models\Patient;
 use App\Models\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -35,6 +38,9 @@ class UserTableSeeder extends Seeder
             ->truncate();
 
         DB::table('users')
+            ->truncate();
+
+        DB::table('patients')
             ->truncate();
         //
         $admin_user = User::factory()
@@ -93,6 +99,72 @@ class UserTableSeeder extends Seeder
                 ]);
 
             $this->addMedia($staff_user, $character['image']);
+            echo '.';
+        });
+
+        echo "\nAdding Patients\n";
+
+        // create the patients
+        $patients->each(function ($character, $index) {
+
+            $staff_user = User::inRandomOrder()
+                ->first();
+
+            // generate the user and set the causer resolver
+            CauserResolver::setCauser($staff_user);
+            $created_at = fake()->dateTimeBetween($staff_user->created_at, '-1 year');
+
+            $name_parts = collect(explode(' ', $character['name']));
+            $first_name = str($name_parts->shift())->title();
+            $last_name = str($name_parts->pop())->title();
+            $middle_name = count($name_parts) > 0 ? str($name_parts->implode(' '))->title() : '';
+
+            $role = match (true) {
+                $index <= 3  => UserRole::Doctor,
+                $index <= 7  => UserRole::Nurse,
+                $index <= 10 => UserRole::Admin,
+                default      => UserRole::Staff,
+            };
+
+            $gender = $character['gender'];
+
+            $patient = Patient::factory()
+                ->create([
+                    'status'          => fake()->randomElement(PatientStatus::cases()),
+                    'prefix'          => match ($gender) {
+                        'Male'   => 'Mr.',
+                        'Female' => fake()->randomElement([
+                            'Ms.',
+                            'Mrs.'
+                        ]),
+                        default  => ''
+                    },
+                    'first_name'      => $first_name,
+                    'middle_name'     => $middle_name,
+                    'last_name'       => $last_name,
+                    'dob'             => fake()->dateTimeBetween('-90 years', '-18 months'),
+                    'gender'          => $gender,
+                    'gender_identity' => $gender,
+                    'suffix'          => fake()->randomElement([
+                        'Jr',
+                        'Sr',
+                        'II',
+                        'III',
+                        ''
+                    ]),
+                    'email'           => str($first_name.'.'.$last_name.rand(100, 999).'@example.com')
+                        ->lower()
+                        ->remove([
+                            ' ',
+                            '\'',
+                        ]),
+                    'created_by_id'   => $staff_user,
+                    'updated_by_id'   => $staff_user,
+                    'created_at'      => $created_at,
+                    'updated_at'      => $created_at,
+                ]);
+
+            $this->addMedia($patient, $character['image']);
             echo '.';
         });
 
