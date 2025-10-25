@@ -1,0 +1,64 @@
+@import "tailwindcss";
+@import 'primeicons/primeicons.css';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+
+
+    --color-primary-50: #faf5ff;
+    --color-primary-100: #f3e8ff;
+    --color-primary-200: #e9d5ff;
+    --color-primary-300: #d8b4fe;
+    --color-primary-400: #c084fc;
+    --color-primary-500: #a855f7;
+    --color-primary-600: #9333ea;
+    --color-primary-700: #7e22ce;
+    --color-primary-800: #6b21a8;
+    --color-primary-900: #581c87;
+    --color-primary-950: #3b0764;
+
+    --color-accent-50: #f7fee7;
+    --color-accent-100: #ecfccb;
+    --color-accent-200: #d9f99d;
+    --color-accent-300: #bef264;
+    --color-accent-400: #a3e635;
+    --color-accent-500: #84cc16;
+    --color-accent-600: #65a30d;
+    --color-accent-700: #4d7c0f;
+    --color-accent-800: #3f6212;
+    --color-accent-900: #365314;
+    --color-accent-950: #1a2e05;
+
+    --color-darker-50: #fafaf9;
+    --color-darker-100: #f5f5f4;
+    --color-darker-200: #e7e5e4;
+    --color-darker-300: #d6d3d1;
+    --color-darker-400: #a8a29e;
+    --color-darker-500: #78716c;
+    --color-darker-600: #57534e;
+    --color-darker-700: #44403c;
+    --color-darker-800: #292524;
+    --color-darker-900: #1c1917;
+    --color-darker-950: #0c0a09;
+}
+
+body {
+    @apply bg-darker-100 text-darker-800;
+}
+
+.link {
+    @apply text-accent-600 hover:underline;
+}
+
+.label {
+    @apply block text-darker-700 font-bold mb-2;
+}
+.btn {
+    @apply hover:text-primary-100 text-white font-bold bg-primary-600 px-4 py-2 cursor-pointer hover:bg-primary-700 rounded-lg;
+    @apply disabled:bg-darker-400 disabled:text-darker-300 disabled:cursor-not-allowed;
+}
