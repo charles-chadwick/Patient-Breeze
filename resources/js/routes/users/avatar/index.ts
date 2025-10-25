@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\UserController::remove
-* @see app/Http/Controllers/UserController.php:87
+* @see app/Http/Controllers/UserController.php:88
 * @route '/users/{user}/avatar/remove'
 */
 export const remove = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ remove.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::remove
-* @see app/Http/Controllers/UserController.php:87
+* @see app/Http/Controllers/UserController.php:88
 * @route '/users/{user}/avatar/remove'
 */
 remove.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ remove.url = (args: { user: number | { id: number } } | [user: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\UserController::remove
-* @see app/Http/Controllers/UserController.php:87
+* @see app/Http/Controllers/UserController.php:88
 * @route '/users/{user}/avatar/remove'
 */
 remove.post = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ remove.post = (args: { user: number | { id: number } } | [user: number | { id: n
 
 /**
 * @see \App\Http\Controllers\UserController::upload
-* @see app/Http/Controllers/UserController.php:70
+* @see app/Http/Controllers/UserController.php:71
 * @route '/users/{user}/avatar/upload'
 */
 export const upload = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -74,7 +74,7 @@ upload.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::upload
-* @see app/Http/Controllers/UserController.php:70
+* @see app/Http/Controllers/UserController.php:71
 * @route '/users/{user}/avatar/upload'
 */
 upload.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -101,7 +101,7 @@ upload.url = (args: { user: string | number } | [user: string | number ] | strin
 
 /**
 * @see \App\Http\Controllers\UserController::upload
-* @see app/Http/Controllers/UserController.php:70
+* @see app/Http/Controllers/UserController.php:71
 * @route '/users/{user}/avatar/upload'
 */
 upload.post = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
