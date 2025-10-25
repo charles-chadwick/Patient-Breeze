@@ -48,7 +48,7 @@
 }
 
 body {
-    @apply bg-darker-100 text-darker-800;
+    @apply bg-darker-200 text-darker-800;
 }
 
 .link {
