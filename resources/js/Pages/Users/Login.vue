@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 import {InputText, Password, Button} from 'primevue';
 import AuthController from '../../actions/App/Http/Controllers/AuthController';
 
@@ -8,7 +8,8 @@ const form = useForm ( {
   email: '',
   password: '',
 } );
-
+const page = usePage ();
+const header = computed ( () => page.props.header );
 const loading = ref ( false );
 
 const submit = () => {
@@ -22,7 +23,7 @@ const submit = () => {
 <template>
   <div class="flex min-h-screen items-center justify-center bg-darker-100">
     <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-      <h2 class="mb-6 text-center text-2xl font-bold text-darker-900">Login</h2>
+      <h2 class="mb-6 text-center text-2xl font-bold text-primary-600">{{ header }}</h2>
       <form @submit.prevent="submit">
         <div class="mb-4">
           <label class="mb-2 block text-sm font-medium text-darker-700">Email</label>

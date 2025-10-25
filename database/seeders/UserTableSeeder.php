@@ -4,6 +4,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Gender;
 use App\Enums\PatientStatus;
 use App\Enums\UserRole;
 
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\Facades\CauserResolver;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+use function fake;
 
 class UserTableSeeder extends Seeder
 {
@@ -143,7 +145,11 @@ class UserTableSeeder extends Seeder
                     'middle_name'     => $middle_name,
                     'last_name'       => $last_name,
                     'dob'             => fake()->dateTimeBetween('-90 years', '-18 months'),
-                    'gender'          => $gender,
+                    'gender'          => match ($gender) {
+                        'Male'   => Gender::Male,
+                        'Female' => Gender::Female,
+                        default  => Gender::Unknown
+                    },
                     'gender_identity' => $gender,
                     'suffix'          => fake()->randomElement([
                         'Jr',
