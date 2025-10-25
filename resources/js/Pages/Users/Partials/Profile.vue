@@ -25,12 +25,12 @@ const handleCloseDialog = () => {
 </script>
 
 <template>
-  <div v-if="user?.attributes" class="flex justify-center items-start gap-x-2">
+  <div v-if="user?.attributes" class="flex justify-center items-center gap-x-2">
     <div v-if="show_name">
       <Link
           :href="UserController.profile(user.id)">
-        <h1 class="font-bold ">{{ user.attributes.full_name }}</h1>
-        <p class="text-sm font-bold">{{ user.attributes.role }}</p>
+        <h1 class="font-bold text-base">{{ user.attributes.full_name }}</h1>
+        <p class="text-sm font-bold text-darker-400">{{ user.attributes.role }}</p>
       </Link>
     </div>
     <div v-if="show_avatar">
@@ -54,7 +54,6 @@ const handleCloseDialog = () => {
           class="rounded-xl border-2 border-darker-300 hover:border-primary-600"
           alt="Avatar"
       />
-
     </template>
   </Dialog>
 </template>
