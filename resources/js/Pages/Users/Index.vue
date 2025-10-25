@@ -25,7 +25,7 @@ defineProps ( { users: Array | Object } )
           >
             <div class="w-full">
               <h2 class="font-bold">
-                <Link :href="UserController.show(user.id)">
+                <Link :href="UserController.profile(user.id)">
                   {{ user.attributes.full_name }}
                 </Link>
               </h2>
