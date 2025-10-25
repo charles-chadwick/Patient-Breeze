@@ -30,7 +30,7 @@ class PatientResource extends JsonResource
                 'gender'          => $this->gender,
                 'gender_identity' => $this->gender_identity,
                 'email'           => $this->email,
-                'created_at'      => $this->created_at,
+                'created_at'      => $this->created_at->format('m/d/Y h:i A'),
                 'full_name'       => $this->full_name,
                 'avatar'          => $this->avatar
             ],
