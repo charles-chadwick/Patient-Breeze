@@ -1,6 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../wayfinder'
 /**
-* @see routes/web.php:5
+* @see [serialized-closure]:2
 * @route '/'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -14,7 +14,7 @@ dashboard.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:5
+* @see [serialized-closure]:2
 * @route '/'
 */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -22,7 +22,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:5
+* @see [serialized-closure]:2
 * @route '/'
 */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -31,7 +31,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:5
+* @see [serialized-closure]:2
 * @route '/'
 */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
