@@ -6,7 +6,7 @@ namespace Database\Seeders;
 
 class FilterData
 {
-    public const array BAD_WORDS = [
+    public const BAD_WORDS = [
         'Titty',
         'Boob',
         'Fuck',
@@ -28,7 +28,9 @@ class FilterData
         'Jacker',
         'Abradolf',
         'Hitler',
-        'Butt'
+        'Butt',
+        'Cunt',
+        'Retard'
     ];
 
     public static function hasBadWords(string $string): bool
