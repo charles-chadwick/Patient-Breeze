@@ -1,10 +1,10 @@
 <script setup>
-import Layout from "./Layout.vue";
+import AuthenticatedLayout from "./AuthenticatedLayout.vue";
 import { Card } from 'primevue';
 </script>
 
 <template>
-  <Layout>
+  <AuthenticatedLayout>
     <Card>
       <template #title>
         <h1>Dashboard</h1>
@@ -13,7 +13,7 @@ import { Card } from 'primevue';
         hey kid, I'm a dashboard.
       </template>
     </Card>
-  </Layout>
+  </AuthenticatedLayout>
 </template>
 
 <style scoped>

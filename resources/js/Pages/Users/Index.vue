@@ -1,6 +1,6 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
-import Layout from "../Layout.vue";
+import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import Pagination from "../../components/Pagination.vue";
 import UserController from "../../actions/App/Http/Controllers/UserController";
 import { Card } from 'primevue';
@@ -10,7 +10,7 @@ defineProps ( { users: Array | Object } )
 </script>
 
 <template>
-  <Layout>
+  <AuthenticatedLayout>
     <Card>
       <template #title>Users</template>
       <template #content>
@@ -47,7 +47,7 @@ defineProps ( { users: Array | Object } )
         <Pagination :pagination="users.meta" />
       </template>
     </Card>
-  </Layout>
+  </AuthenticatedLayout>
 </template>
 
 <style scoped>

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\AuthController::login
 * @see app/Http/Controllers/AuthController.php:13
@@ -87,43 +87,6 @@ logout.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     method: 'post',
 })
 
-/**
-* @see [serialized-closure]:2
-* @route '/'
-*/
-export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: dashboard.url(options),
-    method: 'get',
-})
+const AuthController = { login, logout }
 
-dashboard.definition = {
-    methods: ["get","head"],
-    url: '/',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see [serialized-closure]:2
-* @route '/'
-*/
-dashboard.url = (options?: RouteQueryOptions) => {
-    return dashboard.definition.url + queryParams(options)
-}
-
-/**
-* @see [serialized-closure]:2
-* @route '/'
-*/
-dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: dashboard.url(options),
-    method: 'get',
-})
-
-/**
-* @see [serialized-closure]:2
-* @route '/'
-*/
-dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: dashboard.url(options),
-    method: 'head',
-})
-
+export default AuthController
