@@ -1,10 +1,11 @@
 <!--suppress JSValidateTypes, JSUnresolvedReference -->
 <script setup>
-import { usePage } from "@inertiajs/vue3";
+import { usePage, useForm } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import { Dialog, Message } from "primevue";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import AuthController from '../actions/App/Http/Controllers/AuthController';
 import UserController from '../actions/App/Http/Controllers/UserController';
 import PatientController from "../actions/App/Http/Controllers/PatientController";
 
@@ -43,6 +44,11 @@ const navigation = [
     ]
   },
 ];
+
+const logout = () => {
+  const form = useForm ();
+  form.submit(AuthController.logout())
+}
 
 </script>
 
@@ -143,6 +149,14 @@ const navigation = [
                       :href="UserController.index().url"
                       class="block px-4 py-2 text-sm hover:text-primary-600"
                   >View Users</a>
+                </MenuItem>
+
+                <MenuItem>
+                  <a
+                      href="#"
+                      @click="logout"
+                      class="block px-4 py-2 text-sm hover:text-primary-600"
+                  >Log Out</a>
                 </MenuItem>
               </div>
             </MenuItems>
