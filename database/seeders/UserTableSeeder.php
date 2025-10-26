@@ -188,7 +188,7 @@ class UserTableSeeder extends Seeder
         $characters = collect();
         $page = 1;
 
-        $character_json_path = database_path('characters.json');
+        $character_json_path = database_path('src/characters.json');
         if (file_exists($character_json_path)) {
             $data = collect(json_decode(file_get_contents($character_json_path), true));
         } else {
