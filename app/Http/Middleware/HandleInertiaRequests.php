@@ -2,11 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Gender;
+use App\Enums\PatientStatus;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
 use function auth;
+use function config;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -38,7 +41,8 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return [
+        // collect params we want on every page
+        $params = collect([
             'auth' => [
                 'user' => new UserResource(auth()->user()),
             ],
@@ -49,6 +53,17 @@ class HandleInertiaRequests extends Middleware
             'header' => config('app.name'),
             ...parent::share($request),
             //
-        ];
+        ]);
+
+        // now do some conditionals
+        if ($request->routeIs('patients.*')) {
+            $params->put('attributes', [
+                'statuses' => PatientStatus::cases(),
+                'genders' => Gender::cases()
+            ]);
+        }
+
+        return $params->toArray();
+
     }
 }

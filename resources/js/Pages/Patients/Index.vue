@@ -5,8 +5,9 @@ import Pagination from "../../components/Pagination.vue";
 import PatientController from "../../actions/App/Http/Controllers/PatientController";
 import { Card } from 'primevue';
 import { Link } from "@inertiajs/vue3";
+import Status from "./Partials/Status.vue";
 
-defineProps ( { patients: Array | Object } )
+defineProps ( { patients: Array | Object })
 </script>
 
 <template>
@@ -30,7 +31,7 @@ defineProps ( { patients: Array | Object } )
                 </Link>
               </h2>
               <p>{{ patient.attributes.dob }}</p>
-              <p>{{ patient.attributes.email }}</p>
+              <p><Status :status="patient.attributes.status" /></p>
             </div>
             <div class="shrink-0">
               <img

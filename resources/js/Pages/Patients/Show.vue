@@ -5,6 +5,7 @@ import { Card, FileUpload, Dialog } from "primevue";
 import { Link, useForm } from '@inertiajs/vue3'
 import PatientController from '../../actions/App/Http/Controllers/PatientController';
 import { ref } from "vue";
+import Status from "./Partials/Status.vue";
 
 const props = defineProps ( { patient: Object } )
 const form = useForm ( {
@@ -43,7 +44,7 @@ const handleCloseDialog = () => {
                 / {{ patient.data.attributes.gender_identity }}
               </span>
             </p>
-            <p><span class="font-bold">Status:</span> {{ patient.data.attributes.status }}</p>
+            <p><span class="font-bold">Status:</span> <Status :status="patient.data.attributes.status" /></p>
             <p><span class="font-bold">Created:</span> {{ patient.data.attributes.created_at }}</p>
           </div>
           <div>

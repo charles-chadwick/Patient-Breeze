@@ -22,7 +22,9 @@ class PatientController extends Controller
             ->paginate()
             ->withQueryString();
 
-        return Inertia::render('Patients/Index', ['patients' => PatientResource::collection($patients)]);
+        return Inertia::render('Patients/Index', [
+            'patients' => PatientResource::collection($patients),
+        ]);
     }
 
     public function create()
@@ -31,7 +33,7 @@ class PatientController extends Controller
             ->map(function ($role) {
                 return [
                     'value' => $role->value,
-                    'name' => $role->name,
+                    'name'  => $role->name,
                 ];
             })
             ->toArray();
