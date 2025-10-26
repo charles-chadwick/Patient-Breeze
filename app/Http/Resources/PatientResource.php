@@ -35,6 +35,7 @@ class PatientResource extends JsonResource
                 'avatar' => $this->avatar,
             ],
             'relationships' => [
+                'appointments' => new AppointmentResource($this->whenLoaded('appointments')),
                 'created_by' => new UserResource($this->whenLoaded('created_by')),
             ],
             'links' => [

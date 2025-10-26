@@ -1,14 +1,17 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
-import AuthenticatedLayout from "../AuthenticatedLayout.vue";
-import { Card, FileUpload, Dialog } from "primevue";
-import { Link, useForm } from '@inertiajs/vue3'
-import PatientController from '../../actions/App/Http/Controllers/PatientController';
 import { ref } from "vue";
+import { Link, useForm } from '@inertiajs/vue3'
+import AuthenticatedLayout from "../AuthenticatedLayout.vue";
+import AppointmentList from "../Appointments/AppointmentList.vue";
 import Status from "./Partials/Status.vue";
+import { Card, FileUpload, Dialog } from "primevue";
+import PatientController from '../../actions/App/Http/Controllers/PatientController';
 
-const props = defineProps ( { patient: Object } )
-const patient = props.patient.data; 
+const props = defineProps ( { patient: Object, appointments: Object|Array } )
+
+const patient = props.patient.data;
+
 const form = useForm ( {
   avatar: null
 } )
@@ -26,14 +29,13 @@ const handleShowDialog = () => {
 const handleCloseDialog = () => {
   showDialog.value = false;
 }
-
-
 </script>
 
 <template>
   <AuthenticatedLayout>
-    <Card>
 
+    <!-- profile -->
+    <Card>
       <template #content>
         <div class="flex justify-between items-start">
           <div>
@@ -90,7 +92,18 @@ const handleCloseDialog = () => {
         </div>
       </template>
     </Card>
+
+    <Card class="mt-4">
+      <template #title>Appointments</template>
+      <template #content>
+        <AppointmentList :appointments="appointments" />
+      </template>
+    </Card>
+
   </AuthenticatedLayout>
+
+
+  <!-- dialogs and such -->
   <Dialog
       modal
       :dismissableMask="true"

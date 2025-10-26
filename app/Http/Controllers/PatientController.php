@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Gender;
 use App\Http\Requests\PatientRequest;
+use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
 use Hash;
@@ -52,9 +53,15 @@ class PatientController extends Controller
 
     public function chart(Patient $patient)
     {
-        $patient->load(['created_by', 'appointments']);
+        $patient->load([
+            'created_by',
+            'appointments'
+        ]);
 
-        return Inertia::render('Patients/Chart', ['patient' => new PatientResource($patient)]);
+        return Inertia::render('Patients/Chart', [
+            'patient'      => new PatientResource($patient),
+            'appointments' => AppointmentResource::collection($patient->appointments)
+        ]);
     }
 
     public function edit(Patient $patient) {}
