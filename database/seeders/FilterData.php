@@ -32,6 +32,7 @@ class FilterData
         'Cunt',
         'Retard',
         'Tortured',
+        'Jew'
     ];
 
     public static function hasBadWords(string $string): bool
