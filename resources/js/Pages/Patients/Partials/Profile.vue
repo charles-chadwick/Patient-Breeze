@@ -28,7 +28,7 @@ const handleCloseDialog = () => {
   <div v-if="patient?.attributes" class="flex justify-center items-center gap-x-2">
     <div v-if="show_name">
       <Link
-          :href="PatientController.profile(patient.id)">
+          :href="PatientController.chart(patient.id)">
         <h1 class="font-bold text-base">{{ patient.attributes.full_name }}</h1>
         <p class="text-sm font-bold text-darker-400">{{ patient.attributes.role }}</p>
       </Link>

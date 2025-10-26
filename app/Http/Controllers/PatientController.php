@@ -50,11 +50,11 @@ class PatientController extends Controller
         return to_route('patients.index')->with('message', "{$patient->first_name} {$patient->last_name} created successfully");
     }
 
-    public function profile(Patient $patient)
+    public function chart(Patient $patient)
     {
-        $patient->load('created_by');
+        $patient->load(['created_by', 'appointments']);
 
-        return Inertia::render('Patients/Show', ['patient' => new PatientResource($patient)]);
+        return Inertia::render('Patients/Chart', ['patient' => new PatientResource($patient)]);
     }
 
     public function edit(Patient $patient) {}

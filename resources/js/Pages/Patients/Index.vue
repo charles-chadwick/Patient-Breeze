@@ -26,7 +26,7 @@ defineProps ( { patients: Array | Object })
           >
             <div class="w-full">
               <h2 class="font-bold">
-                <Link :href="PatientController.profile(patient.id)">
+                <Link :href="PatientController.chart(patient.id)">
                   {{ patient.attributes.full_name }}
                 </Link>
               </h2>

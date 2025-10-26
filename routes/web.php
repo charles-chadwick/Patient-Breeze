@@ -91,16 +91,18 @@ Route::middleware('auth')
             'uploadAvatar',
         ])
             ->name('patients.avatar.upload');
+        Route::get('/{patient}/chart', [
+            PatientController::class,
+            'chart',
+        ])
+            ->name('patients.chart');
+
         Route::get('/', [
             PatientController::class,
             'index',
         ])
             ->name('patients.index');
-        Route::get('/{patient}/profile', [
-            PatientController::class,
-            'profile',
-        ])
-            ->name('patients.profile');
+
         Route::get('/create', [
             PatientController::class,
             'create',
