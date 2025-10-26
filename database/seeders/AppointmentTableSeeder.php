@@ -67,7 +67,7 @@ class AppointmentTableSeeder extends Seeder
                         'created_by_id'  => $user->id,
                         'updated_by_id'  => $user->id,
                         'title'       => $random_data->randomData(1),
-                        'description' => nl2br($random_data->randomData(rand(2, 20), false, 2000)),
+                        'description' => nl2br($random_data->randomData(rand(2, 20), false, 100)),
                         'type'        => fake()->randomElement(AppointmentType::cases()),
                         'status'      => $status,
                     ]);

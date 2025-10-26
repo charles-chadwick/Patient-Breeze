@@ -24,6 +24,9 @@ class AppointmentResource extends JsonResource
                 'patient_id'  => $this->patient_id,
                 'start'       => $this->start->format('m/d/Y h:i A'),
                 'end'         => $this->end->format('m/d/Y h:i A'),
+                'date'        => $this->start->format('m/d/Y'),
+                'from'        => $this->start->format('h:i A'),
+                'to'          => $this->end->format('h:i A'),
                 'status'      => $this->status,
                 'type'        => $this->type,
                 'title'       => $this->title,
@@ -31,7 +34,7 @@ class AppointmentResource extends JsonResource
                 'created_at'  => $this->created_at->format('m/d/Y h:i A'),
             ],
             'relationships' => [
-                'patient' => new PatientResource($this->whenLoaded('patient')),
+                'patient'    => new PatientResource($this->whenLoaded('patient')),
                 'created_by' => new UserResource($this->whenLoaded('created_by')),
             ]
         ];

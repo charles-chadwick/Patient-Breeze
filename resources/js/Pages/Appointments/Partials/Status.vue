@@ -6,10 +6,12 @@ const status = computed ( () => props.status )
 const size = computed ( () => props.size )
 
 const severity = {
-  Active: 'fill-accent-400',
-  Inactive: 'fill-darker-200',
-  Deceased: 'fill-red-400',
-  Prospective: 'fill-yellow-400',
+  Confirmed: 'fill-accent-400',
+  Cancelled: 'fill-darker-500',
+  Completed: 'fill-darker-200',
+  Pending: 'fill-yellow-400',
+  Rescheduled: 'fill-darker-500',
+  'No Show': 'fill-red-400',
 }
 
 const sizes = {

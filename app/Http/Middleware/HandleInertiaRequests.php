@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\AppointmentStatus;
 use App\Enums\Gender;
 use App\Enums\PatientStatus;
 use App\Http\Resources\UserResource;
@@ -27,7 +28,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/asset-versioning
      */
-    public function version(Request $request): ?string
+    public function version(Request $request) : ?string
     {
         return parent::version($request);
     }
@@ -39,16 +40,18 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
-    public function share(Request $request): array
+    public function share(Request $request) : array
     {
         // collect params we want on every page
         $params = collect([
-            'auth' => [
+            'auth'   => [
                 'user' => new UserResource(auth()->user()),
             ],
-            'flash' => [
-                'message' => fn () => $request->session()->get('message'),
-                'type' => fn () => $request->session()->get('type'),
+            'flash'  => [
+                'message' => fn() => $request->session()
+                    ->get('message'),
+                'type'    => fn() => $request->session()
+                    ->get('type'),
             ],
             'header' => config('app.name'),
             ...parent::share($request),
@@ -58,8 +61,13 @@ class HandleInertiaRequests extends Middleware
         // now do some conditionals
         if ($request->routeIs('patients.*')) {
             $params->put('attributes', [
-                'statuses' => PatientStatus::cases(),
-                'genders' => Gender::cases()
+                'patient'     => [
+                    'statuses' => PatientStatus::cases(),
+                    'genders'  => Gender::cases()
+                ],
+                'appointment' => [
+                    'statuses' => AppointmentStatus::cases(),
+                ]
             ]);
         }
 
