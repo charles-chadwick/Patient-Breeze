@@ -35,6 +35,7 @@ class AppointmentResource extends JsonResource
             ],
             'relationships' => [
                 'patient'    => new PatientResource($this->whenLoaded('patient')),
+                'users'      => UserResource::collection($this->whenLoaded('users')),
                 'created_by' => new UserResource($this->whenLoaded('created_by')),
             ]
         ];

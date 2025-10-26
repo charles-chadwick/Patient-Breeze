@@ -54,7 +54,7 @@ const logout = () => {
 
 <template>
 
-  <nav class="bg-darker-800 border-b-2 border-primary-600  font-bold text-white shadow-darker-500/25 shadow-2xl">
+  <nav class="bg-darker-800 border-b-2 border-accent-500  font-bold text-white shadow-darker-500/25 shadow-2xl">
     <div class="mx-12 flex h-16 items-center justify-between">
       <div class="flex justify-start items-center gap-x-4">
 
@@ -62,13 +62,13 @@ const logout = () => {
         <h1>
           <a
               href="/"
-              class="hover:text-primary-600"
+              class="hover:text-primary-400"
           >{{ header }}
           </a>
         </h1>
 
         <i
-            class="pi pi-circle-fill text-primary-600"
+            class="pi pi-circle-fill text-primary-400"
             style="font-size: .2rem"
         ></i>
 
@@ -79,7 +79,7 @@ const logout = () => {
             v-for="nav in navigation"
             :key="nav.label"
         >
-          <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md py-2 text-sm font-semibold hover:text-primary-600 cursor-pointer">
+          <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md py-2 text-sm font-semibold hover:text-primary-400 cursor-pointer">
             {{ nav.label }}
             <ChevronDownIcon
                 class="-mr-1 size-5 text-darker-400"
@@ -104,7 +104,7 @@ const logout = () => {
                   <a
                       href="#"
                       @click.prevent="handleDialogOpen(link)"
-                      class="block px-4 py-2 text-sm hover:text-primary-600"
+                      class="block px-4 py-2 text-sm hover:text-primary-400"
                   >{{ link.label }}</a>
                 </MenuItem>
               </div>
@@ -120,7 +120,7 @@ const logout = () => {
             as="div"
             class="relative inline-block"
         >
-          <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md py-2 text-sm font-semibold hover:text-primary-600 cursor-pointer">
+          <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md py-2 text-sm font-semibold hover:text-primary-400 cursor-pointer">
             <UserProfile :user="user.data" />
             <ChevronDownIcon
                 class="-mr-1 size-5 text-darker-200 mt-2"
@@ -141,13 +141,13 @@ const logout = () => {
                 <MenuItem>
                   <a
                       :href="UserController.profile(user.data.id).url"
-                      class="block px-4 py-2 text-sm hover:text-primary-600"
+                      class="block px-4 py-2 text-sm hover:text-primary-400"
                   >My Profile</a>
                 </MenuItem>
                 <MenuItem>
                   <a
                       :href="UserController.index().url"
-                      class="block px-4 py-2 text-sm hover:text-primary-600"
+                      class="block px-4 py-2 text-sm hover:text-primary-400"
                   >View Users</a>
                 </MenuItem>
 
@@ -155,7 +155,7 @@ const logout = () => {
                   <a
                       href="#"
                       @click="logout"
-                      class="block px-4 py-2 text-sm hover:text-primary-600"
+                      class="block px-4 py-2 text-sm hover:text-primary-400"
                   >Log Out</a>
                 </MenuItem>
               </div>

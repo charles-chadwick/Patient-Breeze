@@ -6,6 +6,7 @@ use App\Enums\Gender;
 use App\Http\Requests\PatientRequest;
 use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\PatientResource;
+use App\Models\Appointment;
 use App\Models\Patient;
 use Hash;
 use Illuminate\Http\Request;
@@ -55,12 +56,18 @@ class PatientController extends Controller
     {
         $patient->load([
             'created_by',
-            'appointments'
+            'appointments',
         ]);
+
+        $appointments = Appointment::where('patient_id', $patient->id)
+            ->with('users')
+            ->orderBy('start', 'desc')
+            ->get();
+
 
         return Inertia::render('Patients/Chart', [
             'patient'      => new PatientResource($patient),
-            'appointments' => AppointmentResource::collection($patient->appointments()->orderBy('start', 'desc')->get())
+            'appointments' => AppointmentResource::collection($appointments)
         ]);
     }
 
