@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Enums\AppointmentStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Appointment extends Base
 {
@@ -20,6 +21,11 @@ class Appointment extends Base
         'title',
         'description',
     ];
+
+    public function users() : BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'appointment_users', 'appointment_id', 'user_id');
+    }
 
     protected function casts() : array
     {
