@@ -35,7 +35,12 @@ class FilterData
         'Cunt',
         'Retard',
         'Tortured',
-        'Jew'
+        'Jew',
+        'douche',
+        'damn',
+        'crap',
+        'damn',
+        'bitch'
     ];
     private Collection $data;
 
