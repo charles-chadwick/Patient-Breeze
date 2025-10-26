@@ -40,7 +40,8 @@ class FilterData
         'damn',
         'crap',
         'damn',
-        'bitch'
+        'bitch',
+        'butt'
     ];
     private Collection $data;
 

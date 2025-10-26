@@ -72,16 +72,16 @@ class AppointmentTableSeeder extends Seeder
                         'status'      => $status,
                     ]);
 
-//                $appointment->users()
-//                    ->attach($user->id);
-//
-//                $appointment->users()
-//                    ->attach(User::staff()
-//                        ->where('id', '!=', $user->id)
-//                        ->inRandomOrder()
-//                        ->limit(rand(0, 3))
-//                        ->pluck('id')
-//                        ->toArray());
+                $appointment->users()
+                    ->attach($user->id);
+
+                $appointment->users()
+                    ->attach(User::clinicians()
+                        ->where('id', '!=', $user->id)
+                        ->inRandomOrder()
+                        ->limit(rand(0, 3))
+                        ->pluck('id')
+                        ->toArray());
 
             }
 
