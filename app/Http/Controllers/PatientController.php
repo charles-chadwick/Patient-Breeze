@@ -77,31 +77,4 @@ class PatientController extends Controller
 
     public function destroy(Patient $patient) {}
 
-    /**
-     * @throws FileDoesNotExist
-     * @throws FileIsTooBig
-     */
-    public function uploadAvatar(Request $request)
-    {
-        $request->validate([
-            'avatar' => [
-                'required',
-                'image',
-                'max:2048',
-            ],
-        ]);
-
-        $patient = Patient::findOrFail($request->route('patient'));
-        $patient->addMediaFromRequest('avatar')
-            ->toMediaCollection('avatars');
-
-        return back()->with('message', 'Avatar uploaded successfully');
-    }
-
-    public function removeAvatar(Patient $patient)
-    {
-        Media::where('model_type', Patient::class)
-            ->where('model_id', $patient->id)
-            ->delete();
-    }
 }

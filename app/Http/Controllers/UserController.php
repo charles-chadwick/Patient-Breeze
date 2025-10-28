@@ -62,31 +62,4 @@ class UserController extends Controller
 
     public function destroy(User $user) {}
 
-    /**
-     * @throws FileDoesNotExist
-     * @throws FileIsTooBig
-     */
-    public function uploadAvatar(Request $request)
-    {
-        $request->validate([
-            'avatar' => [
-                'required',
-                'image',
-                'max:2048',
-            ],
-        ]);
-
-        $user = User::findOrFail($request->route('user'));
-        $user->addMediaFromRequest('avatar')
-            ->toMediaCollection('avatars');
-
-        return back()->with('message', 'Avatar uploaded successfully');
-    }
-
-    public function removeAvatar(User $user)
-    {
-        Media::where('model_type', User::class)
-            ->where('model_id', $user->id)
-            ->delete();
-    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -29,17 +30,6 @@ Route::middleware('auth')
 Route::middleware('auth')
     ->prefix('users')
     ->group(function () {
-        Route::post('/{user}/avatar/remove', [
-            UserController::class,
-            'removeAvatar',
-        ])
-            ->name('users.avatar.remove');
-
-        Route::post('/{user}/avatar/upload', [
-            UserController::class,
-            'uploadAvatar',
-        ])
-            ->name('users.avatar.upload');
         Route::get('/', [
             UserController::class,
             'index',
@@ -80,17 +70,7 @@ Route::middleware('auth')
 Route::middleware('auth')
     ->prefix('patients')
     ->group(function () {
-        Route::post('/{patient}/avatar/remove', [
-            PatientController::class,
-            'removeAvatar',
-        ])
-            ->name('patients.avatar.remove');
 
-        Route::post('/{patient}/avatar/upload', [
-            PatientController::class,
-            'uploadAvatar',
-        ])
-            ->name('patients.avatar.upload');
         Route::get('/{patient}/chart', [
             PatientController::class,
             'chart',
@@ -128,4 +108,18 @@ Route::middleware('auth')
             'destroy',
         ])
             ->name('patients.delete');
+    });
+
+Route::middleware('auth')
+    ->prefix('avatar')
+    ->group(function () {
+        Route::post('/upload', [
+            AvatarController::class,
+            'upload',
+        ])
+            ->name('avatar.upload');
+        Route::post('/remove', [
+            AvatarController::class,
+            'remove',
+        ])->name('avatar.remove');
     });
