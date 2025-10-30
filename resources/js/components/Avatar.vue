@@ -1,24 +1,29 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { Dialog, FileUpload } from "primevue";
+import { Dialog } from "primevue";
+import { FileUpload } from "primevue";
 import { ref } from "vue";
 
 const props = defineProps ( { avatar: String, on: Object } )
 const on = props.on;
-const avatar = props.avatar;
+let avatar = props.avatar;
 
 const form = useForm ( {
   on_type: on.type,
   on_id: on.id,
+  avatar: null,
 } )
 
 const uploadAvatar = () => {
   form.post ( '/avatar/upload' )
 }
 
+
 const removeAvatar = () => {
   form.post ( '/avatar/remove' )
+  avatar = null;
 }
+
 
 const showDialog = ref ( false )
 
@@ -49,26 +54,17 @@ const handleCloseDialog = () => {
       </Button>
     </div>
     <div v-else>
-      <form @submit.prevent="uploadAvatar">
-        <FileUpload
-            ref="fileupload"
-            name="avatar"
-            url="/avatar/upload"
-            accept="image/*"
-            :maxFileSize="1000000"
-            :withCredentials="true"
-            @input="form.avatar = $event.target.files[0]"
-        />
-        <progress
-            v-if="form.progress"
-            :value="form.progress.percentage"
-            max="100"
-        >
-          {{ form.progress.percentage }}%
-        </progress>
-
-      </form>
-
+      <FileUpload
+          :maxFileSize="2000000"
+          accept="image/*"
+          :customUpload="true"
+          @uploader="uploadAvatar"
+          @select="(e) => form.avatar = e.files[0]"
+      >
+        <template #empty>
+          <p>Drag and drop image here to upload.</p>
+        </template>
+      </FileUpload>
     </div>
   </div>
   <Dialog

@@ -110,8 +110,7 @@ Route::middleware('auth')
             ->name('patients.delete');
     });
 
-Route::middleware('auth')
-    ->prefix('avatar')
+Route::prefix('avatar')
     ->group(function () {
         Route::post('/upload', [
             AvatarController::class,

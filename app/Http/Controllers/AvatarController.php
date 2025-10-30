@@ -17,16 +17,8 @@ class AvatarController extends Controller
      */
     public function upload(Request $request)
     {
-        $request->validate([
-            'avatar' => [
-                'required',
-                'image',
-                'max:2048',
-            ],
-        ]);
-
         $class = app("App\\Models\\{$request->on_type}");
-        $model = $class::findOrFail($request->onid);
+        $model = $class::findOrFail($request->on_id);
         $model->addMediaFromRequest('avatar')
             ->toMediaCollection('avatars');
 
