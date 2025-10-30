@@ -8,6 +8,7 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use App\Traits\IsPerson;
+use App\Traits\Searchable;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -15,19 +16,23 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Image\Enums\Fit;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class User extends Base implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
     use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
     use HasFactory, Notifiable;
-    use IsPerson;
+    use IsPerson, Searchable;
+
+    const SEARCH_FIELDS = [
+        'first_name',
+        'last_name',
+        'email',
+        'id'
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -70,8 +75,8 @@ class User extends Base implements AuthenticatableContract, AuthorizableContract
         return $this->belongsToMany(Appointment::class, 'appointment_users', 'user_id', 'appointment_id');
     }
 
-    public function scopeClinicians(Builder $query)
+    public function scopeClinicians(Builder $query) : void
     {
-        return $query->where('role', '!=', UserRole::SuperAdmin);
+        $query->where('role', '!=', UserRole::SuperAdmin);
     }
 }

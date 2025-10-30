@@ -3,34 +3,13 @@
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import Pagination from "../../components/Pagination.vue";
 import PatientController from "../../actions/App/Http/Controllers/PatientController";
-import { Card, InputText, Button, Select } from 'primevue';
+import { Card } from 'primevue';
 import { Link } from "@inertiajs/vue3";
 import Status from "./Partials/Status.vue";
-import { ref, watch } from 'vue';
-import { router } from '@inertiajs/vue3';
+import Search from "../../components/Search.vue";
 
 defineProps ( { patients: Array | Object })
 
-const search = ref ( '' )
-const filter = ref ( { status: null, gender: null } )
-
-const clearSearch = () => {
-  search.value = ''
-}
-
-watch ( [ search, filter ], ( [ searchValue] ) => {
-  router.get (
-      '/patients',
-      {
-        search: searchValue,
-      },
-      {
-        preserveState: true,
-        preserveScroll: true,
-        replace: true,
-      }
-  )
-} )
 </script>
 
 <template>
@@ -38,24 +17,7 @@ watch ( [ search, filter ], ( [ searchValue] ) => {
     <Card>
       <template #title>Patients</template>
       <template #subtitle class="flex justify-between items-center">
-        <div class="flex gap-2">
-          <InputText
-              v-model="search"
-              type="text"
-              placeholder="Search patients..."
-              class="w-full"
-          />
-          <Button
-              v-bind:disabled="search === ''"
-              icon="pi pi-times"
-              severity="secondary"
-              @click="clearSearch"
-              aria-label="Clear search"
-          />
-        </div>
-        
-        
-        
+        <Search :url="PatientController.index().url"/>
       </template>
       <template #content>
         <ul

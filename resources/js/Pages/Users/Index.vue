@@ -5,6 +5,7 @@ import Pagination from "../../components/Pagination.vue";
 import UserController from "../../actions/App/Http/Controllers/UserController";
 import { Card } from 'primevue';
 import { Link } from "@inertiajs/vue3";
+import Search from "../../components/Search.vue";
 
 defineProps ( { users: Array | Object } )
 </script>
@@ -13,6 +14,9 @@ defineProps ( { users: Array | Object } )
   <AuthenticatedLayout>
     <Card>
       <template #title>Users</template>
+      <template #subtitle>
+        <Search :url="UserController.index().url"/>
+      </template>
       <template #content>
         <ul
             role="list"

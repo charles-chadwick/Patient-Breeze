@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\IsPerson;
+use App\Traits\Searchable;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -20,7 +21,15 @@ class Patient extends Base implements AuthenticatableContract, AuthorizableContr
 {
     use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
     use HasFactory, Notifiable;
-    use IsPerson;
+    use IsPerson, Searchable;
+
+    const SEARCH_FIELDS = [
+        'first_name',
+        'last_name',
+        'email',
+        'dob',
+        'id'
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -71,18 +80,4 @@ class Patient extends Base implements AuthenticatableContract, AuthorizableContr
     {
         return $this->hasMany(Appointment::class);
     }
-
-    public function scopeSearch($query, $search) {
-        $query->when(strlen($search) > 2, function ($query) {
-            $query->whereAny([
-                'first_name',
-                'last_name',
-                'email',
-                'dob',
-                'id'
-            ], 'like', '%'.request('search').'%');
-        });
-    }
-    
-    
 }

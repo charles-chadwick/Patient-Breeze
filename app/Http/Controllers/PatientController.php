@@ -16,18 +16,9 @@ class PatientController extends Controller
 {
     public function index()
     {
-//        if (request('filter') != '') {
-//            dd(request()->all());
-//        }
         $patients = Patient::with('created_by')
             ->orderBy(request('sort_by', 'id'), request('sort_direction', 'asc'))
-            ->search(request('search'))
-            ->when(request('filter'), function ($query) {
-                foreach(request('filter') as $filter => $value) {
-                    $query->where($filter, $value);
-                }
-
-            })
+            ->searchAny(request('search'))
             ->paginate()
             ->withQueryString();
 
