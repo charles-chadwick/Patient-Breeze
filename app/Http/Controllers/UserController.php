@@ -54,7 +54,7 @@ class UserController extends Controller
     {
         $user->load('created_by');
 
-        return Inertia::render('Users/Show', ['user' => new UserResource($user)]);
+        return Inertia::render('Users/Profile', ['user' => new UserResource($user)]);
     }
 
     public function edit(User $user) {}
