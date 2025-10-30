@@ -30,7 +30,7 @@ const handleCloseDialog = () => {
       <Link
           :href="PatientController.chart(patient.id)">
         <h1 class="font-bold text-base">{{ patient.attributes.full_name }}</h1>
-        <p class="text-sm font-bold text-darker-400">{{ patient.attributes.role }}</p>
+        <p class="text-sm font-bold text-darker-400">{{ patient.attributes.dob }} - {{ patient.attributes.age.years }} Years {{  patient.attributes.age.months }} Months</p>
       </Link>
     </div>
     <div v-if="show_avatar">

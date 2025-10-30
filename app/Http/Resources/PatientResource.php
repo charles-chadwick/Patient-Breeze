@@ -27,6 +27,7 @@ class PatientResource extends JsonResource
                 'last_name' => $this->last_name,
                 'suffix' => $this->suffix,
                 'dob' => $this?->dob->format('m/d/Y'),
+                'age' => $this?->age,
                 'gender' => $this->gender,
                 'gender_identity' => $this->gender_identity,
                 'email' => $this->email,

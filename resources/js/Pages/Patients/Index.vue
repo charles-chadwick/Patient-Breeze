@@ -30,7 +30,7 @@ defineProps ( { patients: Array | Object })
                   {{ patient.attributes.full_name }}
                 </Link>
               </h2>
-              <p>{{ patient.attributes.dob }}</p>
+              <p>{{ patient.attributes.dob }} - {{ patient.attributes.age.years }} Years {{  patient.attributes.age.months }} Months</p>
               <p><Status :status="patient.attributes.status" /></p>
             </div>
             <div class="shrink-0">

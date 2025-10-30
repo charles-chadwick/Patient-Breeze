@@ -45,7 +45,7 @@ class Patient extends Base implements AuthenticatableContract, AuthorizableContr
         ];
     }
 
-    public function getAge() : array
+    public function getAgeAttribute() : array
     {
         if (!$this->dob) {
             return ['years'  => 0,
@@ -60,8 +60,8 @@ class Patient extends Base implements AuthenticatableContract, AuthorizableContr
             ->diffInMonths($now);
 
         return [
-            'years'  => $years,
-            'months' => $months
+            'years'  => intval($years),
+            'months' => intval($months)
         ];
     }
 

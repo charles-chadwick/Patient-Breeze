@@ -30,8 +30,8 @@ const patient = props.patient.data;
               {{ patient.attributes.middle_name }}
               {{ patient.attributes.last_name }}</p>
 
-            <p><span class="font-bold">DOB:</span> {{ patient.attributes.dob }}</p>
-
+            <p><span class="font-bold">DOB:</span>
+              {{ patient.attributes.dob }} - {{ patient.attributes.age.years }} Years {{  patient.attributes.age.months }} Months</p>
             <p><span class="font-bold">Gender:</span> {{ patient.attributes.gender }}
               <span v-if="patient.attributes.gender_identity !== ''"> / {{ patient.attributes.gender_identity }}</span>
             </p>
