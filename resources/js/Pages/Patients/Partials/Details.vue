@@ -45,6 +45,7 @@ const props = defineProps ( {
     <div v-if="showAvatar">
       <Avatar
           :avatar="patient.attributes.avatar"
+          :description="patient.attributes.full_name + ' Avatar'"
           :show_large="!compact"
           :size="compact ? 'md' : 'lg'"
       />
