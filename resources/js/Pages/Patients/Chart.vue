@@ -37,7 +37,7 @@ const patient = props.patient.data;
             </p>
 
             <p><span class="font-bold">Status:</span>
-              <Status :status="patient.attributes.status" />
+              <Status :status="patient.attributes.status" class="ml-2" />
             </p>
 
             <p><span class="font-bold">Created:</span> {{ patient.attributes.created_at }}</p>
