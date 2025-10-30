@@ -40,6 +40,28 @@ class Patient extends Base implements AuthenticatableContract, AuthorizableContr
     {
         return [
             'dob' => 'date',
+            'email_verified_at' => 'datetime',
+            'password'          => 'hashed',
+        ];
+    }
+
+    public function getAge() : array
+    {
+        if (!$this->dob) {
+            return ['years'  => 0,
+                    'months' => 0
+            ];
+        }
+
+        $now = now();
+        $years = $this->dob->diffInYears($now);
+        $months = $this->dob->copy()
+            ->addYears($years)
+            ->diffInMonths($now);
+
+        return [
+            'years'  => $years,
+            'months' => $months
         ];
     }
 
@@ -47,4 +69,6 @@ class Patient extends Base implements AuthenticatableContract, AuthorizableContr
     {
         return $this->hasMany(Appointment::class);
     }
+    
+    
 }
