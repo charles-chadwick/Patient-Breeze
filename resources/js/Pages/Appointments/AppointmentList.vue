@@ -29,8 +29,9 @@ const appointments = computed ( () => props.appointments.data );
           >
             <UserDetails
                 :user="user"
-                :show_role="false"
-                display_mode="initials"
+                :show-avatar="false"
+                :display_mode="'initials'"
+
             />
           </span>
         </div>

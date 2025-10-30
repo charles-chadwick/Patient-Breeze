@@ -26,9 +26,9 @@ defineProps ( { patients: Array | Object })
           <li
               v-for="patient in patients.data"
               :key="patient.id"
-              class="flex justify-between gap-x-2 py-2"
+              class="gap-x-2 py-2"
           >
-            <PatientDetails :patient="patient" />
+            <PatientDetails :compact="true" :patient="patient" />
           </li>
         </ul>
       </template>

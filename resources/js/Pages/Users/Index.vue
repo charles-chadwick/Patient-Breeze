@@ -15,7 +15,7 @@ defineProps ( { users: Array | Object } )
     <Card>
       <template #title>Users</template>
       <template #subtitle>
-        <Search :url="UserController.index().url"/>
+        <Search :url="UserController.index().url" />
       </template>
       <template #content>
         <ul
@@ -25,9 +25,14 @@ defineProps ( { users: Array | Object } )
           <li
               v-for="user in users.data"
               :key="user.id"
-              class="flex justify-between gap-x-2 py-2"
+              class="gap-x-2 py-2"
           >
-            <UserDetails :user="user" />
+            <UserDetails
+                :user="user"
+                :show_details="true"
+                :compact="false"
+                avatar_size="sm"
+            />
           </li>
         </ul>
       </template>

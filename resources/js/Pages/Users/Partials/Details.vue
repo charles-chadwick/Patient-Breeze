@@ -1,27 +1,37 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
-
-import { computed } from "vue";
+import Avatar from "../../../components/Avatar.vue";
 
 const props = defineProps ( {
   user: Object,
-  display_mode: {
-    type: String,
-    default: 'full_name',
-    validator: value => [ 'full_name', 'initials' ].includes ( value )
-  },
-  show_role: { type: Boolean, default: true },
-} )
+  compact: { type: Boolean, default: true },
+  displayMode: { type: String, default: 'full_name' },
+  showAvatar: { type: Boolean, default: true },
+} );
 
-const user = computed ( () => props.user )
 
 </script>
 
 <template>
   <div class="flex justify-between items-start">
-    <div class="text-sm">
-      <p>{{ display_mode === 'full_name' ? user.attributes.full_name : user.attributes.initials }}</p>
-      <p v-if="show_role">{{ user.attributes.role }}</p>
+    <div>
+      <h1
+      :class="[
+          compact ? 'text-base font-normal' : 'text-lg font-bold',
+      ]"
+      >{{ displayMode === 'initials' ? user.attributes.initials : user.attributes.full_name }}
+      </h1>
+      <div v-if="!compact">
+        <p>{{ user.attributes.role }}</p>
+        <p>{{ user.attributes.email }}</p>
+      </div>
+      <slot name="details" />
+    </div>
+    <div v-if="showAvatar">
+      <Avatar
+          :avatar="user.attributes.avatar"
+          :size="compact ? 'sm' : 'md'"
+      />
     </div>
   </div>
 </template>

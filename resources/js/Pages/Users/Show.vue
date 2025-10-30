@@ -13,7 +13,12 @@ const props = defineProps ( { user: Object } )
     <Card>
 
       <template #content>
-        <UserDetails :user="user.data" />
+        <UserDetails
+            :user="user"
+            :show_details="true"
+            :compact="false"
+            avatar_size="sm"
+        />
       </template>
     </Card>
   </AuthenticatedLayout>
