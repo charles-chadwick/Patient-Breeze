@@ -6,14 +6,38 @@ import PatientController from "../../actions/App/Http/Controllers/PatientControl
 import { Card } from 'primevue';
 import { Link } from "@inertiajs/vue3";
 import Status from "./Partials/Status.vue";
+import { ref, watch } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 defineProps ( { patients: Array | Object })
+
+const search = ref ( '' )
+
+watch ( search, ( value ) => {
+  router.get (
+      '/patients',
+      { search: value },
+      {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+      }
+  )
+} )
 </script>
 
 <template>
   <AuthenticatedLayout>
     <Card>
       <template #title>Patients</template>
+      <template #subtitle>
+        <input
+            v-model="search"
+            type="text"
+            placeholder="Search patients..."
+            class="w-full rounded-md border-0 py-3 px-2.5 text-sm ring-1 ring-inset ring-darker-300 placeholder:text-darker-400 focus:ring-2 focus:ring-inset focus:ring-accent-600"
+        />
+      </template>
       <template #content>
         <ul
             role="list"

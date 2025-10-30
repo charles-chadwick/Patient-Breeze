@@ -9,11 +9,7 @@ use App\Http\Resources\PatientResource;
 use App\Models\Appointment;
 use App\Models\Patient;
 use Hash;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class PatientController extends Controller
 {
@@ -21,6 +17,7 @@ class PatientController extends Controller
     {
         $patients = Patient::with('created_by')
             ->orderBy(request('sort_by', 'id'), request('sort_direction', 'asc'))
+            ->search(request('search'))
             ->paginate()
             ->withQueryString();
 

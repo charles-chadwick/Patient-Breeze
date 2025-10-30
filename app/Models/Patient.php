@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use function request;
+use function strlen;
 
 class Patient extends Base implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
@@ -68,6 +70,18 @@ class Patient extends Base implements AuthenticatableContract, AuthorizableContr
     public function appointments() : HasMany
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    public function scopeSearch($query, $search) {
+        $query->when(strlen($search) > 2, function ($query) {
+            $query->whereAny([
+                'first_name',
+                'last_name',
+                'email',
+                'dob',
+                'id'
+            ], 'like', '%'.request('search').'%');
+        });
     }
     
     
