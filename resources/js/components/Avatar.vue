@@ -4,31 +4,21 @@ import { Dialog } from "primevue";
 import { FileUpload } from "primevue";
 import { ref } from "vue";
 
-const props = defineProps ( { avatar: String, on: Object } )
-const on = props.on;
-let avatar = props.avatar;
-
-const form = useForm ( {
-  on_type: on.type,
-  on_id: on.id,
-  avatar: null,
+const props = defineProps ( {
+  avatar: String,
+  size: { type: String, default: 'xs' },
+  show_large_avatar: { type: Boolean, default: false }
 } )
-
-const uploadAvatar = () => {
-  form.post ( '/avatar/upload' )
-}
-
-
-const removeAvatar = () => {
-  form.post ( '/avatar/remove' )
-  avatar = null;
-}
-
+const size = props.size;
+const avatar = props.avatar;
+const show_large_avatar = props.show_large_avatar;
 
 const showDialog = ref ( false )
 
 const handleShowDialog = () => {
-  showDialog.value = true;
+  if (show_large_avatar) {
+    showDialog.value = true;
+  }
 }
 
 const handleCloseDialog = () => {
@@ -39,33 +29,24 @@ const handleCloseDialog = () => {
 
 <template>
   <div>
-    <div v-if="avatar">
+    <div>
       <img
           @click="handleShowDialog"
           alt="Avatar"
-          class="rounded-2xl size-[128px] mx-auto"
+          title="AVATAR!"
+          :class="[
+            'rounded-2xl mx-auto border-2 border-darker-300',
+            show_large_avatar && 'hover:border-primary-600',
+            size === 'xs' && 'size-[48px]',
+            size === 'sm' && 'size-[96px]',
+            size === 'md' && 'size-[128px]',
+            size === 'lg' && 'size-[160px]',
+            size === 'xl' && 'size-[192px]'
+          ]"
           :src="avatar"
       />
-      <Button
-          @click="removeAvatar"
-          class="flex-none cursor-pointer"
-      >
-        Remove This Avatar
-      </Button>
     </div>
-    <div v-else>
-      <FileUpload
-          :maxFileSize="2000000"
-          accept="image/*"
-          :customUpload="true"
-          @uploader="uploadAvatar"
-          @select="(e) => form.avatar = e.files[0]"
-      >
-        <template #empty>
-          <p>Drag and drop image here to upload.</p>
-        </template>
-      </FileUpload>
-    </div>
+
   </div>
   <Dialog
       modal
@@ -79,7 +60,6 @@ const handleCloseDialog = () => {
           class="rounded-xl border-2 border-darker-300 hover:border-primary-600"
           alt="Avatar"
       />
-
     </template>
   </Dialog>
 </template>

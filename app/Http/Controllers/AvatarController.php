@@ -22,7 +22,7 @@ class AvatarController extends Controller
         $model->addMediaFromRequest('avatar')
             ->toMediaCollection('avatars');
 
-        return back()->with('message', 'Avatar uploaded successfully');
+        return back()->with('message', 'AvatarForm uploaded successfully');
     }
 
     public function remove(Request $request)
@@ -30,10 +30,10 @@ class AvatarController extends Controller
         if (Media::where('model_type', "App\\Models\\{$request->on_type}")
             ->where('model_id', $request->on_id)
             ->delete()) {
-            return back()->with('message', 'Avatar removed successfully');
+            return back()->with('message', 'AvatarForm removed successfully');
         }
 
-        return back()->with('message', 'Avatar not found');
+        return back()->with('message', 'AvatarForm not found');
 
 
     }

@@ -5,7 +5,7 @@ import { ref } from "vue";
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import AppointmentList from "../Appointments/AppointmentList.vue";
 import Status from "./Partials/Status.vue";
-import Avatar from "../../components/Avatar.vue";
+import AvatarForm from "../../components/AvatarForm.vue";
 import { Card } from "primevue";
 
 const props = defineProps ( { patient: Object, appointments: Object | Array } )
@@ -44,7 +44,7 @@ const patient = props.patient.data;
           </div>
 
           <!-- avatar information -->
-          <Avatar
+          <AvatarForm
               :avatar="patient.attributes.avatar"
               :on="{ type: 'Patient', id: patient.id}"
           />

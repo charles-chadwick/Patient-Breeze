@@ -2,7 +2,7 @@
 <script setup>
 import { computed } from "vue";
 import Status from "./Partials/Status.vue";
-import Profile from "../Users/Partials/Profile.vue";
+import Details from "../Users/Partials/Details.vue";
 
 const props = defineProps ( { appointments: Object | Array } )
 const appointments = computed ( () => props.appointments.data );
@@ -23,7 +23,7 @@ const appointments = computed ( () => props.appointments.data );
         <div v-html="appointment.attributes.description" ></div>
         <div class="flex ml-4">
           <span class="-ml-2" v-for="user in appointment.relationships.users" :key="user.id">
-            <Profile :show_name="false" :user="user" />
+            <Details :show_name="false" :user="user" />
           </span>
         </div>
       </div>

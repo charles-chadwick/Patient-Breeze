@@ -1,8 +1,8 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
-import Avatar from "../../components/Avatar.vue";
 import { Card } from "primevue";
+import UserDetails from "./Partials/Details.vue";
 const props = defineProps ( { user: Object } )
 
 
@@ -13,15 +13,7 @@ const props = defineProps ( { user: Object } )
     <Card>
 
       <template #content>
-        <div class="flex justify-between items-start">
-          <div>
-            <h1 class="p-card-title">{{ user.data.attributes.full_name }}'s Profile</h1>
-            <p><span class="font-bold">Name:</span> {{ user.data.attributes.full_name }}</p>
-            <p><span class="font-bold">Role:</span> {{ user.data.attributes.role }}</p>
-            <p><span class="font-bold">Created:</span> {{ user.data.attributes.created_at }}</p>
-          </div>
-          <Avatar :avatar="user.data.attributes.avatar" :on="{ type: 'User', id: user.data.id}" />
-        </div>
+        <UserDetails :user="user.data" />
       </template>
     </Card>
   </AuthenticatedLayout>

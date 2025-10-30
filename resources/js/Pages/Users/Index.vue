@@ -4,8 +4,8 @@ import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import Pagination from "../../components/Pagination.vue";
 import UserController from "../../actions/App/Http/Controllers/UserController";
 import { Card } from 'primevue';
-import { Link } from "@inertiajs/vue3";
 import Search from "../../components/Search.vue";
+import UserDetails from "./Partials/Details.vue";
 
 defineProps ( { users: Array | Object } )
 </script>
@@ -27,23 +27,7 @@ defineProps ( { users: Array | Object } )
               :key="user.id"
               class="flex justify-between gap-x-2 py-2"
           >
-            <div class="w-full">
-              <h2 class="font-bold">
-                <Link :href="UserController.profile(user.id)">
-                  {{ user.attributes.full_name }}
-                </Link>
-              </h2>
-              <p>{{ user.attributes.role }}</p>
-              <p>{{ user.attributes.email }}</p>
-            </div>
-            <div class="shrink-0">
-              <img
-                  :src="user.attributes.avatar"
-                  :alt="user.attributes.full_name + ' avatar'"
-                  :title="user.attributes.full_name + ' avatar'"
-                  class="w-16 h-16 rounded-xl"
-              />
-            </div>
+            <UserDetails :user="user" />
           </li>
         </ul>
       </template>

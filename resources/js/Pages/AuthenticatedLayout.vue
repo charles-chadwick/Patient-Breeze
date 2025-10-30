@@ -9,7 +9,7 @@ import AuthController from '../actions/App/Http/Controllers/AuthController';
 import UserController from '../actions/App/Http/Controllers/UserController';
 import PatientController from "../actions/App/Http/Controllers/PatientController";
 
-import UserProfile from "./Users/Partials/Profile.vue";
+import UserDetails from "./Users/Partials/Details.vue";
 import UserCreate from "./Users//Create.vue";
 
 
@@ -121,7 +121,7 @@ const logout = () => {
             class="relative inline-block"
         >
           <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md py-2 text-sm font-semibold hover:text-primary-400 cursor-pointer">
-            <UserProfile :user="user.data" />
+<!--            <UserDetails :user="user.data" />-->
             <ChevronDownIcon
                 class="-mr-1 size-5 text-darker-200 mt-2"
                 aria-hidden="true"
