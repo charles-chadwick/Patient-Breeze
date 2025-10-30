@@ -1,11 +1,10 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
-import { ref } from "vue";
 
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import AppointmentList from "../Appointments/AppointmentList.vue";
-import Status from "./Partials/Status.vue";
-import AvatarForm from "../../components/AvatarForm.vue";
+import Status from "../../components/Status.vue";
+import Avatar from "../../components/Avatar.vue";
 import { Card } from "primevue";
 
 const props = defineProps ( { patient: Object, appointments: Object | Array } )
@@ -37,16 +36,17 @@ const patient = props.patient.data;
             </p>
 
             <p><span class="font-bold">Status:</span>
-              <Status :status="patient.attributes.status" class="ml-2" />
+              <Status type="patient" :status="patient.attributes.status" class="ml-2" />
             </p>
 
             <p><span class="font-bold">Created:</span> {{ patient.attributes.created_at }}</p>
           </div>
 
           <!-- avatar information -->
-          <AvatarForm
+          <Avatar
               :avatar="patient.attributes.avatar"
-              :on="{ type: 'Patient', id: patient.id}"
+              size="xl"
+              :show_large_avatar="true"
           />
         </div>
       </template>

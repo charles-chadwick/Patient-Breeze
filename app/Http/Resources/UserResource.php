@@ -34,6 +34,7 @@ class UserResource extends JsonResource
                 'created_at' => $this->created_at?->format('m/d/Y h:i A'),
                 'avatar' => $this?->avatar,
                 'full_name' => $this->full_name,
+                'initials' => $this->initials
             ],
             'relationships' => [
                 'created_by' => new UserResource($this->whenLoaded('created_by')),
