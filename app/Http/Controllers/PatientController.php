@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Gender;
+use App\Enums\PatientStatus;
 use App\Http\Requests\PatientRequest;
 use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\PatientResource;
@@ -10,6 +11,7 @@ use App\Models\Appointment;
 use App\Models\Patient;
 use Hash;
 use Inertia\Inertia;
+use PHPUnit\Logging\OpenTestReporting\Status;
 use function request;
 
 class PatientController extends Controller
@@ -29,16 +31,11 @@ class PatientController extends Controller
 
     public function create()
     {
-        $genders = collect(Gender::cases())
-            ->map(function ($role) {
-                return [
-                    'value' => $role->value,
-                    'name'  => $role->name,
-                ];
-            })
-            ->toArray();
-
-        return Inertia::render('Patients/Create', ['genders' => $genders]);
+        return Inertia::render('Patients/Create', [
+            'patient'  => new PatientResource(new Patient()),
+            'genders'  => Gender::toArray(),
+            'statuses' => PatientStatus::toArray(),
+        ]);
     }
 
     public function store(PatientRequest $request)

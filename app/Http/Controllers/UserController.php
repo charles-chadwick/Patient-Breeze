@@ -28,16 +28,7 @@ class UserController extends Controller
 
     public function create()
     {
-        $user_roles = collect(UserRole::cases())
-            ->map(function ($role) {
-                return [
-                    'value' => $role->value,
-                    'name' => $role->name,
-                ];
-            })
-            ->toArray();
-
-        return Inertia::render('Users/Create', ['user_roles' => $user_roles]);
+        return Inertia::render('Users/Create', ['user_roles' => UserRole::toArray()]);
     }
 
     public function store(UserRequest $request)

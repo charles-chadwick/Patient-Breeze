@@ -2,9 +2,13 @@
 
 namespace App\Enums;
 
+use App\Traits\EnumToArray;
+
 enum Gender: string
 {
-    case Male = 'Male';
-    case Female = 'Female';
+    use EnumToArray;
+
+    case Male    = 'Male';
+    case Female  = 'Female';
     case Unknown = 'Unknown';
 }

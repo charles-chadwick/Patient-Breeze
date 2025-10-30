@@ -2,10 +2,14 @@
 
 namespace App\Enums;
 
+use App\Traits\EnumToArray;
+
 enum PatientStatus: string
 {
-    case Active = 'Active';
-    case Inactive = 'Inactive';
-    case Deceased = 'Deceased';
+    use EnumToArray;
+
+    case Active      = 'Active';
+    case Inactive    = 'Inactive';
+    case Deceased    = 'Deceased';
     case Prospective = 'Prospective';
 }
