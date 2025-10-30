@@ -10,14 +10,24 @@ use App\Models\Appointment;
 use App\Models\Patient;
 use Hash;
 use Inertia\Inertia;
+use function request;
 
 class PatientController extends Controller
 {
     public function index()
     {
+//        if (request('filter') != '') {
+//            dd(request()->all());
+//        }
         $patients = Patient::with('created_by')
             ->orderBy(request('sort_by', 'id'), request('sort_direction', 'asc'))
             ->search(request('search'))
+            ->when(request('filter'), function ($query) {
+                foreach(request('filter') as $filter => $value) {
+                    $query->where($filter, $value);
+                }
+
+            })
             ->paginate()
             ->withQueryString();
 

@@ -3,7 +3,7 @@
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import Pagination from "../../components/Pagination.vue";
 import PatientController from "../../actions/App/Http/Controllers/PatientController";
-import { Card } from 'primevue';
+import { Card, InputText, Button, Select } from 'primevue';
 import { Link } from "@inertiajs/vue3";
 import Status from "./Partials/Status.vue";
 import { ref, watch } from 'vue';
@@ -12,11 +12,18 @@ import { router } from '@inertiajs/vue3';
 defineProps ( { patients: Array | Object })
 
 const search = ref ( '' )
+const filter = ref ( { status: null, gender: null } )
 
-watch ( search, ( value ) => {
+const clearSearch = () => {
+  search.value = ''
+}
+
+watch ( [ search, filter ], ( [ searchValue] ) => {
   router.get (
       '/patients',
-      { search: value },
+      {
+        search: searchValue,
+      },
       {
         preserveState: true,
         preserveScroll: true,
@@ -30,13 +37,25 @@ watch ( search, ( value ) => {
   <AuthenticatedLayout>
     <Card>
       <template #title>Patients</template>
-      <template #subtitle>
-        <input
-            v-model="search"
-            type="text"
-            placeholder="Search patients..."
-            class="w-full rounded-md border-0 py-3 px-2.5 text-sm ring-1 ring-inset ring-darker-300 placeholder:text-darker-400 focus:ring-2 focus:ring-inset focus:ring-accent-600"
-        />
+      <template #subtitle class="flex justify-between items-center">
+        <div class="flex gap-2">
+          <InputText
+              v-model="search"
+              type="text"
+              placeholder="Search patients..."
+              class="w-full"
+          />
+          <Button
+              v-bind:disabled="search === ''"
+              icon="pi pi-times"
+              severity="secondary"
+              @click="clearSearch"
+              aria-label="Clear search"
+          />
+        </div>
+        
+        
+        
       </template>
       <template #content>
         <ul
