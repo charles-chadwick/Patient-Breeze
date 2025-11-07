@@ -18,12 +18,10 @@ const uploadAvatar = () => {
   form.post ( '/avatar/upload' )
 }
 
-
 const removeAvatar = () => {
   form.post ( '/avatar/remove' )
   avatar = null;
 }
-
 
 const showDialog = ref ( false )
 
@@ -43,7 +41,7 @@ const handleCloseDialog = () => {
       <img
           @click="handleShowDialog"
           alt="Avatar"
-          class="rounded-2xl size-[128px] mx-auto"
+          class="rounded-2xl size-[128px] mx-auto border-2 border-darker-300 hover:border-primary-600"
           :src="avatar"
       />
       <Button
