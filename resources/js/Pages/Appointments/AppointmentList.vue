@@ -2,12 +2,14 @@
 <script setup>
 import { computed } from "vue";
 import Details from "./Partials/Details.vue";
+import Create from "./Create.vue";
 
 const props = defineProps ( { appointments: Object | Array } )
 const appointments = computed ( () => props.appointments.data );
 </script>
 
 <template>
+
   <ul
       role="list"
       class="divide-y divide-darker-200"

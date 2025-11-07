@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\PatientController;
@@ -108,6 +109,29 @@ Route::middleware('auth')
             'destroy',
         ])
             ->name('patients.delete');
+    });
+
+Route::middleware('auth')
+    ->prefix('appointments')
+    ->group(function () {
+
+        Route::get('/', [
+            AppointmentController::class,
+            'index',
+        ])
+            ->name('appointments.index');
+
+        Route::get('/create', [
+            AppointmentController::class,
+            'create',
+        ])
+            ->name('appointments.create');
+
+        Route::post('/store', [
+            AppointmentController::class,
+            'store',
+        ])
+            ->name('appointments.store');
     });
 
 Route::prefix('avatar')
