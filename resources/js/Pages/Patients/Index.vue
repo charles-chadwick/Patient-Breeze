@@ -3,13 +3,13 @@
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import Pagination from "../../components/Pagination.vue";
 import PatientController from "../../actions/App/Http/Controllers/PatientController";
-import { Card } from 'primevue';
+import { Card, InputText } from 'primevue';
 import { Link } from "@inertiajs/vue3";
 import Status from "./Partials/Status.vue";
 import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
 
-defineProps ( { patients: Array | Object })
+defineProps ( { patients: Array | Object } )
 
 const search = ref ( '' )
 
@@ -31,11 +31,10 @@ watch ( search, ( value ) => {
     <Card>
       <template #title>Patients</template>
       <template #subtitle>
-        <input
+        <InputText
             v-model="search"
-            type="text"
-            placeholder="Search patients..."
-            class="w-full rounded-md border-0 py-3 px-2.5 text-sm ring-1 ring-inset ring-darker-300 placeholder:text-darker-400 focus:ring-2 focus:ring-inset focus:ring-accent-600"
+            placeholder="Search users..."
+            class="w-full"
         />
       </template>
       <template #content>
@@ -54,8 +53,11 @@ watch ( search, ( value ) => {
                   {{ patient.attributes.full_name }}
                 </Link>
               </h2>
-              <p>{{ patient.attributes.dob }} - {{ patient.attributes.age.years }} Years {{  patient.attributes.age.months }} Months</p>
-              <p><Status :status="patient.attributes.status" /></p>
+              <p>{{ patient.attributes.dob }} - {{ patient.attributes.age.years }} Years
+                 {{ patient.attributes.age.months }} Months</p>
+              <p>
+                <Status :status="patient.attributes.status" />
+              </p>
             </div>
             <div class="shrink-0">
               <img
