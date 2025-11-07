@@ -8,6 +8,7 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use App\Traits\IsPerson;
+use App\Traits\Searchable;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -22,12 +23,14 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use function request;
+use function strlen;
 
 class User extends Base implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
     use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
     use HasFactory, Notifiable;
-    use IsPerson;
+    use IsPerson, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -65,6 +68,13 @@ class User extends Base implements AuthenticatableContract, AuthorizableContract
         'password'          => 'hashed',
     ];
 
+    public array $search_fields = [
+        'first_name',
+        'last_name',
+        'email',
+        'id'
+    ];
+
     public function appointments() : BelongsToMany
     {
         return $this->belongsToMany(Appointment::class, 'appointment_users', 'user_id', 'appointment_id');
@@ -74,4 +84,6 @@ class User extends Base implements AuthenticatableContract, AuthorizableContract
     {
         return $query->where('role', '!=', UserRole::SuperAdmin);
     }
+
+
 }

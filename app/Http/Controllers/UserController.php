@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use function request;
 
 class UserController extends Controller
 {
@@ -19,6 +20,7 @@ class UserController extends Controller
     {
         $users = User::with('created_by')
             ->orderBy(request('sort_by', 'id'), request('sort_direction', 'asc'))
+            ->search(request('search'))
             ->paginate()
             ->withQueryString();
 

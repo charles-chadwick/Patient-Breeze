@@ -3,16 +3,33 @@
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import Pagination from "../../components/Pagination.vue";
 import UserController from "../../actions/App/Http/Controllers/UserController";
-import { Card } from 'primevue';
-import { Link } from "@inertiajs/vue3";
+import { Card, InputText } from 'primevue';
+import { Link, router } from "@inertiajs/vue3";
+import { ref, watch } from 'vue'
 
 defineProps ( { users: Array | Object } )
+const search = ref ( '' );
+
+watch ( search, ( value ) => {
+  router.get (
+      UserController.index().url,
+      { search: value },
+      { preserveState: true, preserveScroll: true }
+  )
+} )
 </script>
 
 <template>
   <AuthenticatedLayout>
     <Card>
       <template #title>Users</template>
+      <template #subtitle>
+        <InputText
+            v-model="search"
+            placeholder="Search users..."
+            class="w-full"
+        />
+      </template>
       <template #content>
         <ul
             role="list"
