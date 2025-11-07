@@ -1,7 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { Dialog } from "primevue";
-import { FileUpload } from "primevue";
+import { Dialog, Button, FileUpload} from "primevue";
 import { ref } from "vue";
 
 const props = defineProps ( { avatar: String, on: Object } )
