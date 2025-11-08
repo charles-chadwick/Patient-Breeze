@@ -20,7 +20,7 @@ const props = defineProps({appointment: Object})
     <p class="font-bold">{{ appointment.attributes.date }}</p>
     <p>{{ appointment.attributes.from }} - {{ appointment.attributes.to }}</p>
     <p>{{ appointment.attributes.type }}</p>
-    <Status :status="appointment.attributes.status" />
+    <Status :status="appointment.attributes.status" type="appointment" />
   </div>
 </template>
 
