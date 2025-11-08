@@ -23,7 +23,7 @@ class Patient extends Base implements AuthenticatableContract, AuthorizableContr
     use HasFactory, Notifiable;
     use IsPerson, Searchable;
 
-    const SEARCH_FIELDS = [
+    public array $search_fields = [
         'first_name',
         'last_name',
         'email',
