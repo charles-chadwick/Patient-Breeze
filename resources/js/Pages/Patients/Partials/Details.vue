@@ -48,6 +48,7 @@ const props = defineProps ( {
           :description="patient.attributes.full_name + ' Avatar'"
           :show_large="!compact"
           :size="compact ? 'md' : 'lg'"
+          :on="{ type: 'Patient', id: patient.id}"
       />
     </div>
   </div>

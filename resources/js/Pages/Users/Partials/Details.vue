@@ -31,6 +31,8 @@ const props = defineProps ( {
       <Avatar
           :avatar="user.attributes.avatar"
           :size="compact ? 'sm' : 'md'"
+          :show_large="!compact"
+          :on="{ type: 'User', id: user.id}"
       />
     </div>
   </div>
