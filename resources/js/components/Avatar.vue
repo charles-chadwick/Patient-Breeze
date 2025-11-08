@@ -1,24 +1,31 @@
 <script setup>
-import { Button, Dialog } from "primevue";
+import { useForm } from "@inertiajs/vue3";
+import { Dialog, Button, FileUpload} from "primevue";
 import { ref } from "vue";
 
-const props = defineProps ( {
-  avatar: String,
-  size: { type: String, default: 'xs' },
-  show_large: { type: Boolean, default: false },
-  description: { type: String, required: false }
+const props = defineProps ( { avatar: String, on: Object } )
+const on = props.on;
+let avatar = props.avatar;
+
+const form = useForm ( {
+  on_type: on.type,
+  on_id: on.id,
+  avatar: null,
 } )
-const size = props.size;
-const avatar = props.avatar;
-const show_large_avatar = props.show_large;
-const description = props.description;
+
+const uploadAvatar = () => {
+  form.post ( '/avatar/upload' )
+}
+
+const removeAvatar = () => {
+  form.post ( '/avatar/remove' )
+  avatar = null;
+}
 
 const showDialog = ref ( false )
 
 const handleShowDialog = () => {
-  if ( show_large_avatar ) {
-    showDialog.value = true;
-  }
+  showDialog.value = true;
 }
 
 const handleCloseDialog = () => {
@@ -29,25 +36,33 @@ const handleCloseDialog = () => {
 
 <template>
   <div>
-    <div>
+    <div v-if="avatar">
       <img
           @click="handleShowDialog"
           alt="Avatar"
-          title="AVATAR!"
-          :class="[
-            'rounded-2xl mx-auto border-2 border-darker-300',
-            show_large_avatar && 'hover:border-primary-600',
-            size === 'xs' && 'size-[48px]',
-            size === 'sm' && 'size-[64px]',
-            size === 'md' && 'size-[98px]',
-            size === 'lg' && 'size-[128px]',
-            size === 'xl' && 'size-[144px]',
-            size === 'xl' && 'size-[144px]'
-          ]"
+          class="rounded-2xl size-[128px] mx-auto border-2 border-darker-300 hover:border-primary-600"
           :src="avatar"
       />
+      <Button
+          @click="removeAvatar"
+          class="flex-none cursor-pointer"
+      >
+        Remove This Avatar
+      </Button>
     </div>
-
+    <div v-else>
+      <FileUpload
+          :maxFileSize="2000000"
+          accept="image/*"
+          :customUpload="true"
+          @uploader="uploadAvatar"
+          @select="(e) => form.avatar = e.files[0]"
+      >
+        <template #empty>
+          <p>Drag and drop image here to upload.</p>
+        </template>
+      </FileUpload>
+    </div>
   </div>
   <Dialog
       modal
@@ -55,30 +70,13 @@ const handleCloseDialog = () => {
       v-model:visible="showDialog"
   >
     <template #container>
-
-
-      <div
+      <img
           @click="handleCloseDialog"
-          class="rounded-xl border-2 px-1 border-white hover:border-primary-600"
-      >
-        <div class="rounded-t-xl bg-white py-2 flex items-center justify-between">
-          <p class="px-1 w-full text-center">{{ description }}
+          :src="avatar === '' ?? '/avatars/default.jpg'"
+          class="rounded-xl border-2 border-darker-300 hover:border-primary-600"
+          alt="Avatar"
+      />
 
-          </p>
-          <Button
-              icon="pi pi-times"
-              severity="secondary"
-              aria-label="Clear search"
-              size="small"
-              class="shrink-0"
-          />
-        </div>
-        <img
-            class="rounded-md border border-darker-300"
-            :src="avatar"
-            alt="Avatar"
-        />
-      </div>
     </template>
   </Dialog>
 </template>

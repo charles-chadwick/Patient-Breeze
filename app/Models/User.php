@@ -16,23 +16,21 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use function request;
+use function strlen;
 
 class User extends Base implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
     use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
     use HasFactory, Notifiable;
     use IsPerson, Searchable;
-
-    const SEARCH_FIELDS = [
-        'first_name',
-        'last_name',
-        'email',
-        'id'
-    ];
 
     /**
      * The attributes that are mass assignable.
@@ -70,13 +68,22 @@ class User extends Base implements AuthenticatableContract, AuthorizableContract
         'password'          => 'hashed',
     ];
 
+    public array $search_fields = [
+        'first_name',
+        'last_name',
+        'email',
+        'id'
+    ];
+
     public function appointments() : BelongsToMany
     {
         return $this->belongsToMany(Appointment::class, 'appointment_users', 'user_id', 'appointment_id');
     }
 
-    public function scopeClinicians(Builder $query) : void
+    public function scopeClinicians(Builder $query)
     {
-        $query->where('role', '!=', UserRole::SuperAdmin);
+        return $query->where('role', '!=', UserRole::SuperAdmin);
     }
+
+
 }

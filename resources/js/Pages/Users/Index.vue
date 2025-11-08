@@ -3,11 +3,20 @@
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import Pagination from "../../components/Pagination.vue";
 import UserController from "../../actions/App/Http/Controllers/UserController";
-import { Card } from 'primevue';
-import Search from "../../components/Search.vue";
-import UserDetails from "./Partials/Details.vue";
+import { Card, InputText } from 'primevue';
+import { Link, router } from "@inertiajs/vue3";
+import { ref, watch } from 'vue'
 
 defineProps ( { users: Array | Object } )
+const search = ref ( '' );
+
+watch ( search, ( value ) => {
+  router.get (
+      UserController.index().url,
+      { search: value },
+      { preserveState: true, preserveScroll: true }
+  )
+} )
 </script>
 
 <template>
@@ -15,7 +24,11 @@ defineProps ( { users: Array | Object } )
     <Card>
       <template #title>Users</template>
       <template #subtitle>
-        <Search :url="UserController.index().url" />
+        <InputText
+            v-model="search"
+            placeholder="Search users..."
+            class="w-full"
+        />
       </template>
       <template #content>
         <ul
@@ -25,14 +38,25 @@ defineProps ( { users: Array | Object } )
           <li
               v-for="user in users.data"
               :key="user.id"
-              class="gap-x-2 py-2"
+              class="flex justify-between gap-x-2 py-2"
           >
-            <UserDetails
-                :user="user"
-                :show_details="true"
-                :compact="false"
-                avatar_size="sm"
-            />
+            <div class="w-full">
+              <h2 class="font-bold">
+                <Link :href="UserController.profile(user.id)">
+                  {{ user.attributes.full_name }}
+                </Link>
+              </h2>
+              <p>{{ user.attributes.role }}</p>
+              <p>{{ user.attributes.email }}</p>
+            </div>
+            <div class="shrink-0">
+              <img
+                  :src="user.attributes.avatar"
+                  :alt="user.attributes.full_name + ' avatar'"
+                  :title="user.attributes.full_name + ' avatar'"
+                  class="w-16 h-16 rounded-xl"
+              />
+            </div>
           </li>
         </ul>
       </template>

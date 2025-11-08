@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use function request;
 
 class UserController extends Controller
 {
@@ -19,7 +20,7 @@ class UserController extends Controller
     {
         $users = User::with('created_by')
             ->orderBy(request('sort_by', 'id'), request('sort_direction', 'asc'))
-            ->searchAny(request('search'))
+            ->search(request('search'))
             ->paginate()
             ->withQueryString();
 
@@ -28,7 +29,16 @@ class UserController extends Controller
 
     public function create()
     {
-        return Inertia::render('Users/Create', ['user_roles' => UserRole::toArray()]);
+        $user_roles = collect(UserRole::cases())
+            ->map(function ($role) {
+                return [
+                    'value' => $role->value,
+                    'name' => $role->name,
+                ];
+            })
+            ->toArray();
+
+        return Inertia::render('Users/Create', ['user_roles' => $user_roles]);
     }
 
     public function store(UserRequest $request)
@@ -45,7 +55,7 @@ class UserController extends Controller
     {
         $user->load('created_by');
 
-        return Inertia::render('Users/Profile', ['user' => new UserResource($user)]);
+        return Inertia::render('Users/Show', ['user' => new UserResource($user)]);
     }
 
     public function edit(User $user) {}
