@@ -4,7 +4,7 @@ import { ref } from "vue";
 
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import AppointmentList from "../Appointments/AppointmentList.vue";
-import Status from "./Partials/Status.vue";
+import Status from "../../components/Status.vue";
 import Avatar from "../../components/Avatar.vue";
 import { Card } from "primevue";
 

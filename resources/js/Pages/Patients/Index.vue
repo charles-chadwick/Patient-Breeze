@@ -5,7 +5,7 @@ import Pagination from "../../components/Pagination.vue";
 import PatientController from "../../actions/App/Http/Controllers/PatientController";
 import { Card, InputText } from 'primevue';
 import { Link } from "@inertiajs/vue3";
-import Status from "./Partials/Status.vue";
+import Status from "../../components/Status.vue";
 import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
 

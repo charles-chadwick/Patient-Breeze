@@ -1,7 +1,7 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
-import Profile from "../../Users/Partials/Profile.vue";
-import Status from "./Status.vue";
+import Profile from "../../Users/Partials/Details.vue";
+import Status from "../../../components/Status.vue";
 
 const props = defineProps({appointment: Object})
 </script>
