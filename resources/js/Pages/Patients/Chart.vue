@@ -31,13 +31,18 @@ const patient = props.patient.data;
               {{ patient.attributes.last_name }}</p>
 
             <p><span class="font-bold">DOB:</span>
-              {{ patient.attributes.dob }} - {{ patient.attributes.age.years }} Years {{  patient.attributes.age.months }} Months</p>
+              {{ patient.attributes.dob }} - {{ patient.attributes.age.years }} Years {{
+                patient.attributes.age.months
+              }} Months</p>
             <p><span class="font-bold">Gender:</span> {{ patient.attributes.gender }}
               <span v-if="patient.attributes.gender_identity !== ''"> / {{ patient.attributes.gender_identity }}</span>
             </p>
 
             <p><span class="font-bold">Status:</span>
-              <Status :status="patient.attributes.status" class="ml-2" />
+              <Status
+                  :status="patient.attributes.status"
+                  class="ml-2"
+              />
             </p>
 
             <p><span class="font-bold">Created:</span> {{ patient.attributes.created_at }}</p>
@@ -55,6 +60,12 @@ const patient = props.patient.data;
     <!-- Start appointments -->
     <Card class="mt-4">
       <template #title>Appointments</template>
+      <template #subtitle>
+        <a
+            :href="`/appointments/create?patient_id=` + patient.attributes.id "
+            class="text-primary-500 hover:text-primary-600"
+        >Create Appointment</a>
+      </template>
       <template #content>
         <AppointmentList :appointments="appointments" />
       </template>

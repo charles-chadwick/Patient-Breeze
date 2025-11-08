@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\AppointmentStatus;
 use App\Http\Requests\AppointmentRequest;
 use App\Http\Resources\AppointmentResource;
+use App\Http\Resources\PatientResource;
 use App\Models\Appointment;
+use App\Models\Patient;
 use Inertia\Inertia;
 
 class AppointmentController extends Controller
@@ -17,9 +19,17 @@ class AppointmentController extends Controller
 
     public function create()
     {
+        $appointment = new Appointment();
+        if (request()->has('patient_id')) {
+            $appointment->where('patient_id', '=', request()->patient_id)
+                ->get()
+                ->first();
+        }
+
         return Inertia::render('Appointments/Create', [
-            'appointment' => new AppointmentResource(new Appointment()),
-            'statuses'    => AppointmentStatus::toArray()
+            'appointment' => new AppointmentResource($appointment),
+            'statuses'    => AppointmentStatus::toArray(),
+            'patients'    => PatientResource::collection(Patient::all()),
         ]);
     }
 
