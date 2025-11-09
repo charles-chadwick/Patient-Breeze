@@ -6,7 +6,7 @@ trait EnumToArray
     public static function toArray(): array
     {
         return array_map(
-            fn($case) => ['name'  => $case->name,
+            fn($case) => ['label'  => $case->name,
                           'value' => $case->value
             ],
             self::cases()

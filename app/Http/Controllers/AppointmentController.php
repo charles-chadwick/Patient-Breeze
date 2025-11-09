@@ -9,6 +9,7 @@ use App\Http\Resources\PatientResource;
 use App\Models\Appointment;
 use App\Models\Patient;
 use Inertia\Inertia;
+use function request;
 
 class AppointmentController extends Controller
 {
@@ -20,16 +21,12 @@ class AppointmentController extends Controller
     public function create()
     {
         $appointment = new Appointment();
-        if (request()->has('patient_id')) {
-            $appointment->where('patient_id', '=', request()->patient_id)
-                ->get()
-                ->first();
-        }
+        $patient = Patient::find(request()->patient_id);
 
         return Inertia::render('Appointments/Create', [
             'appointment' => new AppointmentResource($appointment),
             'statuses'    => AppointmentStatus::toArray(),
-            'patients'    => PatientResource::collection(Patient::all()),
+            'patient'     => new PatientResource($patient),
         ]);
     }
 

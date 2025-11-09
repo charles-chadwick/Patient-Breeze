@@ -19,7 +19,7 @@ const appointments = computed ( () => props.appointments.data );
         :key="appointment.id"
         class="flex justify-between gap-x-2 py-2"
     >
-  <Details :appointment="appointment" />
+      <Details :appointment="appointment" />
     </li>
   </ul>
 </template>

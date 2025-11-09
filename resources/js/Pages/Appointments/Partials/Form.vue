@@ -1,46 +1,5 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3'
-import { DatePicker, Select, InputText, Textarea, Button, Message } from 'primevue'
-import AppointmentController from "../../../actions/App/Http/Controllers/AppointmentController.ts";
 
-const props = defineProps ( {
-  action: {
-    type: String,
-    default: 'create',
-    validator: ( value ) => [ 'create', 'update' ].includes ( value )
-  },
-  appointment: {
-    type: Object,
-    default: () => ( {} )
-  },
-  patients: {
-    type: Array,
-    default: () => []
-  },
-  statuses: {
-    type: Array,
-    default: () => []
-  }
-} )
-
-
-const form = useForm ( {
-  patient_id: props.appointment.patient_id || '',
-  type: props.appointment.type || '',
-  start: props.appointment.start || null,
-  end: props.appointment.end || null,
-  status: props.appointment.status || '',
-  title: props.appointment.title || '',
-  description: props.appointment.description || ''
-} )
-
-const submit = () => {
-  if ( props.appointment.id ) {
-    form.put ( '/appointments/update', props.appointment.id )
-  } else {
-    form.post ('/appointments/store')
-  }
-}
 </script>
 <template>
   <form
@@ -50,15 +9,7 @@ const submit = () => {
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
       <div>
         <label class="block text-sm font-medium text-darker-700">Patient</label>
-        <Select
-            v-model="form.patient_id"
-            :options="patients"
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Select a patient"
-            class="w-full"
-            :class="{ 'p-invalid': form.errors.patient_id }"
-        />
+        For: {{ form.patient.attributes.full_name }}
         <Message
             severity="error"
             v-if="form.errors.patient_id"
