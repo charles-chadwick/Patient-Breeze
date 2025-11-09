@@ -18,13 +18,11 @@ const patient = props.patient.data;
     <!-- profile -->
     <Card>
       <template #content>
-        <div class="flex justify-between items-start">
 
           <!-- start information -->
           <Details :patient="patient" :show_avatar="true" />
 
           <!-- avatar information -->
-        </div>
       </template>
     </Card>
 

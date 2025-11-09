@@ -1,11 +1,18 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { Dialog, Button, FileUpload} from "primevue";
+import { Dialog, Button, FileUpload } from "primevue";
 import { ref } from "vue";
 
-const props = defineProps ( { avatar: String, on: Object } )
+const props = defineProps ( { avatar: String, on: Object, size: String, show_form: { type: Boolean, default: false} } )
 const on = props.on;
+const size = props.size;
 let avatar = props.avatar;
+
+const sizes = {
+  sm: 'size-16',
+  md: 'size-24',
+  lg: 'size-32',
+}
 
 const form = useForm ( {
   on_type: on.type,
@@ -40,10 +47,11 @@ const handleCloseDialog = () => {
       <img
           @click="handleShowDialog"
           alt="Avatar"
-          class="rounded-2xl size-[128px] mx-auto border-2 border-darker-300 hover:border-primary-600"
+          :class="['rounded-2xl mx-auto my-2 border-2 border-darker-300 hover:border-primary-600', sizes[size]]"
           :src="avatar"
       />
       <Button
+          v-if="show_form"
           @click="removeAvatar"
           class="flex-none cursor-pointer"
       >

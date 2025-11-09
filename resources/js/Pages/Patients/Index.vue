@@ -43,9 +43,8 @@ watch ( search, ( value ) => {
           <li
               v-for="patient in patients.data"
               :key="patient.id"
-              class="flex justify-between gap-x-2 py-2"
           >
-            <PatientDetails :user="patient" :compact="true" />
+            <PatientDetails :patient="patient" :compact="true" />
           </li>
         </ul>
       </template>

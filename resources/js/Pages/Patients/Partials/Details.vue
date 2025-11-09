@@ -20,14 +20,14 @@ const props = defineProps ( {
       ]"
       >
         <a
-            :href="PatientController.chart(patient.id).url"
+            :href="PatientController.chart(patient.attributes.id).url"
             class="hover:underline hover:text-primary-600"
         >
           <span v-if="compact">
           {{ patient.attributes.full_name }}
             </span>
           <span v-else>
-            {{  patient.attributes.first_name }} {{ patient.attributes.middle_name }} {{  patient.attributes.last_name}}
+            {{ patient.attributes.first_name }} {{ patient.attributes.middle_name }} {{ patient.attributes.last_name }}
           </span>
         </a>
       </h1>
@@ -48,7 +48,7 @@ const props = defineProps ( {
           :description="patient.attributes.full_name + ' Avatar'"
           :show_large="!compact"
           :size="compact ? 'md' : 'lg'"
-          :on="{ type: 'Patient', id: patient.id}"
+          :on="{ type: 'Patient', id: patient.attributes.id}"
       />
     </div>
   </div>
