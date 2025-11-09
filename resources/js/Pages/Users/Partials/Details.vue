@@ -9,7 +9,10 @@ const props = defineProps ( {
   showAvatar: { type: Boolean, default: true },
 } );
 
-
+const user = props.user.data;
+const compact = props.compact;
+const displayMode = props.displayMode;
+const showAvatar = props.showAvatar;
 </script>
 
 <template>
@@ -31,7 +34,6 @@ const props = defineProps ( {
       <Avatar
           :avatar="user.attributes.avatar"
           :size="compact ? 'sm' : 'md'"
-          :show_large="!compact"
           :on="{ type: 'User', id: user.id}"
       />
     </div>

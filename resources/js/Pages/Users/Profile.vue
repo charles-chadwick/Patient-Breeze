@@ -15,7 +15,6 @@ const props = defineProps ( { user: Object } )
       <template #content>
         <UserDetails
             :user="user"
-            :show_details="true"
             :compact="false"
             avatar_size="sm"
         />

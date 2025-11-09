@@ -3,7 +3,15 @@ import { useForm } from "@inertiajs/vue3";
 import { Dialog, Button, FileUpload } from "primevue";
 import { ref } from "vue";
 
-const props = defineProps ( { avatar: String, on: Object, size: String, show_form: { type: Boolean, default: false} } )
+const props = defineProps ( {
+  avatar: String,
+  on: Object,
+  size: String,
+  show_form: {
+    type: Boolean,
+    default: false
+  }
+} )
 const on = props.on;
 const size = props.size;
 let avatar = props.avatar;
