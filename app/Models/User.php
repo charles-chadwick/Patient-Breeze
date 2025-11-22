@@ -9,6 +9,7 @@ namespace App\Models;
 use App\Enums\UserRole;
 use App\Traits\IsPerson;
 use App\Traits\Searchable;
+use App\Traits\Selectable;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use LaravelIdea\Helper\App\Models\_IH_User_QB;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use function request;
@@ -30,7 +32,7 @@ class User extends Base implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
     use HasFactory, Notifiable;
-    use IsPerson, Searchable;
+    use IsPerson, Searchable, Selectable;
 
     /**
      * The attributes that are mass assignable.
@@ -80,7 +82,7 @@ class User extends Base implements AuthenticatableContract, AuthorizableContract
         return $this->belongsToMany(Appointment::class, 'appointment_users', 'user_id', 'appointment_id');
     }
 
-    public function scopeClinicians(Builder $query)
+    public function scopeStaff(Builder $query)
     {
         return $query->where('role', '!=', UserRole::SuperAdmin);
     }

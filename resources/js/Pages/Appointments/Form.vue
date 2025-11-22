@@ -2,6 +2,7 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import { DatePicker, Select, InputText, Textarea, Button, Message } from 'primevue'
+import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 const props = defineProps ( {
   action: {
     type: String,
@@ -10,7 +11,8 @@ const props = defineProps ( {
   },
   appointment: Object,
   patient: Object,
-  statuses: Array
+  statuses: Array,
+  users: Array 
 } )
 
 const form = useForm ( {
@@ -20,8 +22,8 @@ const form = useForm ( {
   end: props.appointment?.attributes?.end || null,
   status: props.appointment?.attributes?.status || '',
   title: props.appointment?.attributes?.title || '',
-  description: props.appointment?.attributes?.description || ''
-
+  description: props.appointment?.attributes?.description || '',
+  user_ids: props.appointment?.relationships?.users?.data?.map ( user => user.id ) || []
 } )
 
 const submit = () => {
@@ -34,6 +36,7 @@ const submit = () => {
 
 </script>
 <template>
+  <AuthenticatedLayout>
     <form
         @submit.prevent="submit"
         class="space-y-6"
@@ -115,6 +118,45 @@ const submit = () => {
         </div>
 
         <div>
+          <label class="block text-sm font-medium text-darker-700">Users</label>
+          <Select
+              v-model="form.user_ids"
+              :options="users"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select Users"
+              :filter="true"
+              multiple
+              fluid
+              :class="{ 'p-invalid': form.errors.user_ids }"
+          />
+          <div
+              v-if="form.user_ids.length"
+              class="mt-2 flex flex-wrap gap-2"
+          >
+            <div
+                v-for="userId in form.user_ids"
+                :key="userId"
+                class="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1"
+            >
+              <span>{{ users.find ( u => u.value === userId )?.label }}</span>
+              <button
+                  type="button"
+                  @click="form.user_ids = form.user_ids.filter(id => id !== userId)"
+                  class="text-gray-500 hover:text-gray-700"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+          <Message
+              severity="error"
+              v-if="form.errors.user_ids"
+          >{{ form.errors.user_ids }}
+          </Message>
+        </div>
+
+        <div>
           <label class="block text-sm font-medium text-darker-700">Title</label>
           <InputText
               v-model="form.title"
@@ -154,4 +196,5 @@ const submit = () => {
         />
       </div>
     </form>
+  </AuthenticatedLayout>
 </template>

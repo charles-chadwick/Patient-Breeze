@@ -8,6 +8,7 @@ use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\PatientResource;
 use App\Models\Appointment;
 use App\Models\Patient;
+use App\Models\User;
 use Inertia\Inertia;
 use function request;
 
@@ -22,10 +23,16 @@ class AppointmentController extends Controller
     {
         $patient = Patient::find(request()->patient_id);
 
-        return Inertia::render('Appointments/Create', [
+        $users = User::get()->mapWithKeys(function ($user) {
+            return ['value' => $user->id, 'label' => $user->full_name];
+        });
+
+        return Inertia::render('Appointments/Form', [
+            'action' => 'create',
             'appointment' => new AppointmentResource(new Appointment()),
             'statuses'    => AppointmentStatus::toArray(),
             'patient'     => new PatientResource($patient),
+            'users'       => $users,
         ]);
     }
 
@@ -46,7 +53,22 @@ class AppointmentController extends Controller
 
     public function edit(Appointment $appointment)
     {
-        return Inertia::render('Appointments/Edit', ['appointment' => new AppointmentResource($appointment)]);
+        $patient = Patient::find(request()->patient_id);
+
+        // load relations
+        $appointment->load(['users']);
+
+        $users = User::get()->mapWithKeys(function ($user) {
+            return ['name' => $user->id, 'label' => $user->full_name];
+        });
+
+        return Inertia::render('Appointments/Form', [
+            'action' => 'edit',
+            'appointment' => new AppointmentResource($appointment),
+            'statuses'    => AppointmentStatus::toArray(),
+            'patient'     => new PatientResource($patient),
+            'users'       => $users,
+        ]);
     }
 
     public function update(AppointmentRequest $request, Appointment $appointment)
