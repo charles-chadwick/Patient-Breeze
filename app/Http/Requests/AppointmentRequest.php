@@ -10,8 +10,7 @@ class AppointmentRequest extends FormRequest
     {
         return [
             'patient_id'  => [
-                'required',
-                'exists:patients'
+                'required'
             ],
             'start'       => [
                 'required',

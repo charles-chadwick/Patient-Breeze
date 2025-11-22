@@ -112,27 +112,7 @@ Route::middleware('auth')
     });
 
 Route::middleware('auth')
-    ->prefix('appointments')
-    ->group(function () {
-
-        Route::get('/', [
-            AppointmentController::class,
-            'index',
-        ])
-            ->name('appointments.index');
-
-        Route::get('/create', [
-            AppointmentController::class,
-            'create',
-        ])
-            ->name('appointments.create');
-
-        Route::post('/store', [
-            AppointmentController::class,
-            'store',
-        ])
-            ->name('appointments.store');
-    });
+   ->resource('appointments', AppointmentController::class);
 
 Route::prefix('avatar')
     ->group(function () {

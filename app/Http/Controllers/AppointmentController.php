@@ -20,11 +20,10 @@ class AppointmentController extends Controller
 
     public function create()
     {
-        $appointment = new Appointment();
         $patient = Patient::find(request()->patient_id);
 
         return Inertia::render('Appointments/Create', [
-            'appointment' => new AppointmentResource($appointment),
+            'appointment' => new AppointmentResource(new Appointment()),
             'statuses'    => AppointmentStatus::toArray(),
             'patient'     => new PatientResource($patient),
         ]);
@@ -32,12 +31,17 @@ class AppointmentController extends Controller
 
     public function store(AppointmentRequest $request)
     {
-        return new AppointmentResource(Appointment::create($request->validated()));
+        $appointment = Appointment::create($request->validated());
+        return redirect()->route('appointments.show', $appointment);
     }
 
     public function show(Appointment $appointment)
     {
-        return new AppointmentResource($appointment);
+        $appointment->load([
+            'patient',
+            'created_by',
+        ]);
+        return Inertia::render('Appointments/Show', ['appointment' => new AppointmentResource($appointment)]);
     }
 
     public function edit(Appointment $appointment)

@@ -1,9 +1,17 @@
 <script setup>
 import Form from "./Partials/Form.vue";
+import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 
-defineProps({appointment: Object})
+const props = defineProps ( { appointment: Object, patient: Object, statuses: Array } )
 </script>
 
 <template>
-  <Form :appointment="appointment" action-="edit" />
+  <AuthenticatedLayout>
+    <Form
+        action-="edit"
+        :appointment="appointment"
+        :patient="patient"
+        :statuses="statuses"
+    />
+  </AuthenticatedLayout>
 </template>
