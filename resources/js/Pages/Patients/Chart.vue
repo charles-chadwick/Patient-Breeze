@@ -3,7 +3,6 @@
 
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import AppointmentList from "../Appointments/AppointmentList.vue";
-import Avatar from "../../components/Avatar.vue";
 import { Card } from "primevue";
 import Details from "./Partials/Details.vue";
 

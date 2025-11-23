@@ -2,7 +2,6 @@
 <script setup>
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import Pagination from "../../components/Pagination.vue";
-import UserController from "../../actions/App/Http/Controllers/UserController";
 import { Card, InputText } from 'primevue';
 import { Link, router } from "@inertiajs/vue3";
 import { ref, watch } from 'vue'
@@ -12,7 +11,7 @@ const search = ref ( '' );
 
 watch ( search, ( value ) => {
   router.get (
-      UserController.index().url,
+      route('users.index'),
       { search: value },
       { preserveState: true, preserveScroll: true }
   )

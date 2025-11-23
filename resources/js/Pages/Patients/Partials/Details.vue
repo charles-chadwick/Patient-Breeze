@@ -1,7 +1,6 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
 import Avatar from "../../../components/Avatar.vue";
-import PatientController from "../../../actions/App/Http/Controllers/PatientController";
 import Status from "../../../components/Status.vue";
 
 const props = defineProps ( {
@@ -20,7 +19,7 @@ const props = defineProps ( {
       ]"
       >
         <a
-            :href="PatientController.chart(patient.attributes.id).url"
+            :href="route('patients.chart', patient.attributes.id)"
             class="hover:underline hover:text-primary-600"
         >
           <span v-if="compact">

@@ -20,6 +20,7 @@
     />
 
     <!-- Styles / Scripts -->
+    @routes
     @inertiaHead
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

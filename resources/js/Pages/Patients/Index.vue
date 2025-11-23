@@ -13,7 +13,7 @@ const search = ref ( '' )
 
 watch ( search, ( value ) => {
   router.get (
-      '/patients',
+      route('/patients'),
       { search: value },
       {
         preserveState: true,

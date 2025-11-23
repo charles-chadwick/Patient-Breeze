@@ -1,7 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import PatientController from "../../../actions/App/Http/Controllers/PatientController.ts";
-import {InputText, Select, Password} from 'primevue';
+import {InputText, Select} from 'primevue';
 
 const props = defineProps ( {
   patient: Object,
@@ -20,9 +19,9 @@ const patient = props.patient;
 const save = () => {
 
   if ( props.action === "create" ) {
-    PatientController.create ( patient );
+    route('patients.create',  form );
   } else if ( props.action === "update" ) {
-    PatientController.update ( patient );
+    route('patients.update',  form );
   }
 
 }

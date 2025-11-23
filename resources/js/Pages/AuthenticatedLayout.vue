@@ -5,11 +5,6 @@ import { computed, ref } from "vue";
 import { Dialog, Message } from "primevue";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
-import AuthController from '../actions/App/Http/Controllers/AuthController';
-import UserController from '../actions/App/Http/Controllers/UserController';
-import PatientController from "../actions/App/Http/Controllers/PatientController";
-
-import UserDetails from "./Users/Partials/Details.vue";
 import UserCreate from "./Users//Create.vue";
 
 
@@ -40,14 +35,14 @@ const handleDialogClose = () => {
 const navigation = [
   {
     label: 'Patients', items: [
-      { href: PatientController.index().url, label: 'View Patients', click: "patients.index" },
+      { href: route('patients.index'), label: 'View Patients', click: "patients.index" },
     ]
   },
 ];
 
 const logout = () => {
   const form = useForm ();
-  form.submit(AuthController.logout())
+  form.submit(route('logout'))
 }
 
 </script>
@@ -140,13 +135,13 @@ const logout = () => {
               <div class="py-1">
                 <MenuItem>
                   <a
-                      :href="UserController.profile(user.data.id).url"
+                      :href="route('users.profile', user.id)"
                       class="block px-4 py-2 text-sm hover:text-primary-400"
                   >My Profile</a>
                 </MenuItem>
                 <MenuItem>
                   <a
-                      :href="UserController.index().url"
+                      :href="route('users.index')"
                       class="block px-4 py-2 text-sm hover:text-primary-400"
                   >View Users</a>
                 </MenuItem>

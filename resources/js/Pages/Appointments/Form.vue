@@ -135,15 +135,15 @@ const submit = () => {
               class="mt-2 flex flex-wrap gap-2"
           >
             <div
-                v-for="userId in form.user_ids"
-                :key="userId"
-                class="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1"
+                v-for="user_id in form.user_ids"
+                :key="user_id"
+                class="flex items-center gap-2 bg-darker-100 rounded-full px-3 py-1"
             >
-              <span>{{ users.find ( u => u.value === userId )?.label }}</span>
+              <span>{{ users.find ( u => u.value === user_id )?.label }}</span>
               <button
                   type="button"
-                  @click="form.user_ids = form.user_ids.filter(id => id !== userId)"
-                  class="text-gray-500 hover:text-gray-700"
+                  @click="form.user_ids = form.user_ids.filter(id => id !== user_id)"
+                  class="text-darker-500 hover:text-darker-700"
               >
                 ×
               </button>

@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import {InputText, Password, Button} from 'primevue';
-import AuthController from '../../actions/App/Http/Controllers/AuthController';
 
 const form = useForm ( {
   email: '',
@@ -14,7 +13,7 @@ const loading = ref ( false );
 
 const submit = () => {
   loading.value = true;
-  form.post ( AuthController.login().url, {
+  form.post ( route('login'), {
     onFinish: () => loading.value = false
   } );
 };

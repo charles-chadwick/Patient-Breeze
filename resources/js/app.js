@@ -5,7 +5,7 @@ import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
 import {definePreset} from "@primeuix/themes";
 import { Tooltip } from "primevue";
-
+import { ZiggyVue } from 'ziggy-js';
 const MyPreset = definePreset(Aura, {
     semantic: {
         primary: {
@@ -80,6 +80,7 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .directive('tooltip', Tooltip)
             .use(plugin)
+            .use(ZiggyVue)
             .use(PrimeVue, {
                 theme: {
                     preset: MyPreset,
