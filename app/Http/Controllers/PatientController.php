@@ -31,7 +31,8 @@ class PatientController extends Controller
 
     public function create()
     {
-        return Inertia::render('Patients/Create', [
+        return Inertia::render('Patients/Form', [
+            'action'   => 'store',
             'patient'  => new PatientResource(new Patient()),
             'genders'  => Gender::toArray(),
             'statuses' => PatientStatus::toArray(),

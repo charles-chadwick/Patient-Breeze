@@ -1,6 +1,8 @@
+<!--suppress RequiredAttributes -->
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import {InputText, Select} from 'primevue';
+import { InputText, DatePicker, Select, Message, Button } from 'primevue';
+import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 
 const props = defineProps ( {
   patient: Object,
@@ -8,39 +10,49 @@ const props = defineProps ( {
   genders: Object | Array,
   action: {
     type: String,
-    validator: ( value ) => [ 'create', 'update' ].includes ( value ),
+    validator: ( value ) => [ 'store', 'update' ].includes ( value ),
     required: true
   },
 
 } );
 
-const patient = props.patient;
-
-const save = () => {
-
-  if ( props.action === "create" ) {
-    route('patients.create',  form );
-  } else if ( props.action === "update" ) {
-    route('patients.update',  form );
-  }
-
-}
+const patient = props.patient.data;
 
 const form = useForm ( {
   id: patient?.id,
-  first_name: patient?.first_name,
-  middle_name: patient?.middle_name,
-  last_name: patient?.last_name,
-  email: patient?.email,
-  gender: patient?.gender,
-  gender_identity: patient?.gender_identity,
-  dob: patient?.dob,
+  first_name: patient?.attributes?.first_name,
+  middle_name: patient?.attributes?.middle_name,
+  last_name: patient?.attributes?.last_name,
+  email: patient?.attributes?.email,
+  gender: patient?.attributes?.gender,
+  gender_identity: patient?.attributes?.gender_identity,
+  dob: patient?.attributes?.dob,
+  status: patient?.attributes?.status,
   password: null,
   password_confirmation: null
 } )
+
+const save = () => {
+  form.clearErrors ();
+
+  if ( props.action === "store" ) {
+    form.post ( route ( 'patients.store' ), {
+      onError: () => {
+        console.error ( 'Form submission failed:', form.errors );
+      }
+    } );
+  } else if ( props.action === "update" ) {
+    form.post ( route ( 'patients.update', props.patient.id ), {
+      onError: () => {
+        console.error ( 'Form submission failed:', form.errors );
+      }
+    } );
+  }
+}
 </script>
 
 <template>
+  <AuthenticatedLayout>
   <form
       @submit.prevent="save"
   >
@@ -89,7 +101,8 @@ const form = useForm ( {
       </div>
     </div>
 
-    <div class="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="space-y-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+
       <!-- status -->
       <div class="field">
         <label class="label">Status</label>
@@ -97,7 +110,8 @@ const form = useForm ( {
         <Select
             v-model="form.status"
             :options="statuses"
-            optionLabel="name"
+            optionLabel="label"
+            optionValue="value"
             placeholder="Select a Status"
             class="w-full"
         />
@@ -107,7 +121,8 @@ const form = useForm ( {
         >{{ form.errors.status }}
         </Message>
       </div>
-      <!-- last name -->
+
+      <!-- email -->
       <div class="field">
         <label class="label">Email</label>
         <InputText
@@ -122,6 +137,25 @@ const form = useForm ( {
         </Message>
       </div>
 
+      <!-- dob -->
+      <div class="field">
+        <label class="label">Date of Birth</label>
+        <DatePicker
+            v-model="form.dob"
+            hourFormat="24"
+            fluid
+            :class="{ 'p-invalid': form.errors.dob }"
+        />
+        <Message
+            severity="error"
+            v-if="form.errors.dob"
+        >{{ form.errors.dob }}
+        </Message>
+      </div>
+
+    </div>
+    <div class="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+
       <!-- gender -->
       <div class="field">
         <label class="label">Gender</label>
@@ -129,7 +163,8 @@ const form = useForm ( {
         <Select
             v-model="form.gender"
             :options="genders"
-            optionLabel="name"
+            optionLabel="label"
+            optionValue="value"
             placeholder="Select a Gender"
             class="w-full"
         />
@@ -185,17 +220,20 @@ const form = useForm ( {
         >{{ form.errors.password_confirmation }}
         </Message>
       </div>
+
     </div>
-      <div class="col-span-3 flex justify-center">
-        <Button
-            class="btn"
-            type="submit"
-            label="Create Patient"
-            :loading="form.processing"
-        >Save Patient</Button>
-      </div>
+    <div class="col-span-3 flex justify-center">
+      <Button
+          class="btn"
+          type="submit"
+          label="Create Patient"
+          :loading="form.processing"
+      >Save Patient
+      </Button>
+    </div>
 
   </form>
+  </AuthenticatedLayout>
 </template>
 
 <style scoped>
