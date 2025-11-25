@@ -12,8 +12,10 @@ const props = defineProps ( {
   appointment: Object,
   patient: Object,
   statuses: Array,
-  users: Array 
+  users: Array
 } )
+
+console.log ( props.users )
 
 const form = useForm ( {
   patient_id: props.patient.data.id || '',
@@ -23,7 +25,7 @@ const form = useForm ( {
   status: props.appointment?.attributes?.status || '',
   title: props.appointment?.attributes?.title || '',
   description: props.appointment?.attributes?.description || '',
-  user_ids: props.appointment?.relationships?.users?.data?.map ( user => user.id ) || []
+  user_ids: props.appointment?.relationships?.users?.data?.map ( user => user.attributes.id ) || []
 } )
 
 const submit = () => {

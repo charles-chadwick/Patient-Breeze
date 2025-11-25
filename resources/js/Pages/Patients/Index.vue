@@ -44,7 +44,7 @@ watch ( search, ( value ) => {
               v-for="patient in patients.data"
               :key="patient.id"
           >
-            <PatientDetails :patient="patient" :compact="true" />
+            <PatientDetails :patient="patient" />
           </li>
         </ul>
       </template>

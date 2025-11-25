@@ -19,7 +19,6 @@ const props = defineProps ( { appointment: Object } )
       <Avatar
           :avatar="user.attributes.avatar"
           size="sm"
-          :show_large="!compact"
           :on="{ type: 'User', id: user.id}"
       />          </span>
     </div>
