@@ -88,7 +88,7 @@ const handleCloseDialog = () => {
     <template #container>
       <img
           @click="handleCloseDialog"
-          :src="avatar === '' ?? '/avatars/default.jpg'"
+          :src="avatar"
           class="rounded-xl border-2 border-darker-300 hover:border-primary-600"
           alt="Avatar"
       />
