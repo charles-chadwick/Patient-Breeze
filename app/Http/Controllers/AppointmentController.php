@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedFieldInspection */
 
 namespace App\Http\Controllers;
 
@@ -6,6 +6,7 @@ use App\Enums\AppointmentStatus;
 use App\Http\Requests\AppointmentRequest;
 use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\PatientResource;
+use App\Http\Resources\UserResource;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
@@ -23,9 +24,13 @@ class AppointmentController extends Controller
     {
         $patient = Patient::find(request()->patient_id);
 
-        $users = User::get()->mapWithKeys(function ($user) {
-            return ['value' => $user->id, 'label' => $user->full_name];
-        });
+        $users = [];
+        foreach(User::get() as $user) {
+            $users[] =   [
+                'value' => $user->id,
+                'label' => $user->full_name
+            ];
+        }
 
         return Inertia::render('Appointments/Form', [
             'action' => 'create',
@@ -58,9 +63,16 @@ class AppointmentController extends Controller
         // load relations
         $appointment->load(['users']);
 
-        $users = User::get()->mapWithKeys(function ($user) {
-            return ['name' => $user->id, 'label' => $user->full_name];
-        });
+        $users = User::get()
+            ->mapWithKeys(function ($user) {
+                return [
+                    $user->id => [
+                        'value' => $user->id,
+                        'label' => $user->full_name
+                    ]
+                ];
+            });
+
 
         return Inertia::render('Appointments/Form', [
             'action' => 'edit',

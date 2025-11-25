@@ -1,8 +1,9 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { DatePicker, Select, InputText, Textarea, Button, Message } from 'primevue'
+import { DatePicker, Select, InputText, Button, Message, Textarea } from 'primevue'
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
+import PatientDetails from "../Patients/Partials/Details.vue";
 const props = defineProps ( {
   action: {
     type: String,
@@ -12,10 +13,8 @@ const props = defineProps ( {
   appointment: Object,
   patient: Object,
   statuses: Array,
-  users: Array
+  users: Object | Array
 } )
-
-console.log ( props.users )
 
 const form = useForm ( {
   patient_id: props.patient.data.id || '',
@@ -30,9 +29,9 @@ const form = useForm ( {
 
 const submit = () => {
   if ( props.appointment.id ) {
-    form.put ( '/appointments/', props.appointment.id )
+    form.put ( `/appointments/${ props.appointment.id }` )
   } else {
-    form.post ('/appointments/')
+    form.post ( '/appointments' )
   }
 }
 
@@ -43,10 +42,10 @@ const submit = () => {
         @submit.prevent="submit"
         class="space-y-6"
     >
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
         <div>
           <label class="block text-sm font-medium text-darker-700">Patient</label>
-          For: {{ props.patient.data.attributes?.full_name }}
+          <PatientDetails :patient="patient.data" :compact="true" :show-actions="false" />
           <Message
               severity="error"
               v-if="form.errors.patient_id"
@@ -68,6 +67,22 @@ const submit = () => {
           >{{ form.errors.type }}
           </Message>
         </div>
+
+        <div>
+          <label class="block text-sm font-medium text-darker-700">Title</label>
+          <InputText
+              v-model="form.title"
+              type="text"
+              class="w-full"
+              :class="{ 'p-invalid': form.errors.title }"
+          />
+          <Message
+              severity="error"
+              v-if="form.errors.title"
+          >{{ form.errors.title }}
+          </Message>
+        </div>
+
 
         <div>
           <label class="block text-sm font-medium text-darker-700">Start Date & Time</label>
@@ -119,66 +134,12 @@ const submit = () => {
           </Message>
         </div>
 
-        <div>
-          <label class="block text-sm font-medium text-darker-700">Users</label>
-          <Select
-              v-model="form.user_ids"
-              :options="users"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Select Users"
-              :filter="true"
-              multiple
-              fluid
-              :class="{ 'p-invalid': form.errors.user_ids }"
-          />
-          <div
-              v-if="form.user_ids.length"
-              class="mt-2 flex flex-wrap gap-2"
-          >
-            <div
-                v-for="user_id in form.user_ids"
-                :key="user_id"
-                class="flex items-center gap-2 bg-darker-100 rounded-full px-3 py-1"
-            >
-              <span>{{ users.find ( u => u.value === user_id )?.label }}</span>
-              <button
-                  type="button"
-                  @click="form.user_ids = form.user_ids.filter(id => id !== user_id)"
-                  class="text-darker-500 hover:text-darker-700"
-              >
-                ×
-              </button>
-            </div>
-          </div>
-          <Message
-              severity="error"
-              v-if="form.errors.user_ids"
-          >{{ form.errors.user_ids }}
-          </Message>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-darker-700">Title</label>
-          <InputText
-              v-model="form.title"
-              type="text"
-              class="w-full"
-              :class="{ 'p-invalid': form.errors.title }"
-          />
-          <Message
-              severity="error"
-              v-if="form.errors.title"
-          >{{ form.errors.title }}
-          </Message>
-        </div>
-
-        <div class="sm:col-span-2">
+        <div class="sm:col-span-3">
           <label class="block text-sm font-medium text-darker-700">Description</label>
           <Textarea
               v-model="form.description"
-              rows="4"
               class="w-full"
+              rows="6"
               :class="{ 'p-invalid': form.errors.description }"
           />
           <Message
@@ -189,7 +150,7 @@ const submit = () => {
         </div>
       </div>
 
-      <div class="flex justify-end space-x-3">
+      <div class="flex justify-center space-x-3">
         <Button
             type="submit"
             :loading="form.processing"
