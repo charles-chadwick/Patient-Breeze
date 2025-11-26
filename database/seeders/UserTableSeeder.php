@@ -110,8 +110,7 @@ class UserTableSeeder extends Seeder
         // create the patients
         $patients->each(function ($character) {
 
-            $staff_user = User::clinicians()
-                ->inRandomOrder()
+            $staff_user = User::inRandomOrder()
                 ->first();
 
             // generate the user and set the causer resolver

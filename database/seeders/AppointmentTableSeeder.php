@@ -59,25 +59,24 @@ class AppointmentTableSeeder extends Seeder
 
                 $appointment = Appointment::factory()
                     ->create([
-                        'patient_id'  => $patient->id,
-                        'start'       => $start,
-                        'end'         => $end,
-                        'created_at'  => $created_at,
-                        'updated_at'  => $created_at,
-                        'created_by_id'  => $user->id,
-                        'updated_by_id'  => $user->id,
-                        'title'       => $random_data->randomData(1),
-                        'description' => nl2br($random_data->randomData(rand(2, 20), false, 100)),
-                        'type'        => fake()->randomElement(AppointmentType::cases()),
-                        'status'      => $status,
+                        'patient_id'    => $patient->id,
+                        'start'         => $start,
+                        'end'           => $end,
+                        'created_at'    => $created_at,
+                        'updated_at'    => $created_at,
+                        'created_by_id' => $user->id,
+                        'updated_by_id' => $user->id,
+                        'title'         => $random_data->randomData(1),
+                        'description'   => nl2br($random_data->randomData(rand(2, 20), false, 100)),
+                        'type'          => fake()->randomElement(AppointmentType::cases()),
+                        'status'        => $status,
                     ]);
 
                 $appointment->users()
                     ->attach($user->id);
 
                 $appointment->users()
-                    ->attach(User::clinicians()
-                        ->where('id', '!=', $user->id)
+                    ->attach(User::where('id', '!=', $user->id)
                         ->inRandomOrder()
                         ->limit(rand(0, 3))
                         ->pluck('id')
