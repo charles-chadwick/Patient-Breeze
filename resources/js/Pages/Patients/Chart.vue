@@ -2,7 +2,7 @@
 <script setup>
 
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
-import AppointmentList from "../Appointments/AppointmentList.vue";
+import AppointmentList from "../Appointments/Partials/List.vue";
 import { Card } from "primevue";
 import Details from "./Partials/Details.vue";
 

@@ -1,7 +1,7 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
 import { computed } from "vue";
-import Details from "./Partials/Details.vue";
+import Details from "./Details.vue";
 
 const props = defineProps ( { appointments: Object | Array } )
 const appointments = computed ( () => props.appointments.data );
