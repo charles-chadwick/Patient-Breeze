@@ -1,7 +1,8 @@
 <!--suppress JSUnresolvedReference -->
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { DatePicker, Select, InputText, Button, Message, Textarea } from 'primevue'
+import { DatePicker, Select, InputText, Button, Message, Textarea, AutoComplete } from 'primevue'
+import { ref } from 'vue'
 import AuthenticatedLayout from "../AuthenticatedLayout.vue";
 import PatientDetails from "../Patients/Partials/Details.vue";
 const props = defineProps ( {
@@ -15,6 +16,17 @@ const props = defineProps ( {
   statuses: Array,
   users: Object | Array
 } )
+
+const selectedUsers = ref ( [] )
+const filteredUsers = ref ( [] )
+const patient = props.patient.data
+
+const searchUsers = ( event ) => {
+  const query = event.query.toLowerCase ()
+  filteredUsers.value = props.users.filter ( user =>
+      user.label.toLowerCase ().includes ( query )
+  )
+}
 
 const form = useForm ( {
   patient_id: props.patient.data.id || '',
@@ -148,7 +160,29 @@ const submit = () => {
           >{{ form.errors.description }}
           </Message>
         </div>
+
+        <div class="sm:col-span-3">
+          <label class="block text-sm font-medium text-darker-700">Select Users</label>
+          <AutoComplete
+              v-model="selectedUsers"
+              :suggestions="filteredUsers"
+              @complete="searchUsers"
+              optionLabel="label"
+              placeholder="Search users"
+              :multiple="true"
+              class="w-full"
+              @item-select="(e) => form.user_ids = [...new Set([...form.user_ids, e.value.value])]"
+              @item-unselect="(e) => form.user_ids = form.user_ids.filter(id => id !== e.value.value)"
+          />
+          <Message
+              severity="error"
+              v-if="form.errors.user_ids"
+          >{{ form.errors.user_ids }}
+          </Message>
+        </div>
       </div>
+      
+      
 
       <div class="flex justify-center space-x-3">
         <Button

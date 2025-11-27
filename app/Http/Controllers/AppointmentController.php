@@ -1,4 +1,5 @@
-<?php /** @noinspection PhpUndefinedFieldInspection */
+<?php
+/** @noinspection PhpUndefinedFieldInspection */
 
 namespace App\Http\Controllers;
 
@@ -25,15 +26,15 @@ class AppointmentController extends Controller
         $patient = Patient::find(request()->patient_id);
 
         $users = [];
-        foreach(User::get() as $user) {
-            $users[] =   [
+        foreach (User::get() as $user) {
+            $users[] = [
                 'value' => $user->id,
                 'label' => $user->full_name
             ];
         }
 
         return Inertia::render('Appointments/Form', [
-            'action' => 'create',
+            'action'      => 'create',
             'appointment' => new AppointmentResource(new Appointment()),
             'statuses'    => AppointmentStatus::toArray(),
             'patient'     => new PatientResource($patient),
@@ -44,16 +45,36 @@ class AppointmentController extends Controller
     public function store(AppointmentRequest $request)
     {
         $appointment = Appointment::create($request->validated());
+        $appointment->users()
+            ->sync(request('user_ids'));
         return redirect()->route('appointments.show', $appointment);
     }
 
     public function show(Appointment $appointment)
     {
         $appointment->load([
+            'users',
             'patient',
             'created_by',
         ]);
-        return Inertia::render('Appointments/Show', ['appointment' => new AppointmentResource($appointment)]);
+
+        $appointment = new AppointmentResource($appointment);
+
+        $users = User::get()
+            ->mapWithKeys(function ($user) {
+                return [
+                    $user->id => [
+                        'value' => $user->id,
+                        'label' => $user->full_name
+                    ]
+                ];
+            });
+
+        return Inertia::render('Appointments/Show', [
+            'appointment' => $appointment,
+            'statuses'    => AppointmentStatus::toArray(),
+            'users'       => $users,
+        ]);
     }
 
     public function edit(Appointment $appointment)
@@ -75,7 +96,7 @@ class AppointmentController extends Controller
 
 
         return Inertia::render('Appointments/Form', [
-            'action' => 'edit',
+            'action'      => 'edit',
             'appointment' => new AppointmentResource($appointment),
             'statuses'    => AppointmentStatus::toArray(),
             'patient'     => new PatientResource($patient),

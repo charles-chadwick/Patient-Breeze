@@ -3,21 +3,30 @@
 import { ref } from "vue";
 import Status from "../../../components/Status.vue";
 import Avatar from "../../../components/Avatar.vue";
-import {Dialog} from "primevue";
-import Form from "../Form.vue";
-const props = defineProps ( { appointment: Object } )
+
+import { Card } from "primevue";
+import { Link } from "@inertiajs/vue3";
+
+const props = defineProps ( { appointment: Object, statuses: Array, users: Array, patient: Object } )
+const appointment = props.appointment.data;
 const dialog = ref ( false );
 </script>
 
 <template>
-  <div>
-    <h2
-        class="font-bold cursor-pointer"
-        @click="dialog = true"
-    >{{ appointment.attributes.title }}
-    </h2>
-    <div v-html="appointment.attributes.description"></div>
-    <div class="flex ml-4">
+  <Card>
+    <template #content>
+      <div class="flex justify-between items-start gap-x-4 mb-4">
+        <div>
+          <Link
+              :href="route('appointments.edit', appointment.id)"
+            class="hover:underline hover:text-primary-600">
+          <h2
+              class="font-bold cursor-pointer"
+              @click="dialog = true"
+          >{{ appointment.attributes.title }}
+          </h2></Link>
+          <div v-html="appointment.attributes.description"></div>
+          <div class="flex ml-4">
           <span
               class="-ml-2"
               v-for="user in appointment.relationships.users"
@@ -28,22 +37,18 @@ const dialog = ref ( false );
           size="sm"
           :on="{ type: 'User', id: user.id}"
       />          </span>
-    </div>
-  </div>
-  <div class="text-right text-sm">
-    <p class="font-bold">{{ appointment.attributes.date }}</p>
-    <p>{{ appointment.attributes.from }} - {{ appointment.attributes.to }}</p>
-    <p>{{ appointment.attributes.type }}</p>
-    <Status
-        :status="appointment.attributes.status"
-        type="appointment"
-    />
-  </div>
-  <Dialog
-      :key="appointment.id"
-      v-model:visible="dialog"
-      header="Appointment Details"
-  >
-<Form :appointment="appointment" />
-  </Dialog>
+          </div>
+        </div>
+        <div class="text-right text-sm">
+          <p class="font-bold">{{ appointment.attributes.date }}</p>
+          <p>{{ appointment.attributes.from }} - {{ appointment.attributes.to }}</p>
+          <p>{{ appointment.attributes.type }}</p>
+          <Status
+              :status="appointment.attributes.status"
+              type="appointment"
+          />
+        </div>
+      </div>
+    </template>
+  </Card>
 </template>
