@@ -54,29 +54,16 @@ const submit = () => {
         @submit.prevent="submit"
         class="space-y-6"
     >
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+
+
         <div>
           <label class="block text-sm font-medium text-darker-700">Patient</label>
-          <PatientDetails :patient="patient.data" :compact="true" :show-actions="false" />
+          <PatientDetails :patient="patient" :compact="true" :show-actions="false" />
           <Message
               severity="error"
               v-if="form.errors.patient_id"
           >{{ form.errors.patient_id }}
-          </Message>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-darker-700">Type</label>
-          <InputText
-              v-model="form.type"
-              type="text"
-              class="w-full"
-              :class="{ 'p-invalid': form.errors.type }"
-          />
-          <Message
-              severity="error"
-              v-if="form.errors.type"
-          >{{ form.errors.type }}
           </Message>
         </div>
 
@@ -94,6 +81,21 @@ const submit = () => {
           >{{ form.errors.title }}
           </Message>
         </div>
+        <div>
+          <label class="block text-sm font-medium text-darker-700">Type</label>
+          <InputText
+              v-model="form.type"
+              type="text"
+              class="w-full"
+              :class="{ 'p-invalid': form.errors.type }"
+          />
+          <Message
+              severity="error"
+              v-if="form.errors.type"
+          >{{ form.errors.type }}
+          </Message>
+        </div>
+
 
 
         <div>
@@ -181,8 +183,8 @@ const submit = () => {
           </Message>
         </div>
       </div>
-      
-      
+
+
 
       <div class="flex justify-center space-x-3">
         <Button
