@@ -7,24 +7,23 @@ import Avatar from "../../../components/Avatar.vue";
 import { Card } from "primevue";
 import { Link } from "@inertiajs/vue3";
 
-const props = defineProps ( { appointment: Object, statuses: Array, users: Array, patient: Object } )
-const appointment = props.appointment.data;
+const props = defineProps ( { appointment: Object, patient: Object } )
 const dialog = ref ( false );
 </script>
 
 <template>
-  <Card>
-    <template #content>
-      <div class="flex justify-between items-start gap-x-4 mb-4">
+
         <div>
           <Link
               :href="route('appointments.edit', appointment.id)"
-            class="hover:underline hover:text-primary-600">
-          <h2
-              class="font-bold cursor-pointer"
-              @click="dialog = true"
-          >{{ appointment.attributes.title }}
-          </h2></Link>
+              class="hover:underline hover:text-primary-600"
+          >
+            <h2
+                class="font-bold cursor-pointer"
+                @click="dialog = true"
+            >{{ appointment.attributes.title }}
+            </h2>
+          </Link>
           <div v-html="appointment.attributes.description"></div>
           <div class="flex ml-4">
           <span
@@ -48,7 +47,5 @@ const dialog = ref ( false );
               type="appointment"
           />
         </div>
-      </div>
-    </template>
-  </Card>
+
 </template>
