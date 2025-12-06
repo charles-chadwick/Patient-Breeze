@@ -60,7 +60,6 @@ class PatientController extends Controller
             ->orderBy('start', 'desc')
             ->get();
 
-
         return Inertia::render('Patients/Chart', [
             'patient'      => new PatientResource($patient),
             'appointments' => AppointmentResource::collection($appointments)
