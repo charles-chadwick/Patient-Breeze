@@ -71,6 +71,7 @@ class AppointmentController extends Controller
             });
 
         return Inertia::render('Appointments/Show', [
+            'patient'     => new PatientResource($appointment->patient),
             'appointment' => $appointment,
             'statuses'    => AppointmentStatus::toArray(),
             'users'       => $users,
@@ -79,10 +80,8 @@ class AppointmentController extends Controller
 
     public function edit(Appointment $appointment)
     {
-        $patient = Patient::find(request()->patient_id);
-
         // load relations
-        $appointment->load(['users']);
+        $appointment->load(['users', 'patient']);;
 
         $users = User::get()
             ->mapWithKeys(function ($user) {
@@ -99,7 +98,7 @@ class AppointmentController extends Controller
             'action'      => 'edit',
             'appointment' => new AppointmentResource($appointment),
             'statuses'    => AppointmentStatus::toArray(),
-            'patient'     => new PatientResource($patient),
+            'patient'     => new PatientResource($appointment->patient),
             'users'       => $users,
         ]);
     }
