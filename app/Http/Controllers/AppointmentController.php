@@ -91,11 +91,10 @@ class AppointmentController extends Controller
                         'label' => $user->full_name
                     ]
                 ];
-            });
-
+            })->toArray();
 
         return Inertia::render('Appointments/Form', [
-            'action'      => 'edit',
+            'action'      => 'update',
             'appointment' => new AppointmentResource($appointment),
             'statuses'    => AppointmentStatus::toArray(),
             'patient'     => new PatientResource($appointment->patient),
