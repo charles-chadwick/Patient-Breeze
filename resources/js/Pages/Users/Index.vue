@@ -5,6 +5,7 @@ import Pagination from "../../components/Pagination.vue";
 import { Card, InputText } from 'primevue';
 import { Link, router } from "@inertiajs/vue3";
 import { ref, watch } from 'vue'
+import Avatar from "../../components/Avatar.vue";
 
 defineProps ( { users: Array | Object } )
 const search = ref ( '' );
@@ -41,7 +42,7 @@ watch ( search, ( value ) => {
           >
             <div class="w-full">
               <h2 class="font-bold">
-                <Link :href="UserController.profile(user.id)">
+                <Link :href="route('users.profile', {user: user.attributes.id})">
                   {{ user.attributes.full_name }}
                 </Link>
               </h2>
@@ -49,12 +50,7 @@ watch ( search, ( value ) => {
               <p>{{ user.attributes.email }}</p>
             </div>
             <div class="shrink-0">
-              <img
-                  :src="user.attributes.avatar"
-                  :alt="user.attributes.full_name + ' avatar'"
-                  :title="user.attributes.full_name + ' avatar'"
-                  class="w-16 h-16 rounded-xl"
-              />
+              <Avatar :avatar="user.attributes.avatar" size="sm" :on="{ type: 'User', id: user.id }" />
             </div>
           </li>
         </ul>

@@ -5,17 +5,15 @@ import { computed, ref } from "vue";
 import { Dialog, Message } from "primevue";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
-import UserCreate from "./Users//Create.vue";
-
 
 const page = usePage ();
-const user = computed ( () => page.props.auth.user );
+const user = page.props.auth.user.data;
 const header = computed ( () => page.props.header );
 
 /** Dialog Stuff **/
 const dialogContent = ref ( null );
 const showDialog = ref ( false );
-const dialogs = [  ];
+const dialogs = [];
 
 const handleDialogOpen = ( link ) => {
 
@@ -35,14 +33,18 @@ const handleDialogClose = () => {
 const navigation = [
   {
     label: 'Patients', items: [
-      { href: route('patients.index'), label: 'View Patients', click: "patients.index" },
+      { href: route ( 'patients.index' ), label: 'View Patients', click: "patients.index" },
+    ]
+  }, {
+    label: 'Users', items: [
+      { href: route ( 'users.index' ), label: 'Manage Users', click: "users.index" },
     ]
   },
 ];
 
 const logout = () => {
   const form = useForm ();
-  form.submit(route('logout'))
+  form.post ( route ( 'logout' ) )
 }
 
 </script>
@@ -108,56 +110,49 @@ const logout = () => {
         </Menu>
       </div>
 
-      <!-- show the user -->
-      <div class="flex justify-end items-center gap-x-4">
+      <Menu
+          as="div"
+          class="relative ml-auto"
+      >
+        <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md py-2 text-sm font-semibold hover:text-primary-400 cursor-pointer">
+          {{ user.attributes.first_name }} {{ user.attributes.last_name }}
+          <ChevronDownIcon
+              class="-mr-1 size-5 text-darker-400"
+              aria-hidden="true"
+          />
+        </MenuButton>
 
-        <Menu
-            as="div"
-            class="relative inline-block"
+        <transition
+            enter-active-class="transition ease-out duration-100"
+            enter-from-class="transform opacity-0 scale-95"
+            enter-to-class="transform scale-100"
+            leave-active-class="transition ease-in duration-75"
+            leave-from-class="transform scale-100"
+            leave-to-class="transform opacity-0 scale-95"
         >
-          <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md py-2 text-sm font-semibold hover:text-primary-400 cursor-pointer">
-<!--            <UserDetails :user="user.data" />-->
-            <ChevronDownIcon
-                class="-mr-1 size-5 text-darker-200 mt-2"
-                aria-hidden="true"
-            />
-          </MenuButton>
-
-          <transition
-              enter-active-class="transition ease-out duration-100"
-              enter-from-class="transform opacity-0 scale-95"
-              enter-to-class="transform scale-100"
-              leave-active-class="transition ease-in duration-75"
-              leave-from-class="transform scale-100"
-              leave-to-class="transform opacity-0 scale-95"
-          >
-            <MenuItems class="absolute left-0 z-10 min-w-48 origin-top-right bg-darker-800 rounded-b-lg">
-              <div class="py-1">
-                <MenuItem>
-                  <a
-                      :href="route('users.profile', user.id)"
-                      class="block px-4 py-2 text-sm hover:text-primary-400"
-                  >My Profile</a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                      :href="route('users.index')"
-                      class="block px-4 py-2 text-sm hover:text-primary-400"
-                  >View Users</a>
-                </MenuItem>
-
-                <MenuItem>
-                  <a
-                      href="#"
-                      @click="logout"
-                      class="block px-4 py-2 text-sm hover:text-primary-400"
-                  >Log Out</a>
-                </MenuItem>
-              </div>
-            </MenuItems>
-          </transition>
-        </Menu>
-      </div>
+          <MenuItems class="absolute right-0 z-10 mt-2 min-w-48 origin-top-right bg-darker-800 rounded-b-lg">
+            <div class="py-1">
+              <MenuItem v-slot="{ active }">
+                <a
+                    :href="route('users.profile', {user: user.attributes.id})"
+                    class="block px-4 py-2 text-sm hover:text-primary-400"
+                >
+                  Profile
+                </a>
+              </MenuItem>
+              <MenuItem v-slot="{ active }">
+                <a
+                    href="#"
+                    @click.prevent="logout"
+                    class="block px-4 py-2 text-sm hover:text-primary-400"
+                >
+                  Log Out
+                </a>
+              </MenuItem>
+            </div>
+          </MenuItems>
+        </transition>
+      </Menu>
     </div>
   </nav>
 
@@ -167,10 +162,6 @@ const logout = () => {
       modal
   >
 
-    <UserCreate
-        v-if="dialogContent === 'users.create'"
-        v-on:close-dialog="handleDialogClose"
-    />
   </Dialog>
 
   <!-- main div -->
