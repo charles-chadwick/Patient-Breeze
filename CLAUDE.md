@@ -144,6 +144,8 @@ This project has domain-specific skills available. You MUST activate the relevan
 ### Model Creation
 
 - When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `php artisan make:model --help` to check the available options.
+- Always use Spatie's Activity Logging, and use `use Spatie\Activitylog\Models\Concerns\LogsActivity; use Spatie\Activitylog\Support\LogOptions;` as the imports. 
+- Ensure models use Soft Deletes
 
 ## APIs & Eloquent Resources
 
