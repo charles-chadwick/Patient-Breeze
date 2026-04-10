@@ -20,6 +20,8 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/pint (PINT) - v1
 - pestphp/pest (PEST) - v4
 - phpunit/phpunit (PHPUNIT) - v12
+- @inertiajs/vue3 (INERTIA_VUE) - v3
+- vue (VUE) - v3
 - tailwindcss (TAILWINDCSS) - v4
 
 ## Skills Activation
@@ -28,35 +30,8 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - `laravel-best-practices` — Apply this skill whenever writing, reviewing, or refactoring Laravel PHP code. This includes creating or modifying controllers, models, migrations, form requests, policies, jobs, scheduled commands, service classes, and Eloquent queries. Triggers for N+1 and query performance issues, caching strategies, authorization and security patterns, validation, error handling, queue and job configuration, route definitions, and architectural decisions. Also use for Laravel code reviews and refactoring existing Laravel code to follow best practices. Covers any task involving Laravel backend PHP code patterns.
 - `pest-testing` — Use this skill for Pest PHP testing in Laravel projects only. Trigger whenever any test is being written, edited, fixed, or refactored — including fixing tests that broke after a code change, adding assertions, converting PHPUnit to Pest, adding datasets, and TDD workflows. Always activate when the user asks how to write something in Pest, mentions test files or directories (tests/Feature, tests/Unit, tests/Browser), or needs browser testing, smoke testing multiple pages for JS errors, or architecture tests. Covers: test()/it()/expect() syntax, datasets, mocking, browser testing (visit/click/fill), smoke testing, arch(), Livewire component tests, RefreshDatabase, and all Pest 4 features. Do not use for factories, seeders, migrations, controllers, models, or non-test PHP code.
+- `inertia-vue-development` — Develops Inertia.js v3 Vue client-side applications. Activates when creating Vue pages, forms, or navigation; using <Link>, <Form>, useForm, useHttp, setLayoutProps, or router; working with deferred props, prefetching, optimistic updates, instant visits, or polling; or when user mentions Vue with Inertia, Vue pages, Vue forms, or Vue navigation.
 - `tailwindcss-development` — Always invoke when the user's message includes 'tailwind' in any form. Also invoke for: building responsive grid layouts (multi-column card grids, product grids), flex/grid page structures (dashboards with sidebars, fixed topbars, mobile-toggle navs), styling UI components (cards, tables, navbars, pricing sections, forms, inputs, badges), adding dark mode variants, fixing spacing or typography, and Tailwind v3/v4 work. The core use case: writing or fixing Tailwind utility classes in HTML templates (Blade, JSX, Vue). Skip for backend PHP logic, database queries, API routes, JavaScript with no HTML/CSS component, CSS file audits, build tool configuration, and vanilla CSS.
-
-## Package Usage
-
-### Roles & Permissions — spatie/laravel-permission
-- Use for ALL role and permission management. Never roll custom gate/policy logic for role checks; use `hasRole()`, `hasPermissionTo()`, and `@can` instead.
-- Assign roles/permissions via `$user->assignRole()` / `$user->givePermissionTo()`. Define roles and permissions in a seeder.
-- Use the `HasRoles` trait on the `User` model.
-
-### Media — spatie/laravel-medialibrary
-- Use for ALL file and image uploads. Never store files manually with `Storage::put` when a model owns the media.
-- Implement `HasMedia` + `InteractsWithMedia` on any model that needs file attachments.
-- Define media collections in `registerMediaCollections()` and conversions in `registerMediaConversions()`.
-
-### Activity Logging — spatie/laravel-activitylog
-- Use for ALL audit trails and change tracking. Never write custom logging tables for model changes.
-- Use the `LogsActivity` trait on models. Override `getActivitylogOptions()` to control which attributes are logged.
-- For manual events, use `activity()->log('...')` or `activity()->on($model)->log('...')`.
-
-### Actions — lorisleiva/laravel-actions
-- Use for ALL business logic. Controllers, jobs, listeners, and console commands should delegate to actions.
-- Create actions with `php artisan make:action {Name}`. Place them in `app/Actions/`.
-- Each action has a single `handle()` method. Use `AsAction`, `AsController`, `AsJob`, etc. traits to expose the action through multiple entry points.
-
-### Frontend — Inertia + Vue + Ziggy + shadcn-vue
-- Use **Inertia** (`Inertia::render()`) for ALL page rendering. Never return plain Blade views for pages — Blade is only for the root `app.blade.php` template.
-- All Vue page components live in `resources/js/Pages/`. Reusable components go in `resources/js/Components/`.
-- Use **Ziggy** (`route()` helper / `ZiggyVue`) in Vue components for named route URLs. Never hardcode URL strings.
-- Use **shadcn-vue** components for ALL UI elements. Add components via `npx shadcn-vue@latest add {component}`. Never build from scratch what shadcn-vue provides.
 
 ## Conventions
 
@@ -142,6 +117,7 @@ This project has domain-specific skills available. You MUST activate the relevan
 - Inertia creates fully client-side rendered SPAs without modern SPA complexity, leveraging existing server-side patterns.
 - Components live in `resources/js/Pages` (unless specified in `vite.config.js`). Use `Inertia::render()` for server-side routing instead of Blade views.
 - ALWAYS use `search-docs` tool for version-specific Inertia documentation and updated code examples.
+- IMPORTANT: Activate `inertia-vue-development` when working with Inertia Vue client-side patterns.
 
 # Inertia v3
 
@@ -205,5 +181,12 @@ This project has domain-specific skills available. You MUST activate the relevan
 - This project uses Pest for testing. Create tests: `php artisan make:test --pest {name}`.
 - Run tests: `php artisan test --compact` or filter: `php artisan test --compact --filter=testName`.
 - Do NOT delete tests without approval.
+
+=== inertia-vue/core rules ===
+
+# Inertia + Vue
+
+Vue components must have a single root element.
+- IMPORTANT: Activate `inertia-vue-development` when working with Inertia Vue client-side patterns.
 
 </laravel-boost-guidelines>
