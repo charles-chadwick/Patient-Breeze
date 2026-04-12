@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Policies;
+
+use App\Enums\UserRole;
+use App\Models\Patient;
+use App\Models\User;
+
+class PatientPolicy
+{
+    public function viewAny(User $user): bool
+    {
+        return $user->can('view_patients');
+    }
+
+    public function view(User $user, Patient $patient): bool
+    {
+        if ($user->can('view_patients')) {
+            return true;
+        }
+
+        return $user->id === $patient->user_id;
+    }
+
+    public function create(User $user): bool
+    {
+        return $user->can('create_patients');
+    }
+
+    public function update(User $user, Patient $patient): bool
+    {
+        if ($user->can('update_patients')) {
+            return true;
+        }
+
+        return $user->id === $patient->user_id;
+    }
+
+    public function delete(User $user, Patient $patient): bool
+    {
+        return $user->can('delete_patients');
+    }
+
+    public function restore(User $user, Patient $patient): bool
+    {
+        return $user->can('delete_patients');
+    }
+
+    public function forceDelete(User $user, Patient $patient): bool
+    {
+        return $user->hasRole(UserRole::SuperAdmin->value);
+    }
+}
