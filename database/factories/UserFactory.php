@@ -24,19 +24,14 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $created_at = fake()->dateTimeBetween('2020-01-01', '2023-12-31');
-
         return [
-            'prefix' => fake()->randomElement(['Dr.', '']),
             'first_name' => fake()->firstName(),
+            'middle_name' => '',
             'last_name' => fake()->lastName(),
-            'suffix' => fake()->randomElement(['MD', 'ARNP', 'NP', '']),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'created_at' => $created_at,
-            'updated_at' => $created_at,
         ];
     }
 

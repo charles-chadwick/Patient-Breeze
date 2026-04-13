@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GenderAtBirth;
+use App\Enums\GenderIdentity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class Patient extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -32,6 +33,7 @@ class Patient extends Model
         return [
             'date_of_birth' => 'date',
             'gender_at_birth' => GenderAtBirth::class,
+            'gender_identity' => GenderIdentity::class,
         ];
     }
 

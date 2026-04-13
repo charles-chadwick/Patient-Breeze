@@ -3,9 +3,12 @@
 namespace Database\Factories;
 
 use App\Enums\GenderAtBirth;
+use App\Enums\GenderIdentity;
+use App\Enums\UserRole;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Spatie\Permission\Models\Role;
 
 class PatientFactory extends Factory
 {
@@ -13,24 +16,47 @@ class PatientFactory extends Factory
 
     public function definition(): array
     {
-        $gender_at_birth = $this->faker->randomElement(GenderAtBirth::cases());
-
-        $prefix = match ($gender_at_birth) {
-            GenderAtBirth::Male => 'Mr.',
-            GenderAtBirth::Female => $this->faker->randomElement(['Mrs.', 'Ms.']),
-            GenderAtBirth::Unknown => $this->faker->randomElement(['Mr.', 'Mrs.', 'Ms.']),
-        };
-
-        $created_at = fake()->dateTimeBetween('2021-01-01', 'yesterday');
+        $gender = fake()->randomElement(GenderAtBirth::cases());
 
         return [
-            'prefix' => $prefix,
-            'date_of_birth' => fake()->dateTimeBetween('-100 years', '-18 months'),
-            'gender_at_birth' => $gender_at_birth,
-            'blood_type' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
-            'created_at' => $created_at,
-            'updated_at' => $created_at,
-            'user_id' => User::factory(),
+            'user_id' => User::factory()->state([
+                'prefix' => $this->prefixForGender($gender),
+            ]),
+            'date_of_birth' => fake()->dateTimeBetween('-80 years', '-18 years'),
+            'gender_at_birth' => $gender,
+            'gender_identity' => fake()->randomElement(GenderIdentity::cases()),
+            'blood_type' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Patient $patient): void {
+            Role::findOrCreate(UserRole::Patient->value);
+            $patient->user->assignRole(UserRole::Patient->value);
+        });
+    }
+
+    /**
+     * @param  array<string, mixed>  $userState
+     */
+    public function withUserState(array $userState): static
+    {
+        return $this->state(function (array $attributes) use ($userState) {
+            return [
+                'user_id' => User::factory()->state(array_merge([
+                    'prefix' => $this->prefixForGender($attributes['gender_at_birth']),
+                ], $userState)),
+            ];
+        });
+    }
+
+    private function prefixForGender(GenderAtBirth $gender): string
+    {
+        return match ($gender) {
+            GenderAtBirth::Male => 'Mr.',
+            GenderAtBirth::Female => 'Ms.',
+            GenderAtBirth::Unknown => '',
+        };
     }
 }
