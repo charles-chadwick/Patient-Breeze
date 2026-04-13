@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
+use Exception;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,9 +24,16 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, LogsActivity, Notifiable, SoftDeletes;
 
+    /**
+     * @throws Exception
+     */
     public function patient(): HasOne
     {
-        return $this->hasOne(Patient::class);
+        if ($this->hasRole(UserRole::Patient->value)) {
+            return $this->hasOne(Patient::class);
+        } else {
+            throw new \Exception('User does not have a patient');
+        }
     }
 
     public function isPatient(): bool
