@@ -3,7 +3,7 @@
     "laravel-boost": {
       "command": "/usr/bin/php8.4",
       "args": [
-        "/home/charles/Projects/Learning/PB/artisan",
+        "/Users/charles/Projects/PB/artisan",
         "boost:mcp"
       ]
     }
