@@ -22,6 +22,7 @@ class PatientFactory extends Factory
             'user_id' => User::factory()->state([
                 'prefix' => $this->prefixForGender($gender),
             ]),
+            'mrn' => 'MRN-'.str_pad((string) fake()->unique()->numberBetween(1, 9999999), 7, '0', STR_PAD_LEFT),
             'date_of_birth' => fake()->dateTimeBetween('-80 years', '-18 years'),
             'gender_at_birth' => $gender,
             'gender_identity' => fake()->randomElement(GenderIdentity::cases()),

@@ -1,8 +1,9 @@
 <script setup>
+import { ref } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings } from 'lucide-vue-next'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X } from 'lucide-vue-next'
 
-const props = defineProps({
+defineProps({
     title: {
         type: String,
         default: 'Dashboard',
@@ -18,15 +19,32 @@ const nav_items = [
 ]
 
 const page = usePage()
+const sidebar_open = ref(false)
 </script>
 
 <template>
     <div class="flex h-screen overflow-hidden">
+        <!-- Mobile backdrop -->
+        <div
+            v-if="sidebar_open"
+            class="fixed inset-0 z-20 bg-black/50 lg:hidden"
+            @click="sidebar_open = false"
+        />
+
         <!-- Sidebar -->
-        <aside class="flex w-64 flex-col bg-primary">
+        <aside
+            class="fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-primary transition-transform duration-300 lg:static lg:translate-x-0 lg:transition-none"
+            :class="sidebar_open ? 'translate-x-0' : '-translate-x-full'"
+        >
             <!-- Logo -->
-            <div class="flex h-16 items-center px-6">
+            <div class="flex h-16 items-center justify-between px-6">
                 <span class="text-xl font-bold text-white">PB Health</span>
+                <button
+                    class="rounded p-1 text-white/70 hover:text-white lg:hidden"
+                    @click="sidebar_open = false"
+                >
+                    <X class="size-5" />
+                </button>
             </div>
 
             <!-- Navigation -->
@@ -37,6 +55,7 @@ const page = usePage()
                     :href="route().has(item.route) ? route(item.route) : '#'"
                     class="flex items-center gap-3 rounded-lg px-3 py-2.5 font-bold text-white/70 transition-colors hover:bg-white/10 hover:text-white"
                     :class="{ 'bg-white/15 text-white': route().current(item.route) }"
+                    @click="sidebar_open = false"
                 >
                     <component :is="item.icon" class="size-4 shrink-0 text-white" />
                     <span>{{ item.label }}</span>
@@ -64,8 +83,14 @@ const page = usePage()
         <!-- Main content -->
         <div class="flex flex-1 flex-col overflow-hidden">
             <!-- Top bar -->
-            <header class="flex h-16 items-center border-b border-border bg-white px-6">
-                <h1 class="text-lg font-bold text-foreground">{{ props.title }}</h1>
+            <header class="flex h-16 items-center gap-4 border-b border-border bg-white px-6">
+                <button
+                    class="rounded p-1 text-foreground hover:text-primary lg:hidden"
+                    @click="sidebar_open = true"
+                >
+                    <Menu class="size-5" />
+                </button>
+                <h1 class="text-lg font-bold text-foreground">{{ title }}</h1>
             </header>
 
             <!-- Page content -->

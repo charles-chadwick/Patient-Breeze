@@ -69,14 +69,14 @@ function genderBadgeClass(gender) {
 
 <template>
     <div class="rounded border border-border bg-white shadow-sm">
-        <div class="flex items-center justify-between border-b border-border px-6 py-4">
+        <div class="flex flex-col gap-3 border-b border-border px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-3">
                 <h2 class="font-bold text-foreground">All Patients</h2>
                 <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
                     {{ patients.total }}
                 </span>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <SortDropdown
                     :sort-by="props.sort_by"
                     :direction="props.direction"
@@ -84,78 +84,84 @@ function genderBadgeClass(gender) {
                     :params="{ search: props.search || undefined }"
                     route-name="patients.index"
                 />
-                <div class="w-72">
-                    <SearchInput
-                        :model-value="props.search"
-                        :params="{ sort_by: props.sort_by, direction: props.direction }"
-                        placeholder="Search by name or email…"
-                        route-name="patients.index"
-                    />
-                </div>
+                <SearchInput
+                    :model-value="props.search"
+                    :params="{ sort_by: props.sort_by, direction: props.direction }"
+                    placeholder="Search by name, MRN, or email…"
+                    route-name="patients.index"
+                    class="w-full sm:w-72"
+                />
             </div>
         </div>
 
-        <table class="w-full text-sm">
-            <thead class="sticky top-0 z-10 bg-white shadow-[0_1px_0_0_var(--color-border)]">
-                <tr class="text-left">
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Name</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Date of Birth</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Gender</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Blood Type</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="patients.data.length === 0">
-                    <td colspan="5" class="px-6 py-10 text-center text-sm text-muted-foreground">
-                        No patients found.
-                    </td>
-                </tr>
-                <tr
-                    v-for="(patient, index) in patients.data"
-                    :key="patient.id"
-                    class="border-l-2 border-transparent transition-colors hover:border-primary hover:bg-primary/5"
-                    :class="index % 2 !== 0 ? 'bg-muted/20' : 'bg-white'"
-                >
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-3">
-                            <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                                {{ patientInitials(patient.user) }}
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="sticky top-0 z-10 bg-white shadow-[0_1px_0_0_var(--color-border)]">
+                    <tr class="text-left">
+                        <th class="px-6 py-3 font-bold text-muted-foreground">Name</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground sm:table-cell">MRN</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground md:table-cell">Date of Birth</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground md:table-cell">Gender</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground lg:table-cell">Blood Type</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground lg:table-cell">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-if="patients.data.length === 0">
+                        <td colspan="6" class="px-6 py-10 text-center text-sm text-muted-foreground">
+                            No patients found.
+                        </td>
+                    </tr>
+                    <tr
+                        v-for="(patient, index) in patients.data"
+                        :key="patient.id"
+                        class="border-l-2 border-transparent transition-colors hover:border-primary hover:bg-primary/5"
+                        :class="index % 2 !== 0 ? 'bg-muted/20' : 'bg-white'"
+                    >
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                                    {{ patientInitials(patient.user) }}
+                                </div>
+                                <div>
+                                    <Link
+                                        :href="route('patients.show', patient.id)"
+                                        class="font-bold text-primary hover:underline"
+                                    >
+                                        {{ patient.user.prefix }} {{ patient.user.first_name }} {{ patient.user.last_name }}{{ patient.user.suffix ? `, ${patient.user.suffix}` : '' }}
+                                    </Link>
+                                    <p class="mt-0.5 font-mono text-xs text-muted-foreground sm:hidden">{{ patient.mrn }}</p>
+                                </div>
                             </div>
-                            <Link
-                                :href="route('patients.show', patient.id)"
-                                class="font-bold text-primary hover:underline"
+                        </td>
+                        <td class="hidden px-6 py-4 font-mono text-sm text-muted-foreground sm:table-cell">{{ patient.mrn }}</td>
+                        <td class="hidden px-6 py-4 text-foreground md:table-cell">
+                            {{ formatDate(patient.date_of_birth, DATE_SHORT) }}
+                            <span class="ml-1 text-xs text-muted-foreground">· {{ calculateAge(patient.date_of_birth) }}y</span>
+                        </td>
+                        <td class="hidden px-6 py-4 md:table-cell">
+                            <span
+                                class="rounded-full px-2.5 py-0.5 text-xs font-medium"
+                                :class="genderBadgeClass(patient.gender_at_birth)"
                             >
-                                {{ patient.user.prefix }} {{ patient.user.first_name }} {{ patient.user.last_name }}{{ patient.user.suffix ? `, ${patient.user.suffix}` : '' }}
-                            </Link>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-foreground">
-                        {{ formatDate(patient.date_of_birth, DATE_SHORT) }}
-                        <span class="ml-1 text-xs text-muted-foreground">· {{ calculateAge(patient.date_of_birth) }}y</span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span
-                            class="rounded-full px-2.5 py-0.5 text-xs font-medium"
-                            :class="genderBadgeClass(patient.gender_at_birth)"
-                        >
-                            {{ patient.gender_at_birth }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span
-                            v-if="patient.blood_type"
-                            class="rounded-full px-2.5 py-0.5 text-xs font-bold"
-                            :class="bloodTypeBadgeClass(patient.blood_type)"
-                        >
-                            {{ patient.blood_type }}
-                        </span>
-                        <span v-else class="text-muted-foreground">—</span>
-                    </td>
-                    <td class="px-6 py-4 text-muted-foreground">{{ patient.user.email }}</td>
-                </tr>
-            </tbody>
-        </table>
+                                {{ patient.gender_at_birth }}
+                            </span>
+                        </td>
+                        <td class="hidden px-6 py-4 lg:table-cell">
+                            <span
+                                v-if="patient.blood_type"
+                                class="rounded-full px-2.5 py-0.5 text-xs font-bold"
+                                :class="bloodTypeBadgeClass(patient.blood_type)"
+                            >
+                                {{ patient.blood_type }}
+                            </span>
+                            <span v-else class="text-muted-foreground">—</span>
+                        </td>
+                        <td class="hidden px-6 py-4 text-muted-foreground lg:table-cell">{{ patient.user.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="flex items-center justify-between border-t border-border px-6 py-4">
             <p class="text-sm text-muted-foreground">

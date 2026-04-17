@@ -20,6 +20,7 @@ class Patient extends Model
 
     protected $fillable = [
         'user_id',
+        'mrn',
         'date_of_birth',
         'gender_at_birth',
         'gender_identity',
@@ -29,6 +30,7 @@ class Patient extends Model
     protected function searchableFields(): array
     {
         return [
+            'mrn',
             'blood_type',
             'user.first_name',
             'user.last_name',
