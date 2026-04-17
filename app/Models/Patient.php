@@ -4,16 +4,19 @@ namespace App\Models;
 
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
+use App\Models\Concerns\Searchable;
+use App\Models\Concerns\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
 class Patient extends Model
 {
-    use HasFactory, LogsActivity, SoftDeletes;
+    use HasFactory, LogsActivity, Searchable, SoftDeletes, Sortable;
 
     protected $fillable = [
         'user_id',
@@ -23,9 +26,34 @@ class Patient extends Model
         'blood_type',
     ];
 
+    protected function searchableFields(): array
+    {
+        return [
+            'blood_type',
+            'user.first_name',
+            'user.last_name',
+            'user.email',
+        ];
+    }
+
+    protected function sortableFields(): array
+    {
+        return [
+            'last_name' => 'user.last_name',
+            'first_name' => 'user.first_name',
+            'date_of_birth' => 'date_of_birth',
+            'blood_type' => 'blood_type',
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
     }
 
     protected function casts(): array

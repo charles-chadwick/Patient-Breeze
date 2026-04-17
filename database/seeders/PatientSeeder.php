@@ -5,9 +5,13 @@ namespace Database\Seeders;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Throwable;
 
 class PatientSeeder extends Seeder
 {
+    /**
+     * @throws Throwable
+     */
     public function run(): void
     {
         foreach ($this->readCsv(database_path('data/dummy_patients.csv')) as $data) {
@@ -37,6 +41,8 @@ class PatientSeeder extends Seeder
 
     /**
      * @return list<array<string, string>>
+     *
+     * @throws Throwable
      */
     private function readCsv(string $path): array
     {

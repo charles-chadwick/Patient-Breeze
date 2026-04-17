@@ -52,6 +52,10 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - Always add soft deletes to migrations (`$table->softDeletes()`) and models (`use SoftDeletes`).
 
+## Colors
+
+- The project defines three semantic brand colors: `primary` (purple), `accent` (lime), and `darker` (stone). Always reach for these — via Tailwind utilities `bg-primary`, `text-accent`, `bg-darker`, etc. — before using any other Tailwind color palette classes.
+
 ## Frontend Bundling
 
 - If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
