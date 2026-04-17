@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Appointment;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -11,7 +12,6 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class, 'user_id')->nullable();
             $table->foreignIdFor(User::class, 'patient_id')->nullable();
             $table->date('date');
             $table->time('start_time');
@@ -22,10 +22,21 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('appointment_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Appointment::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->string('role');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->unique(['appointment_id', 'user_id']);
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('appointment_user');
         Schema::dropIfExists('appointments');
     }
 };

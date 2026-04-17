@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,16 +30,23 @@ class User extends Authenticatable
      */
     public function patient(): HasOne
     {
-        if ($this->hasRole(UserRole::Patient->value)) {
+        if ($this->isPatient()) {
             return $this->hasOne(Patient::class);
         } else {
-            throw new \Exception('User does not have a patient');
+            throw new Exception('User is not a patient');
         }
     }
 
     public function isPatient(): bool
     {
         return $this->hasRole(UserRole::Patient->value);
+    }
+
+    public function appointments(): BelongsToMany
+    {
+        return $this->belongsToMany(Appointment::class)
+            ->withPivot('role')
+            ->withTimestamps();
     }
 
     /**
@@ -50,6 +58,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function scopeStaff($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', '!=', UserRole::Patient->value);
+        });
+    }
+
+    public function scopePatients($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', '=', UserRole::Patient->value);
+        });
     }
 
     public function getActivitylogOptions(): LogOptions

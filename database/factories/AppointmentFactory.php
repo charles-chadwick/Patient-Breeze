@@ -2,10 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Enums\AppointmentRole;
 use App\Enums\AppointmentStatus;
+use App\Enums\UserRole;
 use App\Models\Appointment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 /**
  * @extends Factory<Appointment>
@@ -16,8 +19,7 @@ class AppointmentFactory extends Factory
 
     public function definition(): array
     {
-        $provider = User::inRandomOrder()->first() ?? User::factory()->create();
-        $patient = User::where('id', '!=', $provider->id)->inRandomOrder()->first() ?? User::factory()->create();
+        $patient = User::patients()->inRandomOrder()->first() ?? User::factory()->create();
 
         $start_hour = fake()->numberBetween(8, 16);
         $start_minute = fake()->randomElement([0, 30]);
@@ -28,10 +30,10 @@ class AppointmentFactory extends Factory
         $end_hour = $start_hour + intdiv($end_minute, 60);
         $end_time = sprintf('%02d:%02d:00', $end_hour, $end_minute % 60);
 
-        $created_at = fake()->dateTimeBetween($patient->created_at, 'yesterday');
+        $created_at_floor = Carbon::parse($patient->created_at)->min(now()->subDays(2));
+        $created_at = fake()->dateTimeBetween($created_at_floor, 'yesterday');
 
         return [
-            'user_id' => $provider->id,
             'patient_id' => $patient->id,
             'date' => fake()->dateTimeBetween($patient->created_at, '+6 months'),
             'start_time' => $start_time,
@@ -53,6 +55,42 @@ class AppointmentFactory extends Factory
         ];
     }
 
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Appointment $appointment): void {
+            if ($appointment->users()->exists()) {
+                return;
+            }
+
+            $appointment->attachProvider($this->resolveStaff(), AppointmentRole::Primary);
+        });
+    }
+
+    public function withProvider(User $user, AppointmentRole $role = AppointmentRole::Primary): static
+    {
+        return $this->afterCreating(function (Appointment $appointment) use ($user, $role): void {
+            $appointment->users()->detach();
+            $appointment->attachProvider($user, $role);
+        });
+    }
+
+    public function withProviders(int $count): static
+    {
+        return $this->afterCreating(function (Appointment $appointment) use ($count): void {
+            $appointment->users()->detach();
+
+            $roles = [AppointmentRole::Primary, AppointmentRole::Assistant];
+            $excluded_ids = [];
+
+            for ($i = 0; $i < $count; $i++) {
+                $staff = $this->resolveStaff($excluded_ids);
+                $excluded_ids[] = $staff->id;
+
+                $appointment->attachProvider($staff, $roles[$i] ?? AppointmentRole::Assistant);
+            }
+        });
+    }
+
     public function scheduled(): static
     {
         return $this->state(['status' => AppointmentStatus::Scheduled]);
@@ -71,5 +109,17 @@ class AppointmentFactory extends Factory
     public function cancelled(): static
     {
         return $this->state(['status' => AppointmentStatus::Cancelled]);
+    }
+
+    /**
+     * @param  array<int, int>  $excluded_ids
+     */
+    private function resolveStaff(array $excluded_ids = []): User
+    {
+        return User::staff()
+            ->whereNotIn('id', $excluded_ids)
+            ->inRandomOrder()
+            ->first()
+            ?? User::factory()->withRole(UserRole::Staff)->create();
     }
 }
