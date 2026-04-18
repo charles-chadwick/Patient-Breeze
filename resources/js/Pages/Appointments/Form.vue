@@ -1,18 +1,69 @@
 <script setup>
-defineProps({
-    patient: Object,
+import { computed } from 'vue'
+import { Link, setLayoutProps } from '@inertiajs/vue3'
+import DashboardLayout from '@/Layouts/DashboardLayout.vue'
+import AppointmentForm from '@/Pages/Appointments/Partials/AppointmentForm.vue'
+
+defineOptions({ layout: DashboardLayout })
+
+const props = defineProps({
+    patient: {
+        type: Object,
+        required: true,
+    },
     appointment: {
         type: Object,
         default: null,
     },
-    status_options: Array,
-    role_options: Array,
-    staff_options: Array,
+    status_options: {
+        type: Array,
+        required: true,
+    },
+    role_options: {
+        type: Array,
+        required: true,
+    },
+    staff_options: {
+        type: Array,
+        required: true,
+    },
 })
+
+const isEditing = computed(() => props.appointment !== null)
+
+setLayoutProps({
+    title: computed(() =>
+        isEditing.value ? 'Edit Appointment' : 'New Appointment'
+    ),
+})
+
+const backHref = computed(() => route('patients.show', props.patient.id))
+
+const formAction = computed(() =>
+    isEditing.value
+        ? route('patients.appointments.update', [props.patient.id, props.appointment.id])
+        : route('patients.appointments.store', props.patient.id)
+)
+
+const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
 </script>
 
 <template>
-    <div>
-        <!-- Appointments/Form placeholder -->
+    <div class="grid gap-6">
+        <div>
+            <Link :href="backHref" class="text-sm font-bold text-primary hover:underline">
+                ← Back to {{ patient.user.first_name }} {{ patient.user.last_name }}
+            </Link>
+        </div>
+
+        <AppointmentForm
+            :action="formAction"
+            :method="formMethod"
+            :appointment="appointment"
+            :cancel-href="backHref"
+            :status_options="status_options"
+            :role_options="role_options"
+            :staff_options="staff_options"
+        />
     </div>
 </template>
