@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\UserController;
@@ -11,6 +12,9 @@ Route::get('/', function () {
 
 Route::get('/dashboard', DashboardController::class)->name('dashboard');
 Route::resource('patients', PatientController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+Route::resource('patients.appointments', AppointmentController::class)
+    ->only(['create', 'store', 'edit', 'update'])
+    ->scoped();
 Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'edit', 'update']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
