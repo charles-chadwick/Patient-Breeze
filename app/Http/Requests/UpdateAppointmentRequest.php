@@ -37,6 +37,10 @@ class UpdateAppointmentRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function ($validator) {
+            if ($validator->errors()->has('staff')) {
+                return;
+            }
+
             $primaryCount = collect($this->input('staff', []))
                 ->filter(fn ($s) => ($s['role'] ?? '') === AppointmentRole::Primary->value)
                 ->count();
