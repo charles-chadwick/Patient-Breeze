@@ -102,8 +102,14 @@ const status_classes = {
         </div>
 
         <div class="rounded-xl border border-border bg-white shadow-sm">
-            <div class="border-b border-border px-6 py-4">
+            <div class="flex items-center justify-between border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">Appointments</h2>
+                <Link
+                    :href="route('patients.appointments.create', patient.id)"
+                    class="rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90"
+                >
+                    + New Appointment
+                </Link>
             </div>
 
             <div v-if="patient.appointments.length === 0" class="px-6 py-8 text-center text-sm text-muted-foreground">
@@ -119,6 +125,7 @@ const status_classes = {
                         <th class="px-6 py-3 font-bold text-muted-foreground">Staff</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">Status</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">Notes</th>
+                        <th class="px-6 py-3"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-border">
@@ -159,6 +166,14 @@ const status_classes = {
                             </span>
                         </td>
                         <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? '—' }}</td>
+                        <td class="px-6 py-3">
+                            <Link
+                                :href="route('patients.appointments.edit', [patient.id, appointment.id])"
+                                class="text-xs font-bold text-primary hover:underline"
+                            >
+                                Edit
+                            </Link>
+                        </td>
                     </tr>
                 </tbody>
             </table>
