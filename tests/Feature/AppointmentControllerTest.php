@@ -80,6 +80,9 @@ it('renders the edit form for an appointment', function () {
             ->component('Appointments/Form')
             ->has('appointment')
             ->has('patient')
+            ->has('status_options')
+            ->has('role_options')
+            ->has('staff_options')
         );
 });
 

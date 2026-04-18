@@ -26,9 +26,7 @@ class AppointmentController extends Controller
     {
         return Inertia::render('Appointments/Form', [
             'patient' => $patient->load('user'),
-            'status_options' => array_column(AppointmentStatus::cases(), 'value'),
-            'role_options' => array_column(AppointmentRole::cases(), 'value'),
-            'staff_options' => User::staff()->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
+            ...$this->sharedProps(),
         ]);
     }
 
@@ -46,9 +44,7 @@ class AppointmentController extends Controller
         return Inertia::render('Appointments/Form', [
             'patient' => $patient->load('user'),
             'appointment' => $appointment,
-            'status_options' => array_column(AppointmentStatus::cases(), 'value'),
-            'role_options' => array_column(AppointmentRole::cases(), 'value'),
-            'staff_options' => User::staff()->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
+            ...$this->sharedProps(),
         ]);
     }
 
@@ -57,5 +53,17 @@ class AppointmentController extends Controller
         $this->updateAction->execute($appointment, $request->validated());
 
         return redirect()->route('patients.show', $patient);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function sharedProps(): array
+    {
+        return [
+            'status_options' => array_column(AppointmentStatus::cases(), 'value'),
+            'role_options' => array_column(AppointmentRole::cases(), 'value'),
+            'staff_options' => User::staff()->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
+        ];
     }
 }
