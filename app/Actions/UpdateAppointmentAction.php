@@ -6,6 +6,7 @@ use App\Enums\AppointmentRole;
 use App\Models\Appointment;
 use App\Models\User;
 use App\Services\AppointmentConflictService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class UpdateAppointmentAction
@@ -34,21 +35,24 @@ class UpdateAppointmentAction
             ]);
         }
 
-        $appointment->update([
-            'date' => $validated['date'],
-            'start_time' => $validated['start_time'],
-            'end_time' => $validated['end_time'],
-            'status' => $validated['status'],
-            'reason' => $validated['reason'],
-            'notes' => $validated['notes'] ?? null,
-        ]);
+        DB::transaction(function () use ($appointment, $validated) {
+            $appointment->update([
+                'date' => $validated['date'],
+                'start_time' => $validated['start_time'],
+                'end_time' => $validated['end_time'],
+                'status' => $validated['status'],
+                'reason' => $validated['reason'],
+                'notes' => $validated['notes'] ?? null,
+            ]);
 
-        $appointment->users()->detach();
+            $appointment->users()->detach();
 
-        foreach ($validated['staff'] as $entry) {
-            $user = User::findOrFail($entry['user_id']);
-            $appointment->attachProvider($user, AppointmentRole::from($entry['role']));
-        }
+            $users = User::findMany(array_column($validated['staff'], 'user_id'))->keyBy('id');
+
+            foreach ($validated['staff'] as $entry) {
+                $appointment->attachProvider($users[$entry['user_id']], AppointmentRole::from($entry['role']));
+            }
+        });
 
         return $appointment->fresh();
     }

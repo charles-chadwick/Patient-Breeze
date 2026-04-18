@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\AppointmentConflictService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class BookAppointmentAction
@@ -34,20 +35,25 @@ class BookAppointmentAction
             ]);
         }
 
-        $appointment = Appointment::create([
-            'patient_id' => $patient->id,
-            'date' => $validated['date'],
-            'start_time' => $validated['start_time'],
-            'end_time' => $validated['end_time'],
-            'status' => $validated['status'],
-            'reason' => $validated['reason'],
-            'notes' => $validated['notes'] ?? null,
-        ]);
+        $appointment = DB::transaction(function () use ($patient, $validated) {
+            $appointment = Appointment::create([
+                'patient_id' => $patient->id,
+                'date' => $validated['date'],
+                'start_time' => $validated['start_time'],
+                'end_time' => $validated['end_time'],
+                'status' => $validated['status'],
+                'reason' => $validated['reason'],
+                'notes' => $validated['notes'] ?? null,
+            ]);
 
-        foreach ($validated['staff'] as $entry) {
-            $user = User::findOrFail($entry['user_id']);
-            $appointment->attachProvider($user, AppointmentRole::from($entry['role']));
-        }
+            $users = User::findMany(array_column($validated['staff'], 'user_id'))->keyBy('id');
+
+            foreach ($validated['staff'] as $entry) {
+                $appointment->attachProvider($users[$entry['user_id']], AppointmentRole::from($entry['role']));
+            }
+
+            return $appointment;
+        });
 
         return $appointment;
     }
