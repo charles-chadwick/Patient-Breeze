@@ -2,6 +2,8 @@
 import { Link, useForm } from '@inertiajs/vue3'
 import DatePicker from '@/Components/ui/DatePicker.vue'
 
+let _uid = 0
+
 const props = defineProps({
     action: {
         type: String,
@@ -41,13 +43,14 @@ const form = useForm({
     reason: props.appointment?.reason ?? '',
     notes: props.appointment?.notes ?? '',
     staff: props.appointment?.users?.map((u) => ({
+        _key: ++_uid,
         user_id: u.id,
         role: u.pivot.role,
-    })) ?? [{ user_id: '', role: 'Assistant' }],
+    })) ?? [{ _key: ++_uid, user_id: '', role: 'Assistant' }],
 })
 
 function addStaff() {
-    form.staff.push({ user_id: '', role: 'Assistant' })
+    form.staff.push({ _key: ++_uid, user_id: '', role: 'Assistant' })
 }
 
 function removeStaff(index) {
@@ -156,8 +159,10 @@ function submit() {
                         v-model="form.notes"
                         rows="3"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        :class="{ 'border-red-400': form.errors.notes }"
                         placeholder="Optional notes…"
                     />
+                    <p v-if="form.errors.notes" class="mt-1 text-xs text-red-600">{{ form.errors.notes }}</p>
                 </div>
             </div>
         </div>
@@ -177,7 +182,7 @@ function submit() {
             <div class="grid gap-3 px-6 py-5">
                 <div
                     v-for="(entry, index) in form.staff"
-                    :key="index"
+                    :key="entry._key"
                     class="flex items-center gap-3"
                 >
                     <select
