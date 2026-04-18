@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,7 +10,8 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/dashboard', DashboardController::class)->name('dashboard');
-Route::resource('patients', PatientController::class)->only(['index', 'show']);
+Route::resource('patients', PatientController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'edit', 'update']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Authenticated routes (patient, user, etc.) will be registered here.

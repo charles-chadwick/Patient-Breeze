@@ -77,6 +77,12 @@ function genderBadgeClass(gender) {
                 </span>
             </div>
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Link
+                    :href="route('patients.create')"
+                    class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90"
+                >
+                    + New Patient
+                </Link>
                 <SortDropdown
                     :sort-by="props.sort_by"
                     :direction="props.direction"
@@ -87,7 +93,7 @@ function genderBadgeClass(gender) {
                 <SearchInput
                     :model-value="props.search"
                     :params="{ sort_by: props.sort_by, direction: props.direction }"
-                    placeholder="Search by name, MRN, or email…"
+                    placeholder="Search by name, MRN, DOB, or email…"
                     route-name="patients.index"
                     class="w-full sm:w-72"
                 />
@@ -120,9 +126,11 @@ function genderBadgeClass(gender) {
                     >
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                                    {{ patientInitials(patient.user) }}
-                                </div>
+                                <img
+                                    :src="patient.user.avatar_url"
+                                    :alt="patientInitials(patient.user)"
+                                    class="size-8 shrink-0 rounded-full object-cover"
+                                />
                                 <div>
                                     <Link
                                         :href="route('patients.show', patient.id)"

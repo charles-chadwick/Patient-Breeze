@@ -31,6 +31,7 @@ class Patient extends Model
     {
         return [
             'mrn',
+            'date_of_birth',
             'blood_type',
             'user.first_name',
             'user.last_name',
@@ -56,6 +57,14 @@ class Patient extends Model
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    public static function generateMrn(): string
+    {
+        $max = static::withTrashed()->lockForUpdate()->max('mrn');
+        $number = $max ? ((int) substr($max, 4)) + 1 : 1;
+
+        return 'MRN-'.str_pad((string) $number, 7, '0', STR_PAD_LEFT);
     }
 
     protected function casts(): array

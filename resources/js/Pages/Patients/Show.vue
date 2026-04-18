@@ -1,4 +1,5 @@
 <script setup>
+import { computed, ref } from 'vue'
 import { Link, setLayoutProps } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { formatDate, DATE_SHORT, DATE_LONG } from '@/lib/utils'
@@ -16,6 +17,17 @@ setLayoutProps({
     title: `${props.patient.user.first_name} ${props.patient.user.last_name}`,
 })
 
+const fullName = computed(() =>
+    [props.patient.user.prefix, props.patient.user.first_name, props.patient.user.middle_name, props.patient.user.last_name, props.patient.user.suffix]
+        .filter(Boolean).join(' ')
+)
+
+const patientInitials = computed(() =>
+    `${props.patient.user.first_name[0]}${props.patient.user.last_name[0]}`.toUpperCase()
+)
+
+const showAvatarModal = ref(false)
+
 const status_classes = {
     Scheduled: 'bg-blue-100 text-blue-700',
     Confirmed: 'bg-green-100 text-green-700',
@@ -28,25 +40,43 @@ const status_classes = {
 
 <template>
     <div class="grid gap-6">
-        <div>
+        <div class="flex items-center justify-between">
             <Link
                 :href="route('patients.index')"
                 class="text-sm font-bold text-primary hover:underline"
             >
                 ← Back to Patients
             </Link>
+            <Link
+                :href="route('patients.edit', patient.id)"
+                class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
+            >
+                Edit Patient
+            </Link>
         </div>
 
         <div class="rounded-xl border border-border bg-white shadow-sm">
-            <div class="border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Demographics</h2>
+            <div class="flex items-center gap-5 border-b border-border px-6 py-5">
+                <button
+                    type="button"
+                    class="shrink-0 cursor-zoom-in focus:outline-none"
+                    @click="showAvatarModal = true"
+                >
+                    <img
+                        :src="patient.user.avatar_url"
+                        :alt="patientInitials"
+                        class="size-16 rounded-full object-cover ring-2 ring-primary/20"
+                    />
+                </button>
+                <div>
+                    <h2 class="text-lg font-bold text-foreground">{{ fullName }}</h2>
+                    <p class="mt-0.5 font-mono text-sm text-muted-foreground">{{ patient.mrn }}</p>
+                </div>
             </div>
             <div class="grid grid-cols-2 gap-x-8 gap-y-4 px-6 py-5 sm:grid-cols-3 lg:grid-cols-4">
                 <div>
                     <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Full Name</p>
-                    <p class="mt-1 text-sm font-bold text-foreground">
-                        {{ [patient.user.prefix, patient.user.first_name, patient.user.middle_name, patient.user.last_name, patient.user.suffix].filter(Boolean).join(' ') }}
-                    </p>
+                    <p class="mt-1 text-sm font-bold text-foreground">{{ fullName }}</p>
                 </div>
                 <div>
                     <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Date of Birth</p>
@@ -86,6 +116,7 @@ const status_classes = {
                         <th class="px-6 py-3 font-bold text-muted-foreground">Date</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">Time</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">Reason</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">Staff</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">Status</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">Notes</th>
                     </tr>
@@ -102,6 +133,24 @@ const status_classes = {
                         </td>
                         <td class="px-6 py-3 text-foreground">{{ appointment.reason }}</td>
                         <td class="px-6 py-3">
+                            <div v-if="appointment.users.length" class="flex flex-wrap gap-2">
+                                <div
+                                    v-for="user in appointment.users"
+                                    :key="user.id"
+                                    class="flex items-center gap-1.5"
+                                >
+                                    <img
+                                        :src="user.avatar_url"
+                                        :alt="`${user.first_name} ${user.last_name}`"
+                                        class="size-6 rounded-full object-cover ring-1 ring-border"
+                                    />
+                                    <span class="text-foreground">{{ user.first_name }} {{ user.last_name }}</span>
+                                    <span class="text-xs text-muted-foreground">({{ user.pivot.role }})</span>
+                                </div>
+                            </div>
+                            <span v-else class="text-muted-foreground">—</span>
+                        </td>
+                        <td class="px-6 py-3">
                             <span
                                 class="rounded-full px-2.5 py-0.5 text-xs font-bold"
                                 :class="status_classes[appointment.status] ?? 'bg-gray-100 text-gray-600'"
@@ -115,4 +164,28 @@ const status_classes = {
             </table>
         </div>
     </div>
+
+    <!-- Avatar modal -->
+    <Teleport to="body">
+        <div
+            v-if="showAvatarModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            @click.self="showAvatarModal = false"
+        >
+            <div class="relative max-w-sm w-full">
+                <button
+                    type="button"
+                    class="absolute -right-3 -top-3 flex size-8 items-center justify-center rounded-full bg-white shadow-md text-muted-foreground hover:text-foreground focus:outline-none"
+                    @click="showAvatarModal = false"
+                >
+                    ✕
+                </button>
+                <img
+                    :src="patient.user.avatar_url"
+                    :alt="patientInitials"
+                    class="w-full rounded-2xl object-cover shadow-xl ring-4 ring-white bg-white"
+                />
+            </div>
+        </div>
+    </Teleport>
 </template>

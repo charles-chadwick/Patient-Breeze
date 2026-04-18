@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserRole;
+use App\Models\Concerns\Searchable;
+use App\Models\Concerns\Sortable;
 use Database\Factories\UserFactory;
 use Exception;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -16,14 +17,19 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(['first_name', 'middle_name', 'last_name', 'prefix', 'suffix', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, LogsActivity, Notifiable, SoftDeletes;
+    use HasFactory, HasRoles, InteractsWithMedia, LogsActivity, Notifiable, Searchable, SoftDeletes, Sortable;
+
+    /** @var array<int, string> */
+    protected $appends = ['avatar_url'];
 
     /**
      * @throws Exception
@@ -72,6 +78,47 @@ class User extends Authenticatable
         return $query->whereHas('roles', function ($query) {
             $query->where('name', '=', UserRole::Patient->value);
         });
+    }
+
+    protected function searchableFields(): array
+    {
+        return ['first_name', 'last_name', 'email'];
+    }
+
+    protected function sortableFields(): array
+    {
+        return [
+            'last_name' => 'last_name',
+            'first_name' => 'first_name',
+            'email' => 'email',
+        ];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')->singleFile();
+    }
+
+    public static function identityData(array $validated): array
+    {
+        return [
+            'prefix' => $validated['prefix'] ?? '',
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'] ?? '',
+            'last_name' => $validated['last_name'],
+            'suffix' => $validated['suffix'] ?? '',
+            'email' => $validated['email'],
+        ];
+    }
+
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->relationLoaded('media')) {
+            return $this->getFirstMediaUrl('avatar')
+                ?: "https://i.pravatar.cc/80?u={$this->email}";
+        }
+
+        return "https://i.pravatar.cc/80?u={$this->email}";
     }
 
     public function getActivitylogOptions(): LogOptions

@@ -38,7 +38,6 @@ This project has domain-specific skills available. You MUST activate the relevan
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
-- All Vue files must be responsive. Use Tailwind responsive prefixes (`sm:`, `md:`, `lg:`) to ensure layouts work on mobile and desktop.
 
 ## Verification Scripts
 
@@ -48,14 +47,6 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - Stick to existing directory structure; don't create new base folders without approval.
 - Do not change the application's dependencies without approval.
-
-## Database
-
-- Always add soft deletes to migrations (`$table->softDeletes()`) and models (`use SoftDeletes`).
-
-## Colors
-
-- The project defines three semantic brand colors: `primary` (purple), `accent` (lime), and `darker` (stone). Always reach for these — via Tailwind utilities `bg-primary`, `text-accent`, `bg-darker`, etc. — before using any other Tailwind color palette classes.
 
 ## Frontend Bundling
 
@@ -119,6 +110,13 @@ This project has domain-specific skills available. You MUST activate the relevan
 - Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
 - Use array shape type definitions in PHPDoc blocks.
 
+=== tests rules ===
+
+# Test Enforcement
+
+- Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
+- Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test --compact` with a specific filename or filter.
+
 === inertia-laravel/core rules ===
 
 # Inertia
@@ -153,8 +151,6 @@ This project has domain-specific skills available. You MUST activate the relevan
 ### Model Creation
 
 - When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `php artisan make:model --help` to check the available options.
-- Always use Spatie's Activity Logging, and use `use Spatie\Activitylog\Models\Concerns\LogsActivity; use Spatie\Activitylog\Support\LogOptions;` as the imports. 
-- Ensure models use Soft Deletes
 
 ## APIs & Eloquent Resources
 
@@ -199,5 +195,29 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 Vue components must have a single root element.
 - IMPORTANT: Activate `inertia-vue-development` when working with Inertia Vue client-side patterns.
+
+=== project conventions ===
+
+# Project Conventions
+
+## Shared Create/Edit Forms
+
+When building create and edit functionality for any resource, use a single `CreateEdit.vue` page component with a shared form partial:
+
+```
+resources/js/Pages/{Resource}/
+  Form.vue                      ← single page: handles both create and edit modes
+  Partials/
+    {Resource}Form.vue          ← shared component: all form fields
+```
+
+**Rules:**
+- `Form.vue` accepts an optional `resource` prop (null = create mode, object = edit mode); derive `isEditing`, title, back link, action URL, and HTTP method from it using `computed()`
+- Both controller `create()` and `edit()` methods render `{Resource}/Form`
+- `{Resource}Form.vue` accepts `action` (URL string), `method` ('post' or 'put'), and the resource object (null for create) as props
+- Use `useForm` from `@inertiajs/vue3` initialized with the resource's existing values (or empty defaults for create)
+- Call `form[props.method](props.action)` on submit to handle both create and edit with one function
+- Pass enum options and other reference data from the controller as Inertia props; hardcode static lists in the form component
+- Always include a Cancel link back to the appropriate page (index for create, show for edit)
 
 </laravel-boost-guidelines>
