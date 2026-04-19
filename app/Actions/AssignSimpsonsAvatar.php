@@ -4,6 +4,8 @@ namespace App\Actions;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
 class AssignSimpsonsAvatar
 {
@@ -54,6 +56,7 @@ class AssignSimpsonsAvatar
                 ->usingName($key)
                 ->preservingOriginal()
                 ->toMediaCollection('avatar');
+        } catch (FileDoesNotExist|FileIsTooBig $e) {
         } finally {
             if ($source['temporary']) {
                 @unlink($source['path']);
