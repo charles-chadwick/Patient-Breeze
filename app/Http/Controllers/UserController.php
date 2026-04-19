@@ -58,6 +58,19 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
+    public function show(User $user): Response
+    {
+        $user->load([
+            'media',
+            'roles',
+            'appointments' => fn ($query) => $query->with(['patient.media', 'patientRecord'])->orderBy('date', 'desc')->limit(50),
+        ]);
+
+        return Inertia::render('Users/Show', [
+            'user' => $user,
+        ]);
+    }
+
     public function edit(User $user): Response
     {
         $user->load(['media', 'roles']);

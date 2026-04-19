@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\AppointmentConflictService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class UpdateAppointmentAction
 {
@@ -15,16 +16,18 @@ class UpdateAppointmentAction
 
     /**
      * @param  array<string, mixed>  $validated
+     *
+     * @throws Throwable
      */
     public function execute(Appointment $appointment, array $validated): Appointment
     {
-        $userIds = array_column($validated['staff'], 'user_id');
+        $user_ids = array_column($validated['staff'], 'user_id');
 
         $conflicts = $this->conflictService->findConflicts(
             $validated['date'],
             $validated['start_time'],
             $validated['end_time'],
-            $userIds,
+            $user_ids,
             $appointment->id,
         );
 

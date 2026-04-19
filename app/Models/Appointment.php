@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpIncompatibleReturnTypeInspection */
+<?php
+
+/** @noinspection PhpIncompatibleReturnTypeInspection */
 
 namespace App\Models;
 
@@ -32,6 +34,11 @@ class Appointment extends Model
     public function patient(): BelongsTo
     {
         return $this->belongsTo(User::class, 'patient_id');
+    }
+
+    public function patientRecord(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class, 'patient_id', 'user_id');
     }
 
     public function users(): BelongsToMany

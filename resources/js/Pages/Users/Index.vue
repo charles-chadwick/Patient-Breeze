@@ -110,9 +110,12 @@ const role_badge_classes = {
                                     class="size-8 shrink-0 rounded-full object-cover"
                                 />
                                 <div>
-                                    <p class="font-bold text-foreground">
+                                    <Link
+                                        :href="route('users.show', user.id)"
+                                        class="font-bold text-foreground hover:text-primary hover:underline"
+                                    >
                                         {{ [user.prefix, user.first_name, user.middle_name, user.last_name, user.suffix].filter(Boolean).join(' ') }}
-                                    </p>
+                                    </Link>
                                     <p class="mt-0.5 text-xs text-muted-foreground sm:hidden">{{ user.email }}</p>
                                 </div>
                             </div>

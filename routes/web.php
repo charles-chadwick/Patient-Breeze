@@ -15,7 +15,7 @@ Route::resource('patients', PatientController::class)->only(['index', 'create', 
 Route::resource('patients.appointments', AppointmentController::class)
     ->only(['create', 'store', 'edit', 'update'])
     ->scoped();
-Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'edit', 'update']);
+Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Authenticated routes (patient, user, etc.) will be registered here.

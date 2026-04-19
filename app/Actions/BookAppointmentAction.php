@@ -19,13 +19,13 @@ class BookAppointmentAction
      */
     public function execute(Patient $patient, array $validated): Appointment
     {
-        $userIds = array_column($validated['staff'], 'user_id');
+        $user_ids = array_column($validated['staff'], 'user_id');
 
         $conflicts = $this->conflictService->findConflicts(
             $validated['date'],
             $validated['start_time'],
             $validated['end_time'],
-            $userIds,
+            $user_ids,
         );
 
         if ($conflicts->isNotEmpty()) {

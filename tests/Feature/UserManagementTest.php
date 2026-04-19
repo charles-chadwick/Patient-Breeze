@@ -11,6 +11,17 @@ beforeEach(function (): void {
     }
 });
 
+it('renders the user show page', function (): void {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+
+    $this->get(route('users.show', $user))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Users/Show')
+            ->has('user')
+        );
+});
+
 it('renders the users index page', function (): void {
     User::factory()->count(3)->create();
 

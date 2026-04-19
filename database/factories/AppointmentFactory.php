@@ -19,7 +19,8 @@ class AppointmentFactory extends Factory
 
     public function definition(): array
     {
-        $patient = User::patients()->inRandomOrder()->first() ?? User::factory()->create();
+        $patient = User::patients()->inRandomOrder()->first()
+            ?? User::factory()->withRole(UserRole::Patient)->create();
 
         $start_hour = fake()->numberBetween(8, 16);
         $start_minute = fake()->randomElement([0, 30]);
@@ -120,6 +121,6 @@ class AppointmentFactory extends Factory
             ->whereNotIn('id', $excluded_ids)
             ->inRandomOrder()
             ->first()
-            ?? User::factory()->withRole(UserRole::Staff)->create();
+            ?? throw new \RuntimeException('No staff users found. Run UserSeeder first.');
     }
 }
