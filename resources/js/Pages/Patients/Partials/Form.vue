@@ -1,6 +1,7 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3'
 import DatePicker from '@/Components/ui/DatePicker.vue'
+import AvatarUpload from '@/Components/AvatarUpload.vue'
 
 const props = defineProps({
     action: {
@@ -44,6 +45,8 @@ const form = useForm({
     gender_at_birth: props.patient?.gender_at_birth ?? '',
     gender_identity: props.patient?.gender_identity ?? '',
     blood_type: props.patient?.blood_type ?? '',
+    avatar: null,
+    remove_avatar: false,
 })
 
 function submit() {
@@ -53,6 +56,21 @@ function submit() {
 
 <template>
     <form @submit.prevent="submit" class="grid gap-6">
+        <!-- Avatar -->
+        <div class="rounded-xl border border-border bg-white shadow-sm">
+            <div class="border-b border-border px-6 py-4">
+                <h2 class="font-bold text-foreground">Avatar</h2>
+            </div>
+            <div class="px-6 py-5">
+                <AvatarUpload
+                    v-model="form.avatar"
+                    v-model:removed="form.remove_avatar"
+                    :current-url="patient?.user?.avatar_url ?? null"
+                    :error="form.errors.avatar"
+                />
+            </div>
+        </div>
+
         <!-- Identity -->
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="border-b border-border px-6 py-4">

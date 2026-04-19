@@ -30,6 +30,8 @@ class UpdateUserRequest extends FormRequest
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
             'role' => ['required', Rule::in(array_column(UserRole::cases(), 'value'))],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'avatar' => ['nullable', 'image', 'max:2048'],
+            'remove_avatar' => ['nullable', 'boolean'],
         ];
     }
 }

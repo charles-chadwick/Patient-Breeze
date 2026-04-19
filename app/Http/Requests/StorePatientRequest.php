@@ -32,6 +32,8 @@ class StorePatientRequest extends FormRequest
             'gender_at_birth' => ['required', Rule::in(array_column(GenderAtBirth::cases(), 'value'))],
             'gender_identity' => ['nullable', Rule::in(array_column(GenderIdentity::cases(), 'value'))],
             'blood_type' => ['nullable', Rule::in(array_column(BloodType::cases(), 'value'))],
+            'avatar' => ['nullable', 'image', 'max:2048'],
+            'remove_avatar' => ['nullable', 'boolean'],
         ];
     }
 }

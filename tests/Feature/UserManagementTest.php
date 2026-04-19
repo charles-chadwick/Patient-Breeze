@@ -2,7 +2,9 @@
 
 use App\Enums\UserRole;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function (): void {
@@ -145,6 +147,56 @@ it('allows the same email when updating the same user', function (): void {
         'email' => 'same@example.com',
         'role' => UserRole::Staff->value,
     ])->assertRedirect(route('users.index'));
+});
+
+it('uploads an avatar when creating a user', function (): void {
+    Storage::fake('public');
+
+    $this->post(route('users.store'), [
+        'first_name' => 'Ned',
+        'last_name' => 'Flanders',
+        'email' => 'ned@springfield.com',
+        'role' => UserRole::Doctor->value,
+        'password' => 'okily-dokily1',
+        'password_confirmation' => 'okily-dokily1',
+        'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+    ])->assertRedirect(route('users.index'));
+
+    $user = User::where('email', 'ned@springfield.com')->first();
+    expect($user->getFirstMedia('avatar'))->not->toBeNull();
+});
+
+it('uploads an avatar when updating a user', function (): void {
+    Storage::fake('public');
+
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+
+    $this->put(route('users.update', $user), [
+        'first_name' => $user->first_name,
+        'last_name' => $user->last_name,
+        'email' => $user->email,
+        'role' => UserRole::Doctor->value,
+        'avatar' => UploadedFile::fake()->image('new-avatar.jpg'),
+    ])->assertRedirect(route('users.index'));
+
+    expect($user->fresh()->getFirstMedia('avatar'))->not->toBeNull();
+});
+
+it('removes an avatar when remove_avatar is true', function (): void {
+    Storage::fake('public');
+
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+    $user->addMedia(UploadedFile::fake()->image('avatar.jpg'))->toMediaCollection('avatar');
+
+    $this->put(route('users.update', $user), [
+        'first_name' => $user->first_name,
+        'last_name' => $user->last_name,
+        'email' => $user->email,
+        'role' => UserRole::Doctor->value,
+        'remove_avatar' => true,
+    ])->assertRedirect(route('users.index'));
+
+    expect($user->fresh()->getFirstMedia('avatar'))->toBeNull();
 });
 
 it('rejects an email belonging to another user on update', function (): void {

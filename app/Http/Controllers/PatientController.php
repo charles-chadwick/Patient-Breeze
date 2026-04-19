@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ManageAvatarAction;
 use App\Enums\BloodType;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
@@ -49,16 +50,17 @@ class PatientController extends Controller
         ]);
     }
 
-    public function store(StorePatientRequest $request): RedirectResponse
+    public function store(StorePatientRequest $request, ManageAvatarAction $avatarAction): RedirectResponse
     {
         $validated = $request->validated();
 
-        $patient = DB::transaction(function () use ($validated) {
+        $patient = DB::transaction(function () use ($request, $validated, $avatarAction) {
             $user = User::create(array_merge(User::identityData($validated), [
                 'password' => Hash::make(Str::random(32)),
             ]));
 
             $user->assignRole(UserRole::Patient->value);
+            $avatarAction->execute($user, $request->file('avatar'), false);
 
             return Patient::create([
                 'user_id' => $user->id,
@@ -100,7 +102,7 @@ class PatientController extends Controller
         ]);
     }
 
-    public function update(UpdatePatientRequest $request, Patient $patient): RedirectResponse
+    public function update(UpdatePatientRequest $request, Patient $patient, ManageAvatarAction $avatarAction): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -112,6 +114,8 @@ class PatientController extends Controller
             'gender_identity' => $validated['gender_identity'] ?? null,
             'blood_type' => $validated['blood_type'] ?? null,
         ]);
+
+        $avatarAction->execute($patient->user, $request->file('avatar'), (bool) ($validated['remove_avatar'] ?? false));
 
         return redirect()->route('patients.show', $patient);
     }

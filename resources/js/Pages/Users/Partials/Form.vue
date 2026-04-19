@@ -1,5 +1,6 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3'
+import AvatarUpload from '@/Components/AvatarUpload.vue'
 
 const props = defineProps({
     action: {
@@ -34,6 +35,8 @@ const form = useForm({
     role: props.user?.roles?.[0]?.name ?? '',
     password: '',
     password_confirmation: '',
+    avatar: null,
+    remove_avatar: false,
 })
 
 function submit() {
@@ -43,6 +46,21 @@ function submit() {
 
 <template>
     <form class="grid gap-6" @submit.prevent="submit">
+        <!-- Avatar -->
+        <div class="rounded-xl border border-border bg-white shadow-sm">
+            <div class="border-b border-border px-6 py-4">
+                <h2 class="font-bold text-foreground">Avatar</h2>
+            </div>
+            <div class="px-6 py-5">
+                <AvatarUpload
+                    v-model="form.avatar"
+                    v-model:removed="form.remove_avatar"
+                    :current-url="user?.avatar_url ?? null"
+                    :error="form.errors.avatar"
+                />
+            </div>
+        </div>
+
         <!-- Identity -->
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="border-b border-border px-6 py-4">

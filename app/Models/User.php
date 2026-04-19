@@ -19,6 +19,7 @@ use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(['first_name', 'middle_name', 'last_name', 'prefix', 'suffix', 'email', 'password'])]
@@ -97,6 +98,15 @@ class User extends Authenticatable implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('avatar')->singleFile();
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('avatar')
+            ->width(400)
+            ->height(400)
+            ->sharpen(10)
+            ->nonQueued();
     }
 
     public static function identityData(array $validated): array

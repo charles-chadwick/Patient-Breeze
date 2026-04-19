@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ManageAvatarAction;
 use App\Enums\UserRole;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -43,16 +44,17 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(StoreUserRequest $request): RedirectResponse
+    public function store(StoreUserRequest $request, ManageAvatarAction $avatarAction): RedirectResponse
     {
         $validated = $request->validated();
 
-        DB::transaction(function () use ($validated) {
+        DB::transaction(function () use ($request, $validated, $avatarAction) {
             $user = User::create(array_merge(User::identityData($validated), [
                 'password' => Hash::make($validated['password']),
             ]));
 
             $user->syncRoles([$validated['role']]);
+            $avatarAction->execute($user, $request->file('avatar'), false);
         });
 
         return redirect()->route('users.index');
@@ -81,7 +83,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(UpdateUserRequest $request, User $user): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user, ManageAvatarAction $avatarAction): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -92,6 +94,7 @@ class UserController extends Controller
         }
 
         $user->syncRoles([$validated['role']]);
+        $avatarAction->execute($user, $request->file('avatar'), (bool) ($validated['remove_avatar'] ?? false));
 
         return redirect()->route('users.index');
     }

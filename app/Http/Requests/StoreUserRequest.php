@@ -28,6 +28,8 @@ class StoreUserRequest extends FormRequest
             'email' => ['required', 'email', 'unique:users,email'],
             'role' => ['required', Rule::in(array_column(UserRole::cases(), 'value'))],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'avatar' => ['nullable', 'image', 'max:2048'],
+            'remove_avatar' => ['nullable', 'boolean'],
         ];
     }
 }
