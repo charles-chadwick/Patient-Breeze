@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\AssignSimpsonsAvatar;
 use App\Models\User;
+use Database\Seeders\AssignSimpsonsAvatar;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;

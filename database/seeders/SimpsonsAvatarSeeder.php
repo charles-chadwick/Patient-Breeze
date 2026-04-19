@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Actions\AssignSimpsonsAvatar;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
