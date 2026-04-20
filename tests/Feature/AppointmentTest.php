@@ -10,6 +10,12 @@ beforeEach(function (): void {
     foreach (UserRole::cases() as $role) {
         Role::findOrCreate($role->value);
     }
+
+    $actor = User::factory()->withRole(UserRole::Staff)->create();
+    User::factory()->withRole(UserRole::Staff)->create();
+    User::factory()->withRole(UserRole::Staff)->create();
+
+    $this->actingAs($actor);
 });
 
 it('attaches multiple non-patient users with distinct roles', function (): void {

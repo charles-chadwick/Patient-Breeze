@@ -110,6 +110,12 @@ This project has domain-specific skills available. You MUST activate the relevan
 - Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
 - Use array shape type definitions in PHPDoc blocks.
 
+=== deployments rules ===
+
+# Deployment
+
+- Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
+
 === tests rules ===
 
 # Test Enforcement
@@ -170,17 +176,12 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
 
-## Deployment
-
-- Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
-
 === pint/core rules ===
 
 # Laravel Pint Code Formatter
 
 - If you have modified any PHP files, you must run `vendor/bin/pint --dirty --format agent` before finalizing changes to ensure your code matches the project's expected style.
 - Do not run `vendor/bin/pint --test --format agent`, simply run `vendor/bin/pint --format agent` to fix any formatting issues.
-- Use `* @throws Throwable` when necessary, and other comments like it. 
 
 === pest/core rules ===
 
@@ -196,29 +197,5 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 Vue components must have a single root element.
 - IMPORTANT: Activate `inertia-vue-development` when working with Inertia Vue client-side patterns.
-
-=== project conventions ===
-
-# Project Conventions
-
-## Shared Create/Edit Forms
-
-When building create and edit functionality for any resource, use a single `CreateEdit.vue` page component with a shared form partial:
-
-```
-resources/js/Pages/{Resource}/
-  Form.vue                      ← single page: handles both create and edit modes
-  Partials/
-    {Resource}Form.vue          ← shared component: all form fields
-```
-
-**Rules:**
-- `Form.vue` accepts an optional `resource` prop (null = create mode, object = edit mode); derive `isEditing`, title, back link, action URL, and HTTP method from it using `computed()`
-- Both controller `create()` and `edit()` methods render `{Resource}/Form`
-- `{Resource}Form.vue` accepts `action` (URL string), `method` ('post' or 'put'), and the resource object (null for create) as props
-- Use `useForm` from `@inertiajs/vue3` initialized with the resource's existing values (or empty defaults for create)
-- Call `form[props.method](props.action)` on submit to handle both create and edit with one function
-- Pass enum options and other reference data from the controller as Inertia props; hardcode static lists in the form component
-- Always include a Cancel link back to the appropriate page (index for create, show for edit)
 
 </laravel-boost-guidelines>

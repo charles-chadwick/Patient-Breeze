@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\UserController;
@@ -10,14 +11,18 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/dashboard', DashboardController::class)->name('dashboard');
-Route::resource('patients', PatientController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
-Route::resource('patients.appointments', AppointmentController::class)
-    ->only(['create', 'store', 'edit', 'update'])
-    ->scoped();
-Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'create'])->name('login');
+    Route::post('/login', [LoginController::class, 'store']);
+});
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    // Authenticated routes (patient, user, etc.) will be registered here.
-    // Prefer Route::resource / apiResource with implicit model binding.
+Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::resource('patients', PatientController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+    Route::resource('patients.appointments', AppointmentController::class)
+        ->only(['create', 'store', 'edit', 'update'])
+        ->scoped();
+    Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
 });

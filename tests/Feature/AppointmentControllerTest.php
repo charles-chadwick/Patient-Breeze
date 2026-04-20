@@ -6,6 +6,15 @@ use App\Enums\UserRole;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
+
+beforeEach(function (): void {
+    foreach (UserRole::cases() as $role) {
+        Role::findOrCreate($role->value);
+    }
+
+    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
+});
 
 function makeStaffPayload(User $staff, string $role = 'Primary'): array
 {

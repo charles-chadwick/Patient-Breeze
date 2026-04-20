@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X } from 'lucide-vue-next'
+import { Head, Link, router, usePage } from '@inertiajs/vue3'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut } from 'lucide-vue-next'
 
 defineProps({
     title: {
@@ -23,6 +23,7 @@ const sidebar_open = ref(false)
 </script>
 
 <template>
+    <Head :title="title" />
     <div class="flex h-screen overflow-hidden">
         <!-- Mobile backdrop -->
         <div
@@ -65,7 +66,7 @@ const sidebar_open = ref(false)
             <!-- User footer -->
             <div class="border-t border-white/20 px-4 py-4">
                 <div class="flex items-center gap-3">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-sm font-bold text-white">
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-sm font-bold text-white">
                         {{ page.props.auth?.user?.first_name?.[0] ?? 'U' }}
                     </div>
                     <div class="flex-1 overflow-hidden">
@@ -76,6 +77,13 @@ const sidebar_open = ref(false)
                             {{ page.props.auth?.user?.email }}
                         </p>
                     </div>
+                    <button
+                        class="rounded p-1 text-white/60 hover:text-white"
+                        title="Sign out"
+                        @click="router.post(route('logout'))"
+                    >
+                        <LogOut class="size-4" />
+                    </button>
                 </div>
             </div>
         </aside>

@@ -3,6 +3,7 @@
 use App\Enums\GenderAtBirth;
 use App\Enums\UserRole;
 use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
@@ -11,6 +12,8 @@ beforeEach(function (): void {
     foreach (UserRole::cases() as $role) {
         Role::findOrCreate($role->value);
     }
+
+    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
 });
 
 it('uploads an avatar when creating a patient', function (): void {

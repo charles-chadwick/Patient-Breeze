@@ -11,6 +11,8 @@ beforeEach(function (): void {
     foreach (UserRole::cases() as $role) {
         Role::findOrCreate($role->value);
     }
+
+    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
 });
 
 it('renders the user show page', function (): void {
