@@ -56,7 +56,8 @@ class AssignSimpsonsAvatar
                 ->usingName($key)
                 ->preservingOriginal()
                 ->toMediaCollection('avatar');
-        } catch (FileDoesNotExist|FileIsTooBig $e) {
+        } catch (FileDoesNotExist|FileIsTooBig) {
+            // Non-critical; continue seeding other users
         } finally {
             if ($source['temporary']) {
                 @unlink($source['path']);

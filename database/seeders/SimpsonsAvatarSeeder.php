@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 
 class SimpsonsAvatarSeeder extends Seeder
 {
@@ -11,7 +12,7 @@ class SimpsonsAvatarSeeder extends Seeder
     {
         $action = new AssignSimpsonsAvatar;
 
-        User::with('media')->chunkById(100, function ($users) use ($action): void {
+        User::with('media')->chunkById(100, function (Collection $users) use ($action): void {
             foreach ($users as $user) {
                 if ($action->execute($user)) {
                     $this->command->info("Assigned avatar: {$user->first_name} {$user->last_name}");
