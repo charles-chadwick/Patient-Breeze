@@ -11,6 +11,15 @@ class AssignSimpsonsAvatar
 {
     /** @var array<string, array{file: string, url: string}> */
     public static array $avatars = [
+        'Homer Simpson' => ['file' => 'homer-simpson.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/0/02/Homer_Simpson_2006.png'],
+        'Charles Burns' => ['file' => 'charles-burns.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/5/56/Mr_Burns.png'],
+        'Clancy Wiggum' => ['file' => 'clancy-wiggum.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/7/7a/Chief_Wiggum.png'],
+        'Edna Krabappel' => ['file' => 'edna-krabappel.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/7/76/Edna_Krabappel.png'],
+        'Julius Hibbert' => ['file' => 'julius-hibbert.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/thumb/9/98/Dr._Hibbert.svg/250px-Dr._Hibbert.svg.png'],
+        'Timothy Lovejoy' => ['file' => 'timothy-lovejoy.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/7/7d/Rev_Lovejoy.png'],
+        'Seymour Skinner' => ['file' => 'seymour-skinner.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/3/3a/Seymour_Skinner.png'],
+        'Kent Brockman' => ['file' => 'kent-brockman.jpg', 'url' => 'https://upload.wikimedia.org/wikipedia/en/9/9d/Kent_Brockman.jpg'],
+        'Lionel Hutz' => ['file' => 'lionel-hutz.jpg', 'url' => 'https://upload.wikimedia.org/wikipedia/en/3/3f/Lionel_Hutz.jpg'],
         'Marge Simpson' => ['file' => 'marge-simpson.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/0/0b/Marge_Simpson.png'],
         'Bart Simpson' => ['file' => 'bart-simpson.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/a/aa/Bart_Simpson_200px.png'],
         'Lisa Simpson' => ['file' => 'lisa-simpson.png', 'url' => 'https://upload.wikimedia.org/wikipedia/en/e/ec/Lisa_Simpson.png'],
@@ -88,10 +97,8 @@ class AssignSimpsonsAvatar
             return null;
         }
 
-        $ext = pathinfo(parse_url($config['url'], PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'png';
-        $tmp = tempnam(sys_get_temp_dir(), 'simpsons_').'.'.$ext;
-        file_put_contents($tmp, $response->body());
+        file_put_contents($cached, $response->body());
 
-        return ['path' => $tmp, 'temporary' => true];
+        return ['path' => $cached, 'temporary' => false];
     }
 }
