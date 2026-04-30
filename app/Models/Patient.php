@@ -6,20 +6,29 @@ use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
+use Database\Factories\PatientFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Patient extends Model
+class Patient extends Model implements HasMedia
 {
-    use HasFactory, LogsActivity, Searchable, SoftDeletes, Sortable;
+    /** @use HasFactory<PatientFactory> */
+    use HasFactory, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable;
 
     protected $fillable = [
-        'user_id',
+        'prefix',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'suffix',
+        'email',
         'mrn',
         'date_of_birth',
         'gender_at_birth',
@@ -27,31 +36,27 @@ class Patient extends Model
         'blood_type',
     ];
 
+    /** @var array<int, string> */
+    protected $appends = ['avatar_url'];
+
     protected function searchableFields(): array
     {
         return [
+            'first_name',
+            'last_name',
+            'email',
             'mrn',
-            'date_of_birth',
-            'blood_type',
-            'user.first_name',
-            'user.last_name',
-            'user.email',
         ];
     }
 
     protected function sortableFields(): array
     {
         return [
-            'last_name' => 'user.last_name',
-            'first_name' => 'user.first_name',
+            'last_name' => 'last_name',
+            'first_name' => 'first_name',
             'date_of_birth' => 'date_of_birth',
             'blood_type' => 'blood_type',
         ];
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function appointments(): HasMany
@@ -65,6 +70,30 @@ class Patient extends Model
         $number = $max ? ((int) substr($max, 4)) + 1 : 1;
 
         return 'MRN-'.str_pad((string) $number, 7, '0', STR_PAD_LEFT);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')->singleFile();
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('avatar')
+            ->width(400)
+            ->height(400)
+            ->sharpen(10)
+            ->nonQueued();
+    }
+
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->relationLoaded('media')) {
+            return $this->getFirstMediaUrl('avatar')
+                ?: "https://i.pravatar.cc/80?u={$this->email}";
+        }
+
+        return "https://i.pravatar.cc/80?u={$this->email}";
     }
 
     protected function casts(): array
