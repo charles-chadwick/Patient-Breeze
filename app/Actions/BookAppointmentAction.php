@@ -35,7 +35,7 @@ class BookAppointmentAction
             ]);
         }
 
-        $appointment = DB::transaction(function () use ($patient, $validated) {
+        return DB::transaction(function () use ($patient, $validated) {
             $appointment = Appointment::create([
                 'patient_id' => $patient->id,
                 'date' => $validated['date'],
@@ -54,7 +54,5 @@ class BookAppointmentAction
 
             return $appointment;
         });
-
-        return $appointment;
     }
 }
