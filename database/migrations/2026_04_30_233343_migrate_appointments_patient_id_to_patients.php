@@ -11,13 +11,13 @@ return new class extends Migration
     {
         // Convert rows where patient_id is currently a users.id value.
         // Rows already storing a patients.id (from BookAppointmentAction) are
-        // not matched by this join and are left unchanged — both cases resolve
+        // not matched by the subquery and are left unchanged — both cases resolve
         // to a valid patients.id after this runs.
         DB::statement('
-            UPDATE appointments a
-            INNER JOIN patients p ON p.user_id = a.patient_id
-            SET a.patient_id = p.id
-            WHERE a.patient_id IS NOT NULL
+            UPDATE appointments
+            SET patient_id = (SELECT id FROM patients WHERE user_id = patient_id)
+            WHERE patient_id IS NOT NULL
+              AND EXISTS (SELECT 1 FROM patients WHERE user_id = patient_id)
         ');
 
         Schema::table('appointments', function (Blueprint $table): void {
@@ -36,10 +36,10 @@ return new class extends Migration
 
         // Reverse: convert patients.id back to users.id
         DB::statement('
-            UPDATE appointments a
-            INNER JOIN patients p ON p.id = a.patient_id
-            SET a.patient_id = p.user_id
-            WHERE a.patient_id IS NOT NULL
+            UPDATE appointments
+            SET patient_id = (SELECT user_id FROM patients WHERE id = patient_id)
+            WHERE patient_id IS NOT NULL
+              AND EXISTS (SELECT 1 FROM patients WHERE id = patient_id)
         ');
     }
 };
