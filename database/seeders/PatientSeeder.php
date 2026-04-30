@@ -16,14 +16,12 @@ class PatientSeeder extends Seeder
     public function run(): void
     {
         foreach ($this->readCsv(database_path('data/dummy_patients.csv')) as $data) {
-            Patient::factory()
-                ->withUserState([
-                    'first_name' => $data['first_name'],
-                    'middle_name' => $data['middle_name'] ?? '',
-                    'last_name' => $data['last_name'],
-                    'email' => $this->uniqueEmailFor($data['first_name'], $data['last_name']),
-                ])
-                ->create();
+            Patient::factory()->create([
+                'first_name' => $data['first_name'],
+                'middle_name' => $data['middle_name'] ?? '',
+                'last_name' => $data['last_name'],
+                'email' => $this->uniqueEmailFor($data['first_name'], $data['last_name']),
+            ]);
         }
     }
 }

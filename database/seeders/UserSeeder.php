@@ -16,13 +16,8 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $nonPatientRoles = array_filter(
-            UserRole::cases(),
-            fn (UserRole $role) => $role !== UserRole::Patient,
-        );
-
         foreach ($this->readCsv(database_path('data/dummy_users.csv')) as $data) {
-            $role = fake()->randomElement($nonPatientRoles);
+            $role = fake()->randomElement(UserRole::cases());
 
             $user = User::factory()->create([
                 'prefix' => $this->prefixForRole($role),
