@@ -4,8 +4,8 @@ namespace Database\Factories;
 
 use App\Enums\AppointmentRole;
 use App\Enums\AppointmentStatus;
-use App\Enums\UserRole;
 use App\Models\Appointment;
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
@@ -19,8 +19,8 @@ class AppointmentFactory extends Factory
 
     public function definition(): array
     {
-        $patient = User::patients()->inRandomOrder()->first()
-            ?? User::factory()->withRole(UserRole::Patient)->create();
+        $patient = Patient::inRandomOrder()->first()
+            ?? Patient::factory()->create();
 
         $start_hour = fake()->numberBetween(8, 16);
         $start_minute = fake()->randomElement([0, 30]);
