@@ -15,11 +15,7 @@ class PatientPolicy
 
     public function view(User $user, Patient $patient): bool
     {
-        if ($user->can('view_patients')) {
-            return true;
-        }
-
-        return $user->id === $patient->user_id;
+        return $user->can('view_patients');
     }
 
     public function create(User $user): bool
@@ -29,11 +25,7 @@ class PatientPolicy
 
     public function update(User $user, Patient $patient): bool
     {
-        if ($user->can('update_patients')) {
-            return true;
-        }
-
-        return $user->id === $patient->user_id;
+        return $user->can('update_patients');
     }
 
     public function delete(User $user, Patient $patient): bool

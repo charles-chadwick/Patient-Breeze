@@ -27,7 +27,7 @@ class StorePatientRequest extends FormRequest
             'middle_name' => ['nullable', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
             'suffix' => ['nullable', 'string', 'max:20'],
-            'email' => ['required', 'email', 'unique:users,email'],
+            'email' => ['required', 'email', 'unique:patients,email'],
             'date_of_birth' => ['required', 'date', 'before:today'],
             'gender_at_birth' => ['required', Rule::in(array_column(GenderAtBirth::cases(), 'value'))],
             'gender_identity' => ['nullable', Rule::in(array_column(GenderIdentity::cases(), 'value'))],

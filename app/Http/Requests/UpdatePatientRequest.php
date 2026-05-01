@@ -29,7 +29,7 @@ class UpdatePatientRequest extends FormRequest
             'middle_name' => ['nullable', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
             'suffix' => ['nullable', 'string', 'max:20'],
-            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($patient->user_id)],
+            'email' => ['required', 'email', Rule::unique('patients', 'email')->ignore($patient->id)],
             'date_of_birth' => ['required', 'date', 'before:today'],
             'gender_at_birth' => ['required', Rule::in(array_column(GenderAtBirth::cases(), 'value'))],
             'gender_identity' => ['nullable', Rule::in(array_column(GenderIdentity::cases(), 'value'))],

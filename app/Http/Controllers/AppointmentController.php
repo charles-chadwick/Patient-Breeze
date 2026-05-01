@@ -25,7 +25,7 @@ class AppointmentController extends Controller
     public function create(Patient $patient): Response
     {
         return Inertia::render('Appointments/Form', [
-            'patient' => $patient->load('user'),
+            'patient' => $patient->load('media'),
             ...$this->sharedProps(),
         ]);
     }
@@ -42,7 +42,7 @@ class AppointmentController extends Controller
         $appointment->load('users');
 
         return Inertia::render('Appointments/Form', [
-            'patient' => $patient->load('user'),
+            'patient' => $patient->load('media'),
             'appointment' => $appointment,
             ...$this->sharedProps(),
         ]);
