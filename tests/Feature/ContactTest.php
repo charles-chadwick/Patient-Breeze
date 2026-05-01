@@ -31,12 +31,9 @@ it('allows phone and street_address to be null', function (): void {
 
 it('retrieves all contacts for a patient', function (): void {
     $patient = Patient::factory()->create();
-    Contact::factory()->count(3)->create([
-        'contactable_type' => Patient::class,
-        'contactable_id' => $patient->id,
-    ]);
+    Contact::factory()->count(3)->for($patient, 'contactable')->create();
 
-    expect($patient->contacts)->toHaveCount(3);
+    expect($patient->contacts()->count())->toBe(3);
 });
 
 it('casts type to ContactType enum', function (): void {
@@ -48,10 +45,7 @@ it('casts type to ContactType enum', function (): void {
 
 it('contact factory produces valid contacts', function (): void {
     $patient = Patient::factory()->create();
-    $contact = Contact::factory()->create([
-        'contactable_type' => Patient::class,
-        'contactable_id' => $patient->id,
-    ]);
+    $contact = Contact::factory()->for($patient, 'contactable')->create();
 
     expect($contact->type)->toBeInstanceOf(ContactType::class);
 });
