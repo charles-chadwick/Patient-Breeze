@@ -39,12 +39,11 @@ it('creates a new patient and redirects to show', function (): void {
         'blood_type' => 'O+',
     ])->assertRedirect();
 
-    $patient = Patient::whereHas('user', fn ($q) => $q->where('email', 'john.doe@example.com'))->first();
+    $patient = Patient::where('email', 'john.doe@example.com')->first();
 
     expect($patient)->not->toBeNull();
     expect($patient->mrn)->toStartWith('MRN-');
-    expect($patient->user->first_name)->toBe('John');
-    expect($patient->user->hasRole(UserRole::Patient->value))->toBeTrue();
+    expect($patient->first_name)->toBe('John');
 });
 
 it('validates required fields on store', function (): void {
@@ -53,7 +52,7 @@ it('validates required fields on store', function (): void {
 });
 
 it('rejects a duplicate email on store', function (): void {
-    User::factory()->create(['email' => 'taken@example.com']);
+    Patient::factory()->create(['email' => 'taken@example.com']);
 
     $this->post(route('patients.store'), [
         'first_name' => 'Jane',
@@ -86,26 +85,26 @@ it('updates a patient and redirects to show', function (): void {
         'middle_name' => '',
         'last_name' => 'Name',
         'suffix' => '',
-        'email' => $patient->user->email,
+        'email' => $patient->email,
         'date_of_birth' => '1992-03-20',
         'gender_at_birth' => GenderAtBirth::Female->value,
         'gender_identity' => null,
         'blood_type' => 'A+',
     ])->assertRedirect(route('patients.show', $patient));
 
-    expect($patient->user->fresh()->first_name)->toBe('Updated');
+    expect($patient->fresh()->first_name)->toBe('Updated');
     expect($patient->fresh()->blood_type)->toBe('A+');
 });
 
-it('allows the same email on update for the same user', function (): void {
+it('allows the same email on update for the same patient', function (): void {
     $patient = Patient::factory()->create();
 
     $this->put(route('patients.update', $patient), [
-        'first_name' => $patient->user->first_name,
+        'first_name' => $patient->first_name,
         'middle_name' => '',
-        'last_name' => $patient->user->last_name,
+        'last_name' => $patient->last_name,
         'suffix' => '',
-        'email' => $patient->user->email,
+        'email' => $patient->email,
         'date_of_birth' => '1992-03-20',
         'gender_at_birth' => GenderAtBirth::Male->value,
         'blood_type' => null,
@@ -113,7 +112,7 @@ it('allows the same email on update for the same user', function (): void {
 });
 
 it('rejects a duplicate email on update', function (): void {
-    User::factory()->create(['email' => 'other@example.com']);
+    Patient::factory()->create(['email' => 'other@example.com']);
     $patient = Patient::factory()->create();
 
     $this->put(route('patients.update', $patient), [
