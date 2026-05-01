@@ -27,14 +27,6 @@ class LoginController extends Controller
             return back()->withErrors(['email' => 'These credentials do not match our records.']);
         }
 
-        if (Auth::user()->isPatient()) {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return back()->withErrors(['email' => 'Please use the patient portal to log in.']);
-        }
-
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard'));

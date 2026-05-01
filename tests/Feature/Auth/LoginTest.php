@@ -46,16 +46,6 @@ it('rejects invalid credentials', function (): void {
     $this->assertGuest();
 });
 
-it('rejects a patient attempting to log in via staff portal', function (): void {
-    $patient = User::factory()->withRole(UserRole::Patient)->create();
-
-    $this->post(route('login'), [
-        'email' => $patient->email,
-        'password' => 'password',
-    ])->assertSessionHasErrors(['email' => 'Please use the patient portal to log in.']);
-
-    $this->assertGuest();
-});
 
 it('logs out an authenticated user', function (): void {
     $user = User::factory()->withRole(UserRole::Doctor)->create();
