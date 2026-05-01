@@ -52,7 +52,7 @@ const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
     <div class="grid gap-6">
         <div>
             <Link :href="backHref" class="text-sm font-bold text-primary hover:underline">
-                ← Back to {{ patient.user.first_name }} {{ patient.user.last_name }}
+                ← Back to {{ patient.first_name }} {{ patient.last_name }}
             </Link>
         </div>
 

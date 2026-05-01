@@ -14,16 +14,16 @@ const props = defineProps({
 })
 
 setLayoutProps({
-    title: `${props.patient.user.first_name} ${props.patient.user.last_name}`,
+    title: `${props.patient.first_name} ${props.patient.last_name}`,
 })
 
 const fullName = computed(() =>
-    [props.patient.user.prefix, props.patient.user.first_name, props.patient.user.middle_name, props.patient.user.last_name, props.patient.user.suffix]
+    [props.patient.prefix, props.patient.first_name, props.patient.middle_name, props.patient.last_name, props.patient.suffix]
         .filter(Boolean).join(' ')
 )
 
 const patientInitials = computed(() =>
-    `${props.patient.user.first_name[0]}${props.patient.user.last_name[0]}`.toUpperCase()
+    `${props.patient.first_name[0]}${props.patient.last_name[0]}`.toUpperCase()
 )
 
 const showAvatarModal = ref(false)
@@ -63,7 +63,7 @@ const status_classes = {
                     @click="showAvatarModal = true"
                 >
                     <img
-                        :src="patient.user.avatar_url"
+                        :src="patient.avatar_url"
                         :alt="patientInitials"
                         class="size-16 rounded-full object-cover ring-2 ring-primary/20"
                     />
@@ -96,7 +96,7 @@ const status_classes = {
                 </div>
                 <div>
                     <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Email</p>
-                    <p class="mt-1 text-sm text-foreground">{{ patient.user.email }}</p>
+                    <p class="mt-1 text-sm text-foreground">{{ patient.email }}</p>
                 </div>
             </div>
         </div>
@@ -196,7 +196,7 @@ const status_classes = {
                     ✕
                 </button>
                 <img
-                    :src="patient.user.avatar_url"
+                    :src="patient.avatar_url"
                     :alt="patientInitials"
                     class="w-full rounded-2xl object-cover shadow-xl ring-4 ring-white bg-white"
                 />

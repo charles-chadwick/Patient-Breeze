@@ -35,12 +35,12 @@ const props = defineProps({
 })
 
 const form = useForm({
-    prefix: props.patient?.user?.prefix ?? '',
-    first_name: props.patient?.user?.first_name ?? '',
-    middle_name: props.patient?.user?.middle_name ?? '',
-    last_name: props.patient?.user?.last_name ?? '',
-    suffix: props.patient?.user?.suffix ?? '',
-    email: props.patient?.user?.email ?? '',
+    prefix: props.patient?.prefix ?? '',
+    first_name: props.patient?.first_name ?? '',
+    middle_name: props.patient?.middle_name ?? '',
+    last_name: props.patient?.last_name ?? '',
+    suffix: props.patient?.suffix ?? '',
+    email: props.patient?.email ?? '',
     date_of_birth: props.patient?.date_of_birth ?? '',
     gender_at_birth: props.patient?.gender_at_birth ?? '',
     gender_identity: props.patient?.gender_identity ?? '',
@@ -65,7 +65,7 @@ function submit() {
                 <AvatarUpload
                     v-model="form.avatar"
                     v-model:removed="form.remove_avatar"
-                    :current-url="patient?.user?.avatar_url ?? null"
+                    :current-url="patient?.avatar_url ?? null"
                     :error="form.errors.avatar"
                 />
             </div>

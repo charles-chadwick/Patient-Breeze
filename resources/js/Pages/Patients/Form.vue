@@ -30,7 +30,7 @@ const isEditing = computed(() => props.patient !== null)
 setLayoutProps({
     title: computed(() =>
         isEditing.value
-            ? `Edit ${props.patient.user.first_name} ${props.patient.user.last_name}`
+            ? `Edit ${props.patient.first_name} ${props.patient.last_name}`
             : 'New Patient'
     ),
 })

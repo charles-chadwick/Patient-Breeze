@@ -35,8 +35,8 @@ const sort_options = [
     { label: 'Blood Type', value: 'blood_type' },
 ]
 
-function patientInitials(user) {
-    return `${user.first_name[0]}${user.last_name[0]}`.toUpperCase()
+function patientInitials(patient) {
+    return `${patient.first_name[0]}${patient.last_name[0]}`.toUpperCase()
 }
 
 function calculateAge(dateOfBirth) {
@@ -127,8 +127,8 @@ function genderBadgeClass(gender) {
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <img
-                                    :src="patient.user.avatar_url"
-                                    :alt="patientInitials(patient.user)"
+                                    :src="patient.avatar_url"
+                                    :alt="patientInitials(patient)"
                                     class="size-8 shrink-0 rounded-full object-cover"
                                 />
                                 <div>
@@ -136,7 +136,7 @@ function genderBadgeClass(gender) {
                                         :href="route('patients.show', patient.id)"
                                         class="font-bold text-primary hover:underline"
                                     >
-                                        {{ patient.user.prefix }} {{ patient.user.first_name }} {{ patient.user.last_name }}{{ patient.user.suffix ? `, ${patient.user.suffix}` : '' }}
+                                        {{ patient.prefix }} {{ patient.first_name }} {{ patient.last_name }}{{ patient.suffix ? `, ${patient.suffix}` : '' }}
                                     </Link>
                                     <p class="mt-0.5 font-mono text-xs text-muted-foreground sm:hidden">{{ patient.mrn }}</p>
                                 </div>
@@ -165,7 +165,7 @@ function genderBadgeClass(gender) {
                             </span>
                             <span v-else class="text-muted-foreground">—</span>
                         </td>
-                        <td class="hidden px-6 py-4 text-muted-foreground lg:table-cell">{{ patient.user.email }}</td>
+                        <td class="hidden px-6 py-4 text-muted-foreground lg:table-cell">{{ patient.email }}</td>
                     </tr>
                 </tbody>
             </table>
