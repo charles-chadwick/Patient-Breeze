@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { Link, setLayoutProps } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import AppointmentForm from '@/Pages/Appointments/Partials/AppointmentForm.vue'
+import PatientCard from '@/Components/PatientCard.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -55,6 +56,8 @@ const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
                 ← Back to {{ patient.first_name }} {{ patient.last_name }}
             </Link>
         </div>
+
+        <PatientCard :patient="patient" />
 
         <AppointmentForm
             :action="formAction"
