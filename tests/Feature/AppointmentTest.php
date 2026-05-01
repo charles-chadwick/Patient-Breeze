@@ -31,23 +31,23 @@ it('attaches multiple non-patient users with distinct roles', function (): void 
     $appointment->attachProvider($doctor, AppointmentRole::Primary);
     $appointment->attachProvider($nurse, AppointmentRole::Assistant);
 
-    expect($appointment->users()->count())->toBe(2);
-    expect($appointment->primaryProvider()->is($doctor))->toBeTrue();
+    expect($appointment->users()->count())->toBe(2)
+        ->and($appointment->primaryProvider()->is($doctor))->toBeTrue();
 });
 
 it('creates an appointment with a single primary provider by default', function (): void {
     $appointment = Appointment::factory()->create();
 
-    expect($appointment->users()->count())->toBe(1);
-    expect($appointment->primaryProvider())->not->toBeNull();
+    expect($appointment->users()->count())->toBe(1)
+        ->and($appointment->primaryProvider())->not->toBeNull();
 });
 
 it('creates an appointment with multiple providers via withProviders state', function (): void {
     $appointment = Appointment::factory()->withProviders(2)->create();
 
-    expect($appointment->users()->count())->toBe(2);
-    expect($appointment->users->pluck('id')->unique()->count())->toBe(2);
-    expect($appointment->primaryProvider())->not->toBeNull();
+    expect($appointment->users()->count())->toBe(2)
+        ->and($appointment->users->pluck('id')->unique()->count())->toBe(2)
+        ->and($appointment->primaryProvider())->not->toBeNull();
 });
 
 it('exposes appointments a user is attached to', function (): void {
@@ -62,6 +62,6 @@ it('exposes appointments a user is attached to', function (): void {
 
     $appointment_ids = $doctor->appointments()->pluck('appointments.id');
 
-    expect($appointment_ids)->toContain($attached->id);
-    expect($appointment_ids)->not->toContain($unrelated->id);
+    expect($appointment_ids)->toContain($attached->id)
+        ->and($appointment_ids)->not->toContain($unrelated->id);
 });

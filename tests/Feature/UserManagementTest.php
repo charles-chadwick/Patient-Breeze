@@ -62,10 +62,11 @@ it('creates a new user with the given password', function (): void {
 
     $user = User::where('email', 'ned@springfield.com')->first();
 
-    expect($user)->not->toBeNull();
-    expect($user->first_name)->toBe('Ned');
-    expect($user->hasRole(UserRole::Doctor->value))->toBeTrue();
-    expect(Hash::check('okily-dokily1', $user->password))->toBeTrue();
+    expect($user)
+        ->not->toBeNull()
+        ->and($user->first_name)->toBe('Ned')
+        ->and($user->hasRole(UserRole::Doctor->value))->toBeTrue()
+        ->and(Hash::check('okily-dokily1', $user->password))->toBeTrue();
 });
 
 it('requires a password on store', function (): void {
@@ -119,8 +120,9 @@ it('updates a user without changing the password when left blank', function (): 
         'role' => UserRole::Nurse->value,
     ])->assertRedirect(route('users.index'));
 
-    expect(Hash::check('original-password', $user->fresh()->password))->toBeTrue();
-    expect($user->fresh()->hasRole(UserRole::Nurse->value))->toBeTrue();
+    $fresh = $user->fresh();
+    expect(Hash::check('original-password', $fresh->password))->toBeTrue()
+        ->and($fresh->hasRole(UserRole::Nurse->value))->toBeTrue();
 });
 
 it('updates the password when provided on edit', function (): void {

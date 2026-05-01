@@ -41,9 +41,10 @@ it('creates a new patient and redirects to show', function (): void {
 
     $patient = Patient::where('email', 'john.doe@example.com')->first();
 
-    expect($patient)->not->toBeNull();
-    expect($patient->mrn)->toStartWith('MRN-');
-    expect($patient->first_name)->toBe('John');
+    expect($patient)
+        ->not->toBeNull()
+        ->and($patient->mrn)->toStartWith('MRN-')
+        ->and($patient->first_name)->toBe('John');
 });
 
 it('validates required fields on store', function (): void {
@@ -92,8 +93,9 @@ it('updates a patient and redirects to show', function (): void {
         'blood_type' => 'A+',
     ])->assertRedirect(route('patients.show', $patient));
 
-    expect($patient->fresh()->first_name)->toBe('Updated');
-    expect($patient->fresh()->blood_type)->toBe('A+');
+    $fresh = $patient->fresh();
+    expect($fresh->first_name)->toBe('Updated')
+        ->and($fresh->blood_type)->toBe('A+');
 });
 
 it('allows the same email on update for the same patient', function (): void {

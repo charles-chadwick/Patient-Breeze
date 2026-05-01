@@ -56,8 +56,8 @@ it('creates an appointment and redirects to patient show', function () {
     );
 
     $response->assertRedirect(route('patients.show', $patient));
-    expect(Appointment::count())->toBe(1);
-    expect(Appointment::first()->users()->count())->toBe(1);
+    expect(Appointment::count())->toBe(1)
+        ->and(Appointment::first()->users()->count())->toBe(1);
 });
 
 it('rejects store when a staff member has a conflicting appointment', function () {
