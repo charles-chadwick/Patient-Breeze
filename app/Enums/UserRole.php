@@ -9,5 +9,4 @@ enum UserRole: string
     case Nurse = 'Nurse';
     case MedicalAssistant = 'Medical Assistant';
     case Staff = 'Staff';
-    case Patient = 'Patient';
 }

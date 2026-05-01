@@ -2,16 +2,13 @@
 
 namespace App\Models;
 
-use App\Enums\UserRole;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
 use Database\Factories\UserFactory;
-use Exception;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -31,23 +28,6 @@ class User extends Authenticatable implements HasMedia
 
     /** @var array<int, string> */
     protected $appends = ['avatar_url'];
-
-    /**
-     * @throws Exception
-     */
-    public function patient(): HasOne
-    {
-        if ($this->isPatient()) {
-            return $this->hasOne(Patient::class);
-        } else {
-            throw new Exception('User is not a patient');
-        }
-    }
-
-    public function isPatient(): bool
-    {
-        return $this->hasRole(UserRole::Patient->value);
-    }
 
     public function appointments(): BelongsToMany
     {
@@ -69,16 +49,7 @@ class User extends Authenticatable implements HasMedia
 
     public function scopeStaff($query)
     {
-        return $query->whereHas('roles', function ($query) {
-            $query->where('name', '!=', UserRole::Patient->value);
-        });
-    }
-
-    public function scopePatients($query)
-    {
-        return $query->whereHas('roles', function ($query) {
-            $query->where('name', '=', UserRole::Patient->value);
-        });
+        return $query;
     }
 
     protected function searchableFields(): array

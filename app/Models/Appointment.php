@@ -7,7 +7,6 @@ namespace App\Models;
 use App\Enums\AppointmentRole;
 use App\Enums\AppointmentStatus;
 use Database\Factories\AppointmentFactory;
-use DomainException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,10 +51,6 @@ class Appointment extends Model
 
     public function attachProvider(User $user, AppointmentRole $role = AppointmentRole::Primary): void
     {
-        if ($user->isPatient()) {
-            throw new DomainException('Cannot assign a patient as an appointment provider.');
-        }
-
         $this->users()->syncWithoutDetaching([
             $user->id => ['role' => $role->value],
         ]);
