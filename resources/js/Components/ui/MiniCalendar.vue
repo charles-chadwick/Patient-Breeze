@@ -41,22 +41,14 @@ const calendarValue = computed(() => {
     }
 })
 
-const weekStart = computed(() => {
-    if (props.view !== 'week') return null
-    const dow = getDayOfWeek(calendarValue.value, 'en-US') // 0=Sun, 1=Mon...6=Sat
-    const daysFromMonday = (dow + 6) % 7
-    return calendarValue.value.subtract({ days: daysFromMonday })
+const selectedWeekKeys = computed(() => {
+    if (props.view !== 'week') return new Set()
+    const dow = getDayOfWeek(calendarValue.value, 'en-US') // 0=Sun, 1=Mon…6=Sat
+    const monday = calendarValue.value.subtract({ days: (dow + 6) % 7 })
+    const keys = new Set()
+    for (let i = 0; i < 7; i++) keys.add(monday.add({ days: i }).toString())
+    return keys
 })
-
-const weekEnd = computed(() => {
-    if (!weekStart.value) return null
-    return weekStart.value.add({ days: 6 })
-})
-
-function isInSelectedWeek(date) {
-    if (!weekStart.value || !weekEnd.value) return false
-    return date.compare(weekStart.value) >= 0 && date.compare(weekEnd.value) <= 0
-}
 
 function onSelect(val) {
     if (!val) return
@@ -111,7 +103,7 @@ function onSelect(val) {
                             :date="date"
                             :class="cn(
                                 'relative p-0',
-                                view === 'week' && isInSelectedWeek(date) && 'bg-primary/10 first:rounded-l-md last:rounded-r-md',
+                                view === 'week' && selectedWeekKeys.has(date.toString()) && 'bg-primary/10 first:rounded-l-md last:rounded-r-md',
                             )"
                         >
                             <CalendarCellTrigger
@@ -126,8 +118,8 @@ function onSelect(val) {
                                         'text-foreground hover:bg-muted',
                                         'data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary',
                                     ],
-                                    view === 'week' && isInSelectedWeek(date) && 'hover:bg-primary/20',
-                                    view === 'week' && !isInSelectedWeek(date) && 'text-foreground hover:bg-muted',
+                                    view === 'week' && selectedWeekKeys.has(date.toString()) && 'hover:bg-primary/20',
+                                    view === 'week' && !selectedWeekKeys.has(date.toString()) && 'text-foreground hover:bg-muted',
                                     view === 'week' && calendarValue.compare(date) === 0 && 'bg-primary text-primary-foreground hover:bg-primary',
                                 )"
                             />
