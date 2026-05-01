@@ -155,6 +155,21 @@ it('defaults to week view and today when no params given', function (): void {
         );
 });
 
+it('falls back to week view for an unrecognised view param', function (): void {
+    $this->get(route('appointments.index', ['view' => 'month']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->where('view', 'week'));
+});
+
+it('ignores a whitespace-only search and returns all appointments in range', function (): void {
+    $patient = Patient::factory()->create();
+    Appointment::factory()->forDate('2026-06-10')->create(['patient_id' => $patient->id]);
+
+    $this->get(route('appointments.index', ['date' => '2026-06-10', 'view' => 'day', 'search' => '   ']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->count('appointments', 1));
+});
+
 it('returns only appointments for the requested date in day view', function (): void {
     $patient = Patient::factory()->create();
     Appointment::factory()->forDate('2026-06-10')->create(['patient_id' => $patient->id]);

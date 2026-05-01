@@ -27,6 +27,8 @@ const emit = defineEmits(['update:modelValue'])
 const search_value = ref(props.modelValue)
 let debounce_timer = null
 
+watch(() => props.modelValue, (v) => { search_value.value = v })
+
 watch(search_value, (value) => {
     emit('update:modelValue', value)
 

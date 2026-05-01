@@ -62,16 +62,15 @@ const appointmentsByDate = computed(() => {
     for (const appointment of props.appointments) {
         const key = appointment.date.substring(0, 10)
         if (!groups[key]) groups[key] = []
-        groups[key].push(appointment)
+        groups[key].push({
+            ...appointment,
+            primaryProvider: appointment.users?.find((u) => u.pivot?.role === 'Primary') ?? appointment.users?.[0],
+        })
     }
     return Object.keys(groups)
         .sort()
         .map((date) => ({ date, items: groups[date] }))
 })
-
-function primaryProvider(appointment) {
-    return appointment.users?.find((u) => u.pivot?.role === 'Primary') ?? appointment.users?.[0]
-}
 
 function formatTime(time) {
     return time?.slice(0, 5) ?? ''
@@ -196,9 +195,9 @@ function onStaffChange(newStaff) {
                                             </p>
                                             <p class="mt-0.5 text-sm text-muted-foreground">
                                                 {{ formatTime(appointment.start_time) }}–{{ formatTime(appointment.end_time) }}
-                                                <template v-if="primaryProvider(appointment)">
+                                                <template v-if="appointment.primaryProvider">
                                                     &middot;
-                                                    {{ primaryProvider(appointment).first_name }} {{ primaryProvider(appointment).last_name }}
+                                                    {{ appointment.primaryProvider.first_name }} {{ appointment.primaryProvider.last_name }}
                                                 </template>
                                             </p>
                                         </div>
@@ -214,7 +213,7 @@ function onStaffChange(newStaff) {
 
                             <PopoverPortal>
                                 <PopoverContent
-                                    side="right"
+                                    side="bottom"
                                     align="start"
                                     :side-offset="8"
                                     :collision-padding="16"
