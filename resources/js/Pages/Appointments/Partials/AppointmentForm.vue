@@ -1,8 +1,8 @@
 <script setup>
+import { computed } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import DatePicker from '@/Components/ui/DatePicker.vue'
-
-let _uid = 0
+import MultiSelect from '@/Components/ui/MultiSelect.vue'
 
 const props = defineProps({
     action: {
@@ -43,19 +43,24 @@ const form = useForm({
     reason: props.appointment?.reason ?? '',
     notes: props.appointment?.notes ?? '',
     staff: props.appointment?.users?.map((u) => ({
-        _key: ++_uid,
         user_id: u.id,
         role: u.pivot.role,
-    })) ?? [{ _key: ++_uid, user_id: '', role: 'Assistant' }],
+    })) ?? [],
 })
 
-function addStaff() {
-    form.staff.push({ _key: ++_uid, user_id: '', role: 'Assistant' })
-}
+const staffOptions = computed(() =>
+    props.staff_options.map((u) => ({ value: u.id, label: `${u.last_name}, ${u.first_name}` })),
+)
 
-function removeStaff(index) {
-    form.staff.splice(index, 1)
-}
+const selectedStaffIds = computed({
+    get: () => form.staff.map((s) => s.user_id),
+    set: (newIds) => {
+        form.staff = newIds.map((id) => {
+            const existing = form.staff.find((s) => s.user_id === id)
+            return existing ?? { user_id: id, role: 'Assistant' }
+        })
+    },
+})
 
 function submit() {
     form[props.method](props.action)
@@ -169,48 +174,35 @@ function submit() {
 
         <!-- Staff -->
         <div class="rounded-xl border border-border bg-white shadow-sm">
-            <div class="flex items-center justify-between border-b border-border px-6 py-4">
+            <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">Staff</h2>
-                <button
-                    type="button"
-                    class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
-                    @click="addStaff"
-                >
-                    + Add Staff
-                </button>
             </div>
-            <div class="grid gap-3 px-6 py-5">
-                <div
-                    v-for="(entry, index) in form.staff"
-                    :key="entry._key"
-                    class="flex items-center gap-3"
-                >
-                    <select
-                        v-model="entry.user_id"
-                        class="flex-1 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+            <div class="grid gap-4 px-6 py-5">
+                <MultiSelect
+                    v-model="selectedStaffIds"
+                    :options="staffOptions"
+                    placeholder="Select staff…"
+                    :class="{ 'ring-2 ring-red-400 rounded-lg': form.errors.staff }"
+                />
+
+                <div v-if="form.staff.length" class="grid gap-2">
+                    <div
+                        v-for="entry in form.staff"
+                        :key="entry.user_id"
+                        class="flex items-center gap-3"
                     >
-                        <option value="">Select staff…</option>
-                        <option v-for="opt in staff_options" :key="opt.id" :value="opt.id">
-                            {{ opt.last_name }}, {{ opt.first_name }}
-                        </option>
-                    </select>
-                    <select
-                        v-model="entry.role"
-                        class="w-36 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                    >
-                        <option v-for="role in role_options" :key="role" :value="role">{{ role }}</option>
-                    </select>
-                    <button
-                        v-if="form.staff.length > 1"
-                        type="button"
-                        class="shrink-0 rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50"
-                        @click="removeStaff(index)"
-                    >
-                        Remove
-                    </button>
+                        <span class="flex-1 text-sm text-foreground">
+                            {{ staffOptions.find((o) => o.value === entry.user_id)?.label }}
+                        </span>
+                        <select
+                            v-model="entry.role"
+                            class="w-36 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        >
+                            <option v-for="role in role_options" :key="role" :value="role">{{ role }}</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Conflict / staff error banner -->
                 <div
                     v-if="form.errors.staff"
                     class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
