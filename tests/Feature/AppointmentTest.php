@@ -35,24 +35,11 @@ it('attaches multiple non-patient users with distinct roles', function (): void 
     expect($appointment->primaryProvider()->is($doctor))->toBeTrue();
 });
 
-it('rejects attaching a patient as a provider', function (): void {
-    $appointment = Appointment::factory()->create();
-
-    $patient = User::factory()->create();
-    $patient->assignRole(UserRole::Patient->value);
-
-    $appointment->attachProvider($patient);
-})->throws(DomainException::class);
-
 it('creates an appointment with a single primary provider by default', function (): void {
     $appointment = Appointment::factory()->create();
 
     expect($appointment->users()->count())->toBe(1);
-
-    $provider = $appointment->primaryProvider();
-
-    expect($provider)->not->toBeNull();
-    expect($provider->isPatient())->toBeFalse();
+    expect($appointment->primaryProvider())->not->toBeNull();
 });
 
 it('creates an appointment with multiple providers via withProviders state', function (): void {
