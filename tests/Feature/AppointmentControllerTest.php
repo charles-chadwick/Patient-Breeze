@@ -130,6 +130,97 @@ it('excludes the appointment being edited from the conflict check', function () 
     $response->assertRedirect(route('patients.show', $patient));
 });
 
+// ── Appointments index ────────────────────────────────────────────────────────
+
+it('renders the appointments index page', function (): void {
+    $this->get(route('appointments.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('Appointments/Index')
+            ->has('appointments')
+            ->has('date')
+            ->has('view')
+            ->has('search')
+            ->has('staff')
+            ->has('staff_options')
+        );
+});
+
+it('defaults to week view and today when no params given', function (): void {
+    $this->get(route('appointments.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('view', 'week')
+            ->where('date', now()->toDateString())
+        );
+});
+
+it('returns only appointments for the requested date in day view', function (): void {
+    $patient = Patient::factory()->create();
+    Appointment::factory()->forDate('2026-06-10')->create(['patient_id' => $patient->id]);
+    Appointment::factory()->forDate('2026-06-11')->create(['patient_id' => $patient->id]);
+
+    $this->get(route('appointments.index', ['date' => '2026-06-10', 'view' => 'day']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->count('appointments', 1));
+});
+
+it('returns appointments for the full Mon–Sun week in week view', function (): void {
+    $patient = Patient::factory()->create();
+    // 2026-06-08 is Monday, 2026-06-14 is Sunday
+    Appointment::factory()->forDate('2026-06-08')->create(['patient_id' => $patient->id]);
+    Appointment::factory()->forDate('2026-06-14')->create(['patient_id' => $patient->id]);
+    Appointment::factory()->forDate('2026-06-15')->create(['patient_id' => $patient->id]); // outside
+
+    $this->get(route('appointments.index', ['date' => '2026-06-10', 'view' => 'week']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->count('appointments', 2));
+});
+
+it('filters appointments by patient name search', function (): void {
+    $matching = Patient::factory()->create(['first_name' => 'Zebediah', 'last_name' => 'Quincey']);
+    $other = Patient::factory()->create(['first_name' => 'Alice', 'last_name' => 'Smith']);
+    Appointment::factory()->forDate('2026-06-10')->create(['patient_id' => $matching->id]);
+    Appointment::factory()->forDate('2026-06-10')->create(['patient_id' => $other->id]);
+
+    $this->get(route('appointments.index', ['date' => '2026-06-10', 'view' => 'day', 'search' => 'Zebediah']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->count('appointments', 1));
+});
+
+it('filters appointments by staff ids', function (): void {
+    $staffA = User::factory()->withRole(UserRole::Staff)->create();
+    $staffB = User::factory()->withRole(UserRole::Staff)->create();
+    $patient = Patient::factory()->create();
+    Appointment::factory()->forDate('2026-06-10')->withProvider($staffA)->create(['patient_id' => $patient->id]);
+    Appointment::factory()->forDate('2026-06-10')->withProvider($staffB)->create(['patient_id' => $patient->id]);
+
+    $this->get(route('appointments.index', ['date' => '2026-06-10', 'view' => 'day', 'staff' => [$staffA->id]]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->count('appointments', 1));
+});
+
+it('orders appointments by start_time within a day', function (): void {
+    $patient = Patient::factory()->create();
+    Appointment::factory()->forDate('2026-06-10')->create([
+        'patient_id' => $patient->id,
+        'start_time' => '14:00:00',
+        'end_time' => '15:00:00',
+    ]);
+    Appointment::factory()->forDate('2026-06-10')->create([
+        'patient_id' => $patient->id,
+        'start_time' => '09:00:00',
+        'end_time' => '10:00:00',
+    ]);
+
+    $this->get(route('appointments.index', ['date' => '2026-06-10', 'view' => 'day']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('appointments.0.start_time', '09:00:00')
+            ->where('appointments.1.start_time', '14:00:00')
+        );
+});
+
 it('rejects update when a staff member conflicts with a different appointment', function () {
     $patient = Patient::factory()->create();
     $staff = User::factory()->withRole(UserRole::Staff)->create();

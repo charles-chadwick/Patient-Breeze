@@ -92,6 +92,11 @@ class AppointmentFactory extends Factory
         });
     }
 
+    public function forDate(string $date): static
+    {
+        return $this->state(['date' => $date]);
+    }
+
     public function scheduled(): static
     {
         return $this->state(['status' => AppointmentStatus::Scheduled]);

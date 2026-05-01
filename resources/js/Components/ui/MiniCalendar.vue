@@ -1,0 +1,140 @@
+<script setup>
+import { computed } from 'vue'
+import { getDayOfWeek, getLocalTimeZone, parseDate, today } from '@internationalized/date'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-vue-next'
+import {
+    CalendarCell,
+    CalendarCellTrigger,
+    CalendarGrid,
+    CalendarGridBody,
+    CalendarGridHead,
+    CalendarGridRow,
+    CalendarHeadCell,
+    CalendarHeader,
+    CalendarHeading,
+    CalendarNext,
+    CalendarPrev,
+    CalendarRoot,
+} from 'reka-ui'
+import { cn } from '@/lib/utils'
+
+const props = defineProps({
+    modelValue: {
+        type: String,
+        required: true,
+    },
+    view: {
+        type: String,
+        default: 'week',
+    },
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const todayDate = today(getLocalTimeZone())
+
+const calendarValue = computed(() => {
+    try {
+        return parseDate(props.modelValue)
+    } catch {
+        return todayDate
+    }
+})
+
+const weekStart = computed(() => {
+    if (props.view !== 'week') return null
+    const dow = getDayOfWeek(calendarValue.value, 'en-US') // 0=Sun, 1=Mon...6=Sat
+    const daysFromMonday = (dow + 6) % 7
+    return calendarValue.value.subtract({ days: daysFromMonday })
+})
+
+const weekEnd = computed(() => {
+    if (!weekStart.value) return null
+    return weekStart.value.add({ days: 6 })
+})
+
+function isInSelectedWeek(date) {
+    if (!weekStart.value || !weekEnd.value) return false
+    return date.compare(weekStart.value) >= 0 && date.compare(weekEnd.value) <= 0
+}
+
+function onSelect(val) {
+    if (!val) return
+    emit('update:modelValue', `${val.year}-${String(val.month).padStart(2, '0')}-${String(val.day).padStart(2, '0')}`)
+}
+</script>
+
+<template>
+    <CalendarRoot
+        :model-value="calendarValue"
+        :week-starts-on="1"
+        granularity="day"
+        @update:model-value="onSelect"
+    >
+        <template #default="{ weekDays, grid }">
+            <CalendarHeader class="mb-3 flex items-center justify-between">
+                <CalendarPrev
+                    class="flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted focus:outline-none"
+                >
+                    <ChevronLeftIcon class="size-4" />
+                </CalendarPrev>
+                <CalendarHeading class="text-sm font-semibold text-foreground" />
+                <CalendarNext
+                    class="flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted focus:outline-none"
+                >
+                    <ChevronRightIcon class="size-4" />
+                </CalendarNext>
+            </CalendarHeader>
+
+            <CalendarGrid v-for="month in grid" :key="month.value.toString()">
+                <CalendarGridHead>
+                    <CalendarGridRow class="mb-1 flex">
+                        <CalendarHeadCell
+                            v-for="day in weekDays"
+                            :key="day"
+                            class="w-9 text-center text-xs font-medium text-muted-foreground"
+                        >
+                            {{ day }}
+                        </CalendarHeadCell>
+                    </CalendarGridRow>
+                </CalendarGridHead>
+
+                <CalendarGridBody>
+                    <CalendarGridRow
+                        v-for="(weekDates, idx) in month.rows"
+                        :key="idx"
+                        class="flex"
+                    >
+                        <CalendarCell
+                            v-for="date in weekDates"
+                            :key="date.toString()"
+                            :date="date"
+                            :class="cn(
+                                'relative p-0',
+                                view === 'week' && isInSelectedWeek(date) && 'bg-primary/10 first:rounded-l-md last:rounded-r-md',
+                            )"
+                        >
+                            <CalendarCellTrigger
+                                :day="date"
+                                :month="month.value"
+                                :class="cn(
+                                    'flex size-9 items-center justify-center rounded-md text-sm focus:outline-none',
+                                    'data-[outside-month]:text-muted-foreground/40',
+                                    'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40',
+                                    date.compare(todayDate) === 0 && 'border border-border',
+                                    view === 'day' && [
+                                        'text-foreground hover:bg-muted',
+                                        'data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary',
+                                    ],
+                                    view === 'week' && isInSelectedWeek(date) && 'hover:bg-primary/20',
+                                    view === 'week' && !isInSelectedWeek(date) && 'text-foreground hover:bg-muted',
+                                    view === 'week' && calendarValue.compare(date) === 0 && 'bg-primary text-primary-foreground hover:bg-primary',
+                                )"
+                            />
+                        </CalendarCell>
+                    </CalendarGridRow>
+                </CalendarGridBody>
+            </CalendarGrid>
+        </template>
+    </CalendarRoot>
+</template>

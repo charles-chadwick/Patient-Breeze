@@ -24,5 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('patients.appointments', AppointmentController::class)
         ->only(['create', 'store', 'edit', 'update'])
         ->scoped();
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
 });
