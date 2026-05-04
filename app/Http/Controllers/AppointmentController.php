@@ -36,7 +36,7 @@ class AppointmentController extends Controller
             ? [$date->copy(), $date->copy()]
             : [$date->copy()->startOfWeek(), $date->copy()->endOfWeek()];
 
-        $appointments = Appointment::with(['patient', 'users'])
+        $appointments = Appointment::with(['patient.media', 'users.media'])
             ->forDateRange($range_start, $range_end)
             ->when($search, fn (Builder $query) => $query->whereHas(
                 'patient',
@@ -59,7 +59,7 @@ class AppointmentController extends Controller
             'view' => $view,
             'search' => $search->toString(),
             'staff' => $staff_ids,
-            'staff_options' => User::staff()->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
+            'staff_options' => User::staff()->with('media')->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
         ]);
     }
 
@@ -104,7 +104,7 @@ class AppointmentController extends Controller
         return [
             'status_options' => array_column(AppointmentStatus::cases(), 'value'),
             'role_options' => array_column(AppointmentRole::cases(), 'value'),
-            'staff_options' => User::staff()->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
+            'staff_options' => User::staff()->with('media')->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
         ];
     }
 }

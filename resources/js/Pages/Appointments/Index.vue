@@ -45,7 +45,7 @@ const props = defineProps({
 })
 
 const staffSelectOptions = computed(() =>
-    props.staff_options.map((u) => ({ value: u.id, label: `${u.last_name}, ${u.first_name}` })),
+    props.staff_options.map((u) => ({ value: u.id, label: `${u.last_name}, ${u.first_name}`, avatar: u.avatar_url })),
 )
 
 const statusClasses = {
@@ -106,7 +106,7 @@ function onStaffChange(newStaff) {
 <template>
     <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
         <!-- Left: mini calendar + view toggle -->
-        <aside class="w-full shrink-0 lg:w-60">
+        <aside class="w-full shrink-0 lg:w-1/3">
             <div class="rounded-xl border border-border bg-white p-4 shadow-sm">
                 <MiniCalendar
                     :model-value="date"
@@ -188,18 +188,25 @@ function onStaffChange(newStaff) {
                                     type="button"
                                     class="w-full rounded-xl border border-border bg-white px-5 py-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                 >
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div class="min-w-0 flex-1">
-                                            <p class="font-bold text-foreground">
-                                                {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
-                                            </p>
-                                            <p class="mt-0.5 text-sm text-muted-foreground">
-                                                {{ formatTime(appointment.start_time) }}–{{ formatTime(appointment.end_time) }}
-                                                <template v-if="appointment.primaryProvider">
-                                                    &middot;
-                                                    {{ appointment.primaryProvider.first_name }} {{ appointment.primaryProvider.last_name }}
-                                                </template>
-                                            </p>
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div class="flex min-w-0 flex-1 items-center gap-3">
+                                            <img
+                                                :src="appointment.patient.avatar_url"
+                                                :alt="`${appointment.patient.first_name} ${appointment.patient.last_name}`"
+                                                class="size-9 shrink-0 rounded-full object-cover"
+                                            />
+                                            <div class="min-w-0">
+                                                <p class="font-bold text-foreground">
+                                                    {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
+                                                </p>
+                                                <p class="mt-0.5 text-sm text-muted-foreground">
+                                                    {{ formatTime(appointment.start_time) }}–{{ formatTime(appointment.end_time) }}
+                                                    <template v-if="appointment.primaryProvider">
+                                                        &middot;
+                                                        {{ appointment.primaryProvider.first_name }} {{ appointment.primaryProvider.last_name }}
+                                                    </template>
+                                                </p>
+                                            </div>
                                         </div>
                                         <span
                                             class="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-bold"
@@ -219,7 +226,12 @@ function onStaffChange(newStaff) {
                                     :collision-padding="16"
                                     class="z-50 w-80 rounded-xl border border-border bg-white p-5 shadow-xl focus:outline-none"
                                 >
-                                    <div class="mb-4 border-b border-border pb-4">
+                                    <div class="mb-4 flex items-center gap-3 border-b border-border pb-4">
+                                        <img
+                                            :src="appointment.patient.avatar_url"
+                                            :alt="`${appointment.patient.first_name} ${appointment.patient.last_name}`"
+                                            class="size-10 rounded-full object-cover"
+                                        />
                                         <Link
                                             :href="route('patients.show', appointment.patient.id)"
                                             class="text-base font-bold text-primary hover:underline"
@@ -262,9 +274,14 @@ function onStaffChange(newStaff) {
                                             <li
                                                 v-for="user in appointment.users"
                                                 :key="user.id"
-                                                class="flex items-center justify-between text-sm"
+                                                class="flex items-center gap-2 text-sm"
                                             >
-                                                <span class="text-foreground">
+                                                <img
+                                                    :src="user.avatar_url"
+                                                    :alt="`${user.first_name} ${user.last_name}`"
+                                                    class="size-7 rounded-full object-cover"
+                                                />
+                                                <span class="flex-1 text-foreground">
                                                     {{ user.first_name }} {{ user.last_name }}
                                                 </span>
                                                 <span class="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">

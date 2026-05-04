@@ -78,13 +78,13 @@ function onSelect(val) {
                 </CalendarNext>
             </CalendarHeader>
 
-            <CalendarGrid v-for="month in grid" :key="month.value.toString()">
+            <CalendarGrid v-for="month in grid" :key="month.value.toString()" class="w-full">
                 <CalendarGridHead>
-                    <CalendarGridRow class="mb-1 flex">
+                    <CalendarGridRow class="mb-1 flex w-full">
                         <CalendarHeadCell
                             v-for="day in weekDays"
                             :key="day"
-                            class="w-9 text-center text-xs font-medium text-muted-foreground"
+                            class="flex-1 text-center text-xs font-medium text-muted-foreground"
                         >
                             {{ day }}
                         </CalendarHeadCell>
@@ -95,14 +95,14 @@ function onSelect(val) {
                     <CalendarGridRow
                         v-for="(weekDates, idx) in month.rows"
                         :key="idx"
-                        class="flex"
+                        class="flex w-full"
                     >
                         <CalendarCell
                             v-for="date in weekDates"
                             :key="date.toString()"
                             :date="date"
                             :class="cn(
-                                'relative p-0',
+                                'relative flex flex-1 p-0',
                                 view === 'week' && selectedWeekKeys.has(date.toString()) && 'bg-primary/10 first:rounded-l-md last:rounded-r-md',
                             )"
                         >
@@ -110,7 +110,7 @@ function onSelect(val) {
                                 :day="date"
                                 :month="month.value"
                                 :class="cn(
-                                    'flex size-9 items-center justify-center rounded-md text-sm focus:outline-none',
+                                    'aspect-square w-full items-center justify-center rounded-md text-sm focus:outline-none flex',
                                     'data-[outside-month]:text-muted-foreground/40',
                                     'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40',
                                     date.compare(todayDate) === 0 && 'border border-border',

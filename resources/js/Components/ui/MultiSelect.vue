@@ -39,8 +39,8 @@ function removeOption(value) {
     emit('update:modelValue', props.modelValue.filter((v) => v !== value))
 }
 
-function labelFor(value) {
-    return props.options.find((o) => o.value === value)?.label ?? value
+function optionFor(value) {
+    return props.options.find((o) => o.value === value)
 }
 </script>
 
@@ -62,7 +62,13 @@ function labelFor(value) {
                 :key="val"
                 class="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-foreground"
             >
-                {{ labelFor(val) }}
+                <img
+                    v-if="optionFor(val)?.avatar"
+                    :src="optionFor(val).avatar"
+                    :alt="optionFor(val).label"
+                    class="size-4 rounded-full object-cover"
+                />
+                {{ optionFor(val)?.label ?? val }}
                 <button
                     type="button"
                     class="ml-0.5 rounded hover:text-red-500 focus:outline-none"
@@ -97,6 +103,12 @@ function labelFor(value) {
                     <ComboboxItemIndicator>
                         <CheckIcon class="size-4 text-primary" />
                     </ComboboxItemIndicator>
+                    <img
+                        v-if="option.avatar"
+                        :src="option.avatar"
+                        :alt="option.label"
+                        class="size-6 rounded-full object-cover"
+                    />
                     <span class="flex-1">{{ option.label }}</span>
                 </ComboboxItem>
             </ComboboxViewport>

@@ -1,0 +1,15 @@
+- generic [ref=e4]:
+  - generic [ref=e5]: PB Health
+  - generic [ref=e6]:
+    - heading "Sign In" [level=1] [ref=e7]
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]: Email *
+        - textbox "you@example.com" [active] [ref=e11]
+      - generic [ref=e12]:
+        - generic [ref=e13]: Password *
+        - textbox "••••••••" [ref=e14]
+      - generic [ref=e15]:
+        - checkbox "Remember me" [ref=e16]
+        - generic [ref=e17]: Remember me
+      - button "Sign In" [ref=e18]

@@ -49,7 +49,7 @@ const form = useForm({
 })
 
 const staffOptions = computed(() =>
-    props.staff_options.map((u) => ({ value: u.id, label: `${u.last_name}, ${u.first_name}` })),
+    props.staff_options.map((u) => ({ value: u.id, label: `${u.last_name}, ${u.first_name}`, avatar: u.avatar_url })),
 )
 
 const selectedStaffIds = computed({
