@@ -62,10 +62,7 @@ const appointmentsByDate = computed(() => {
     for (const appointment of props.appointments) {
         const key = appointment.date.substring(0, 10)
         if (!groups[key]) groups[key] = []
-        groups[key].push({
-            ...appointment,
-            primaryProvider: appointment.users?.find((u) => u.pivot?.role === 'Primary') ?? appointment.users?.[0],
-        })
+        groups[key].push(appointment)
     }
     return Object.keys(groups)
         .sort()
@@ -201,10 +198,9 @@ function onStaffChange(newStaff) {
                                                 </p>
                                                 <p class="mt-0.5 text-sm text-muted-foreground">
                                                     {{ formatTime(appointment.start_time) }}–{{ formatTime(appointment.end_time) }}
-                                                    <template v-if="appointment.primaryProvider">
-                                                        &middot;
-                                                        {{ appointment.primaryProvider.first_name }} {{ appointment.primaryProvider.last_name }}
-                                                    </template>
+                                                </p>
+                                                <p v-if="appointment.users?.length" class="mt-0.5 text-sm text-muted-foreground">
+                                                    {{ appointment.users.map((u) => `${u.first_name} ${u.last_name}`).join(', ') }}
                                                 </p>
                                             </div>
                                         </div>
