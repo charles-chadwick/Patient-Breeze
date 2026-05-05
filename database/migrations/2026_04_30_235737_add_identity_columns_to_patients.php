@@ -41,10 +41,31 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasColumn('patients', 'user_id')) {
+            Schema::table('patients', function (Blueprint $table): void {
+                $table->unsignedBigInteger('user_id')->nullable()->after('id');
+            });
+        }
+
+        if (Schema::hasColumn('patients', 'email')) {
+            DB::statement('
+                UPDATE patients
+                SET user_id = (SELECT id FROM users WHERE users.email = patients.email)
+                WHERE patients.email IS NOT NULL
+                  AND user_id IS NULL
+            ');
+
+            Schema::table('patients', function (Blueprint $table): void {
+                $table->dropUnique(['email']);
+                $table->dropColumn(['prefix', 'first_name', 'middle_name', 'last_name', 'suffix', 'email']);
+            });
+        }
+
+        // Rows with no matching user cannot satisfy the FK — remove them before constraining.
+        DB::table('patients')->whereNull('user_id')->delete();
+
         Schema::table('patients', function (Blueprint $table): void {
-            $table->dropUnique(['email']);
-            $table->dropColumn(['prefix', 'first_name', 'middle_name', 'last_name', 'suffix', 'email']);
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
     }
 };
