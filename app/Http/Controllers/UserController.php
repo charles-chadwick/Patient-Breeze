@@ -60,16 +60,29 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
-    public function show(User $user): Response
+    public function show(User $user, Request $request): Response
     {
-        $user->load([
-            'media',
-            'roles',
-            'appointments' => fn ($query) => $query->with(['patient.media', 'patientRecord'])->orderBy('date', 'desc')->limit(50),
-        ]);
+        $search = $request->string('search')->trim();
+
+        $user->load(['media', 'roles']);
+
+        $appointments = $user->appointments()
+            ->with(['patient.media'])
+            ->when($search, fn ($query) => $query->where(fn ($q) => $q
+                ->where('reason', 'like', "%{$search}%")
+                ->orWhereHas('patient', fn ($pq) => $pq
+                    ->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                )
+            ))
+            ->orderBy('date', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('Users/Show', [
             'user' => $user,
+            'appointments' => $appointments,
+            'appointment_search' => $search->toString(),
         ]);
     }
 
