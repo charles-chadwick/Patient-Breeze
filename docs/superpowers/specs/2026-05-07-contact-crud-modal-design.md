@@ -35,9 +35,9 @@ Nested under the existing `auth` middleware group, following the same pattern as
 
 Three actions:
 
-- **`store(StoreContactRequest $request, Patient $patient)`** — creates a contact via `$patient->contacts()->create(...)`, redirects back with `withOnly(['contacts'])`.
-- **`update(UpdateContactRequest $request, Patient $patient, Contact $contact)`** — resolves contact via `$patient->contacts()->findOrFail($contact->id)`, updates, redirects back with `withOnly(['contacts'])`.
-- **`destroy(Patient $patient, Contact $contact)`** — resolves contact via `$patient->contacts()->findOrFail($contact->id)`, deletes, redirects back with `withOnly(['contacts'])`.
+- **`store(StoreContactRequest $request, Patient $patient)`** — creates a contact via `$patient->contacts()->create(...)`, returns `redirect()->back()`.
+- **`update(UpdateContactRequest $request, Patient $patient, Contact $contact)`** — resolves contact via `$patient->contacts()->findOrFail($contact->id)`, updates, returns `redirect()->back()`.
+- **`destroy(Patient $patient, Contact $contact)`** — resolves contact via `$patient->contacts()->findOrFail($contact->id)`, deletes, returns `redirect()->back()`.
 
 ### Form Requests
 
@@ -100,9 +100,9 @@ Self-contained section card matching the Appointments card style:
 ```
 User clicks "Add Contact"
   → ContactModal opens (create mode)
-  → useForm.post(route('patients.contacts.store', patient.id))
-  → ContactController::store creates contact, redirects back withOnly(['contacts'])
-  → Inertia partial reload updates contacts prop only
+  → useForm.post(route('patients.contacts.store', patient.id), { only: ['contacts'] })
+  → ContactController::store creates contact, returns redirect()->back()
+  → Inertia partial reload fetches only the 'contacts' prop from the redirected page
   → ContactsSection re-renders list
   → modal closes (emitted from form.post onSuccess callback)
 ```
