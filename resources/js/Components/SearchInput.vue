@@ -16,6 +16,10 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    routeParams: {
+        type: [Object, Number, String, Array],
+        default: undefined,
+    },
     params: {
         type: Object,
         default: () => ({}),
@@ -35,7 +39,7 @@ watch(search_value, (value) => {
     clearTimeout(debounce_timer)
     debounce_timer = setTimeout(() => {
         router.get(
-            route(props.routeName),
+            route(props.routeName, props.routeParams),
             { ...props.params, search: value || undefined },
             { preserveState: true, replace: true },
         )

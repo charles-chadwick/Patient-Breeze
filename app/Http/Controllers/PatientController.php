@@ -68,17 +68,26 @@ class PatientController extends Controller
         return redirect()->route('patients.show', $patient);
     }
 
-    public function show(Patient $patient): Response
+    public function show(Patient $patient, Request $request): Response
     {
-        $patient->load([
-            'media',
-            'appointments' => fn ($query) => $query->orderBy('date', 'desc')->limit(50),
-            'appointments.users',
-            'appointments.users.media',
-        ]);
+        $search = $request->string('search')->trim();
+
+        $patient->load('media');
+
+        $appointments = $patient->appointments()
+            ->with(['users.media'])
+            ->when($search, fn ($query) => $query->where(fn ($q) => $q
+                ->where('reason', 'like', "%{$search}%")
+                ->orWhere('notes', 'like', "%{$search}%")
+            ))
+            ->orderBy('date', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('Patients/Show', [
             'patient' => $patient,
+            'appointments' => $appointments,
+            'appointment_search' => $search->toString(),
         ]);
     }
 

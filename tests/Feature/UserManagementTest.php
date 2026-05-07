@@ -1,6 +1,9 @@
 <?php
 
+use App\Enums\AppointmentRole;
 use App\Enums\UserRole;
+use App\Models\Appointment;
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +26,82 @@ it('renders the user show page', function (): void {
         ->assertInertia(fn ($page) => $page
             ->component('Users/Show')
             ->has('user')
+            ->has('user.roles')
+            ->has('appointments')
+            ->has('appointment_search')
+        );
+});
+
+it('includes patient_id on appointments in the user show payload', function (): void {
+    $patient = Patient::factory()->create();
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+
+    Appointment::factory()
+        ->withProvider($user, AppointmentRole::Primary)
+        ->create(['patient_id' => $patient->id]);
+
+    $this->get(route('users.show', $user))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Users/Show')
+            ->has('appointments.data', 1)
+            ->where('appointments.data.0.patient_id', $patient->id)
+        );
+});
+
+it('loads patient media on appointments for the user show page', function (): void {
+    $patient = Patient::factory()->create();
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+
+    Appointment::factory()
+        ->withProvider($user, AppointmentRole::Primary)
+        ->create(['patient_id' => $patient->id]);
+
+    $this->get(route('users.show', $user))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Users/Show')
+            ->has('appointments.data.0.patient')
+        );
+});
+
+it('shows no appointments when the user has none', function (): void {
+    $user = User::factory()->withRole(UserRole::Nurse)->create();
+
+    $this->get(route('users.show', $user))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Users/Show')
+            ->has('appointments.data', 0)
+        );
+});
+
+it('filters appointments by reason on the user show page', function (): void {
+    $patient = Patient::factory()->create();
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+
+    Appointment::factory()->withProvider($user)->create(['patient_id' => $patient->id, 'reason' => 'Annual checkup']);
+    Appointment::factory()->withProvider($user)->create(['patient_id' => $patient->id, 'reason' => 'Follow-up visit']);
+
+    $this->get(route('users.show', [$user, 'search' => 'checkup']))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->has('appointments.data', 1)
+            ->where('appointments.data.0.reason', 'Annual checkup')
+        );
+});
+
+it('paginates appointments on the user show page', function (): void {
+    $patient = Patient::factory()->create();
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+
+    Appointment::factory()->withProvider($user)->count(12)->create(['patient_id' => $patient->id]);
+
+    $this->get(route('users.show', $user))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->has('appointments.data', 10)
+            ->where('appointments.total', 12)
         );
 });
 

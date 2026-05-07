@@ -3,6 +3,8 @@ import { Link, setLayoutProps } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 import PatientCard from '@/Components/PatientCard.vue'
+import AppointmentStatusBadge from '@/Components/AppointmentStatusBadge.vue'
+import SearchInput from '@/Components/SearchInput.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -11,20 +13,19 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    appointments: {
+        type: Object,
+        required: true,
+    },
+    appointmentSearch: {
+        type: String,
+        default: '',
+    },
 })
 
 setLayoutProps({
     title: `${props.patient.first_name} ${props.patient.last_name}`,
 })
-
-const status_classes = {
-    Scheduled: 'bg-blue-100 text-blue-700',
-    Confirmed: 'bg-green-100 text-green-700',
-    Completed: 'bg-gray-100 text-gray-600',
-    Cancelled: 'bg-red-100 text-red-700',
-    Rescheduled: 'bg-yellow-100 text-yellow-700',
-    NoShow: 'bg-orange-100 text-orange-700',
-}
 </script>
 
 <template>
@@ -49,16 +50,25 @@ const status_classes = {
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="flex items-center justify-between border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">Appointments</h2>
-                <Link
-                    :href="route('patients.appointments.create', patient.id)"
-                    class="rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90"
-                >
-                    + New Appointment
-                </Link>
+                <div class="flex items-center gap-3">
+                    <SearchInput
+                        :model-value="appointmentSearch"
+                        :route-params="patient.id"
+                        route-name="patients.show"
+                        placeholder="Search reason or notes…"
+                        class="w-56"
+                    />
+                    <Link
+                        :href="route('patients.appointments.create', patient.id)"
+                        class="rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90"
+                    >
+                        + New Appointment
+                    </Link>
+                </div>
             </div>
 
-            <div v-if="patient.appointments.length === 0" class="px-6 py-8 text-center text-sm text-muted-foreground">
-                No appointments on record.
+            <div v-if="appointments.data.length === 0" class="px-6 py-8 text-center text-sm text-muted-foreground">
+                {{ appointmentSearch ? 'No appointments match your search.' : 'No appointments on record.' }}
             </div>
 
             <table v-else class="w-full text-sm">
@@ -75,7 +85,7 @@ const status_classes = {
                 </thead>
                 <tbody class="divide-y divide-border">
                     <tr
-                        v-for="appointment in patient.appointments"
+                        v-for="appointment in appointments.data"
                         :key="appointment.id"
                         class="hover:bg-muted/40"
                     >
@@ -103,12 +113,7 @@ const status_classes = {
                             <span v-else class="text-muted-foreground">—</span>
                         </td>
                         <td class="px-6 py-3">
-                            <span
-                                class="rounded-full px-2.5 py-0.5 text-xs font-bold"
-                                :class="status_classes[appointment.status] ?? 'bg-gray-100 text-gray-600'"
-                            >
-                                {{ appointment.status }}
-                            </span>
+                            <AppointmentStatusBadge :status="appointment.status" />
                         </td>
                         <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? '—' }}</td>
                         <td class="px-6 py-3">
@@ -122,7 +127,49 @@ const status_classes = {
                     </tr>
                 </tbody>
             </table>
+
+            <div
+                v-if="appointments.total > 0"
+                class="flex items-center justify-between border-t border-border px-6 py-4"
+            >
+                <p class="text-sm text-muted-foreground">
+                    Showing {{ appointments.from }}–{{ appointments.to }} of {{ appointments.total }} appointments
+                </p>
+                <div class="flex items-center gap-1">
+                    <Link
+                        v-if="appointments.prev_page_url"
+                        :href="appointments.prev_page_url"
+                        class="rounded-lg border border-border px-3 py-1.5 text-sm font-bold text-foreground hover:bg-muted/40"
+                    >
+                        ←
+                    </Link>
+                    <template v-for="link in appointments.links.slice(1, -1)" :key="link.label">
+                        <Link
+                            v-if="link.url"
+                            :href="link.url"
+                            class="rounded-lg border px-3 py-1.5 text-sm font-bold"
+                            :class="link.active
+                                ? 'border-primary bg-primary text-white'
+                                : 'border-border text-foreground hover:bg-muted/40'"
+                        >
+                            {{ link.label }}
+                        </Link>
+                        <span
+                            v-else
+                            class="px-2 py-1.5 text-sm text-muted-foreground"
+                        >
+                            {{ link.label }}
+                        </span>
+                    </template>
+                    <Link
+                        v-if="appointments.next_page_url"
+                        :href="appointments.next_page_url"
+                        class="rounded-lg border border-border px-3 py-1.5 text-sm font-bold text-foreground hover:bg-muted/40"
+                    >
+                        →
+                    </Link>
+                </div>
+            </div>
         </div>
     </div>
-
 </template>
