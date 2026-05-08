@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\ManageAvatarAction;
 use App\Enums\BloodType;
+use App\Enums\ContactType;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Http\Requests\StorePatientRequest;
@@ -72,7 +73,7 @@ class PatientController extends Controller
     {
         $search = $request->string('search')->trim();
 
-        $patient->load('media');
+        $patient->load(['media', 'contacts' => fn ($q) => $q->orderBy('name')]);
 
         $appointments = $patient->appointments()
             ->with(['users.media'])
@@ -88,6 +89,7 @@ class PatientController extends Controller
             'patient' => $patient,
             'appointments' => $appointments,
             'appointment_search' => $search->toString(),
+            'contact_types' => array_column(ContactType::cases(), 'value'),
         ]);
     }
 

@@ -14,9 +14,11 @@ class Contact extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'type',
         'phone',
         'street_address',
+        'roi',
     ];
 
     public function contactable(): MorphTo
@@ -28,6 +30,7 @@ class Contact extends Model
     {
         return [
             'type' => ContactType::class,
+            'roi' => 'boolean',
         ];
     }
 }
