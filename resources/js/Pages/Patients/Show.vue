@@ -123,7 +123,7 @@ setLayoutProps({
             <PatientCard v-if="active_tab === 'demographics'" :patient="patient" flat />
 
             <template v-if="active_tab === 'contacts'">
-                <div class="flex items-center justify-between border-b border-border px-6 py-4">
+                <div class="flex items-center justify-between px-6 py-4">
                     <h2 class="font-bold text-foreground">Contacts</h2>
                     <button
                         type="button"

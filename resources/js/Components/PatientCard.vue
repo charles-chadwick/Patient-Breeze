@@ -27,7 +27,7 @@ const show_avatar_modal = ref(false)
 
 <template>
     <div :class="flat ? '' : 'rounded-xl border border-border bg-white shadow-sm'">
-        <div class="flex items-center gap-5 border-b border-border px-6 py-5">
+        <div :class="['flex items-center gap-5 px-6 py-5', !flat && 'border-b border-border']">
             <button
                 type="button"
                 class="shrink-0 cursor-zoom-in focus:outline-none"
