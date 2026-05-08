@@ -16,9 +16,11 @@ class ContactFactory extends Factory
     public function definition(): array
     {
         return [
+            'name' => fake()->name(),
             'type' => fake()->randomElement(ContactType::cases()),
             'phone' => fake()->optional()->phoneNumber(),
             'street_address' => fake()->optional()->streetAddress(),
+            'roi' => fake()->optional()->boolean(),
         ];
     }
 }
