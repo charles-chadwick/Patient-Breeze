@@ -7,6 +7,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    flat: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 const full_name = computed(() =>
@@ -22,7 +26,7 @@ const show_avatar_modal = ref(false)
 </script>
 
 <template>
-    <div class="rounded-xl border border-border bg-white shadow-sm">
+    <div :class="flat ? '' : 'rounded-xl border border-border bg-white shadow-sm'">
         <div class="flex items-center gap-5 border-b border-border px-6 py-5">
             <button
                 type="button"

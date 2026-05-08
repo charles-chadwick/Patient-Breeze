@@ -33,6 +33,8 @@ const props = defineProps({
 
 const PATIENT_CONTACTABLE = 'App\\Models\\Patient'
 
+const active_tab = ref('demographics')
+
 const contact_modal_open = ref(false)
 const editing_contact = ref(null)
 
@@ -94,74 +96,99 @@ setLayoutProps({
             </Link>
         </div>
 
-        <PatientCard :patient="patient" />
-
-        <div class="rounded-xl border border-border bg-white shadow-sm">
-            <div class="flex items-center justify-between border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Contacts</h2>
+        <div class="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+            <div class="flex bg-muted/40 p-1">
                 <button
                     type="button"
-                    @click="openCreateContact"
-                    class="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white hover:bg-primary/90"
+                    @click="active_tab = 'demographics'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="active_tab === 'demographics'
+                        ? 'bg-white text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'"
                 >
-                    + New Contact
+                    Demographics
+                </button>
+                <button
+                    type="button"
+                    @click="active_tab = 'contacts'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="active_tab === 'contacts'
+                        ? 'bg-white text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    Contacts
                 </button>
             </div>
 
-            <div
-                v-if="patient.contacts.length === 0"
-                class="px-6 py-8 text-center text-sm text-muted-foreground"
-            >
-                No contacts on record.
-            </div>
+            <PatientCard v-if="active_tab === 'demographics'" :patient="patient" flat />
 
-            <table v-else class="w-full text-sm">
-                <thead>
-                    <tr class="border-b border-border text-left">
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Name</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Type</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Phone</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Address</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">ROI</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-border">
-                    <tr
-                        v-for="contact in patient.contacts"
-                        :key="contact.id"
-                        class="hover:bg-muted/40"
+            <template v-if="active_tab === 'contacts'">
+                <div class="flex items-center justify-between border-b border-border px-6 py-4">
+                    <h2 class="font-bold text-foreground">Contacts</h2>
+                    <button
+                        type="button"
+                        @click="openCreateContact"
+                        class="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white hover:bg-primary/90"
                     >
-                        <td class="px-6 py-3 font-bold text-foreground">{{ contact.name }}</td>
-                        <td class="px-6 py-3">
-                            <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
-                                {{ contact.type }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-3 text-muted-foreground">{{ contact.phone || '—' }}</td>
-                        <td class="px-6 py-3 text-muted-foreground">{{ contact.street_address || '—' }}</td>
-                        <td class="px-6 py-3">
-                            <RoiBadge :value="contact.roi" />
-                        </td>
-                        <td class="px-6 py-3 text-right">
-                            <button
-                                type="button"
-                                @click="openEditContact(contact)"
-                                class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
-                            >
-                                Edit
-                            </button>
-                            <button
-                                type="button"
-                                @click="askDeleteContact(contact)"
-                                class="ml-2 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50"
-                            >
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        + New Contact
+                    </button>
+                </div>
+
+                <div
+                    v-if="patient.contacts.length === 0"
+                    class="px-6 py-8 text-center text-sm text-muted-foreground"
+                >
+                    No contacts on record.
+                </div>
+
+                <table v-else class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-border text-left">
+                            <th class="px-6 py-3 font-bold text-muted-foreground">Name</th>
+                            <th class="px-6 py-3 font-bold text-muted-foreground">Type</th>
+                            <th class="px-6 py-3 font-bold text-muted-foreground">Phone</th>
+                            <th class="px-6 py-3 font-bold text-muted-foreground">Address</th>
+                            <th class="px-6 py-3 font-bold text-muted-foreground">ROI</th>
+                            <th class="px-6 py-3 font-bold text-muted-foreground text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-border">
+                        <tr
+                            v-for="contact in patient.contacts"
+                            :key="contact.id"
+                            class="hover:bg-muted/40"
+                        >
+                            <td class="px-6 py-3 font-bold text-foreground">{{ contact.name }}</td>
+                            <td class="px-6 py-3">
+                                <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
+                                    {{ contact.type }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-muted-foreground">{{ contact.phone || '—' }}</td>
+                            <td class="px-6 py-3 text-muted-foreground">{{ contact.street_address || '—' }}</td>
+                            <td class="px-6 py-3">
+                                <RoiBadge :value="contact.roi" />
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <button
+                                    type="button"
+                                    @click="openEditContact(contact)"
+                                    class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="askDeleteContact(contact)"
+                                    class="ml-2 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50"
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </template>
         </div>
 
         <div class="rounded-xl border border-border bg-white shadow-sm">
