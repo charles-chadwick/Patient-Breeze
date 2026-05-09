@@ -2,59 +2,43 @@
 
 namespace App\Models;
 
-use App\Enums\ContactType;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
-use Database\Factories\ContactFactory;
+use Database\Factories\DiscussionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Contact extends Model implements HasMedia
+class Discussion extends Model implements HasMedia
 {
-    /** @use HasFactory<ContactFactory> */
+    /** @use HasFactory<DiscussionFactory> */
     use HasFactory, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable;
 
     protected $fillable = [
-        'name',
         'type',
-        'phone',
-        'street_address',
-        'roi',
+        'title',
+        'status',
     ];
 
     protected function searchableFields(): array
     {
         return [
-            'name',
-            'phone',
-            'street_address',
+            'title',
+            'type',
+            'status',
         ];
     }
 
     protected function sortableFields(): array
     {
         return [
-            'name' => 'name',
+            'title' => 'title',
             'type' => 'type',
-        ];
-    }
-
-    public function contactable(): MorphTo
-    {
-        return $this->morphTo();
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'type' => ContactType::class,
-            'roi' => 'boolean',
+            'status' => 'status',
         ];
     }
 
