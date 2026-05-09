@@ -89,7 +89,8 @@ class PatientController extends Controller
             'patient' => $patient,
             'appointments' => $appointments,
             'appointment_search' => $search->toString(),
-            'contact_types' => array_column(ContactType::cases(), 'value'),
+            'contact_types' => ContactType::values(),
+            'contactable_type' => Patient::class,
         ]);
     }
 

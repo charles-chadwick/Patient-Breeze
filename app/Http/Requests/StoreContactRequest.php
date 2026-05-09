@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\ContactType;
 use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,7 +26,7 @@ class StoreContactRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:255'],
             'street_address' => ['nullable', 'string', 'max:255'],
             'roi' => ['nullable', 'boolean'],
-            'contactable_type' => ['required', 'string', Rule::in([Patient::class])],
+            'contactable_type' => ['required', 'string', Rule::in([Patient::class, User::class])],
             'contactable_id' => ['required', 'integer'],
         ];
     }

@@ -1,10 +1,12 @@
 <script setup>
+import { ref } from 'vue'
 import { Link, setLayoutProps } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 import UserCard from '@/Components/UserCard.vue'
 import AppointmentStatusBadge from '@/Components/AppointmentStatusBadge.vue'
 import SearchInput from '@/Components/SearchInput.vue'
+import ContactsTab from '@/Components/ContactsTab.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -21,7 +23,17 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    contact_types: {
+        type: Array,
+        default: () => [],
+    },
+    contactable_type: {
+        type: String,
+        required: true,
+    },
 })
+
+const active_tab = ref('details')
 
 setLayoutProps({
     title: `${props.user.first_name} ${props.user.last_name}`,
@@ -45,7 +57,41 @@ setLayoutProps({
             </Link>
         </div>
 
-        <UserCard :user="user" />
+        <div class="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+            <div class="flex bg-muted/40 p-1">
+                <button
+                    type="button"
+                    @click="active_tab = 'details'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="active_tab === 'details'
+                        ? 'bg-white text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    Details
+                </button>
+                <button
+                    type="button"
+                    @click="active_tab = 'contacts'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="active_tab === 'contacts'
+                        ? 'bg-white text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    Contacts
+                </button>
+            </div>
+
+            <UserCard v-if="active_tab === 'details'" :user="user" flat />
+
+            <ContactsTab
+                v-if="active_tab === 'contacts'"
+                :contacts="user.contacts"
+                :contactable-type="contactable_type"
+                :contactable-id="user.id"
+                :types="contact_types"
+                reload-key="user"
+            />
+        </div>
 
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="flex items-center justify-between border-b border-border px-6 py-4">

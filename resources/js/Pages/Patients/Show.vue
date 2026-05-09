@@ -1,14 +1,12 @@
 <script setup>
 import { ref } from 'vue'
-import { Link, router, setLayoutProps } from '@inertiajs/vue3'
+import { Link, setLayoutProps } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 import PatientCard from '@/Components/PatientCard.vue'
 import AppointmentStatusBadge from '@/Components/AppointmentStatusBadge.vue'
 import SearchInput from '@/Components/SearchInput.vue'
-import ContactModal from '@/Components/ContactModal.vue'
-import ConfirmDialog from '@/Components/ConfirmDialog.vue'
-import RoiBadge from '@/Components/RoiBadge.vue'
+import ContactsTab from '@/Components/ContactsTab.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -29,50 +27,13 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    contactable_type: {
+        type: String,
+        required: true,
+    },
 })
 
-const PATIENT_CONTACTABLE = 'App\\Models\\Patient'
-
 const active_tab = ref('demographics')
-
-const contact_modal_open = ref(false)
-const editing_contact = ref(null)
-
-const confirm_open = ref(false)
-const deleting_contact = ref(null)
-const deleting = ref(false)
-
-function openCreateContact() {
-    editing_contact.value = null
-    contact_modal_open.value = true
-}
-
-function openEditContact(contact) {
-    editing_contact.value = contact
-    contact_modal_open.value = true
-}
-
-function handleContactSaved() {
-    router.reload({ only: ['patient'] })
-}
-
-function askDeleteContact(contact) {
-    deleting_contact.value = contact
-    confirm_open.value = true
-}
-
-function confirmDeleteContact() {
-    if (!deleting_contact.value) return
-    deleting.value = true
-    router.delete(route('contacts.destroy', deleting_contact.value.id), {
-        preserveScroll: true,
-        onFinish: () => {
-            deleting.value = false
-            confirm_open.value = false
-            deleting_contact.value = null
-        },
-    })
-}
 
 setLayoutProps({
     title: `${props.patient.first_name} ${props.patient.last_name}`,
@@ -103,7 +64,7 @@ setLayoutProps({
                     @click="active_tab = 'demographics'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'demographics'
-                        ? 'bg-white text-foreground shadow-sm'
+                        ? 'bg-white text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     Demographics
@@ -113,7 +74,7 @@ setLayoutProps({
                     @click="active_tab = 'contacts'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'contacts'
-                        ? 'bg-white text-foreground shadow-sm'
+                        ? 'bg-white text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     Contacts
@@ -122,73 +83,14 @@ setLayoutProps({
 
             <PatientCard v-if="active_tab === 'demographics'" :patient="patient" flat />
 
-            <template v-if="active_tab === 'contacts'">
-                <div class="flex items-center justify-between px-6 py-4">
-                    <h2 class="font-bold text-foreground">Contacts</h2>
-                    <button
-                        type="button"
-                        @click="openCreateContact"
-                        class="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white hover:bg-primary/90"
-                    >
-                        + New Contact
-                    </button>
-                </div>
-
-                <div
-                    v-if="patient.contacts.length === 0"
-                    class="px-6 py-8 text-center text-sm text-muted-foreground"
-                >
-                    No contacts on record.
-                </div>
-
-                <table v-else class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b border-border text-left">
-                            <th class="px-6 py-3 font-bold text-muted-foreground">Name</th>
-                            <th class="px-6 py-3 font-bold text-muted-foreground">Type</th>
-                            <th class="px-6 py-3 font-bold text-muted-foreground">Phone</th>
-                            <th class="px-6 py-3 font-bold text-muted-foreground">Address</th>
-                            <th class="px-6 py-3 font-bold text-muted-foreground">ROI</th>
-                            <th class="px-6 py-3 font-bold text-muted-foreground text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border">
-                        <tr
-                            v-for="contact in patient.contacts"
-                            :key="contact.id"
-                            class="hover:bg-muted/40"
-                        >
-                            <td class="px-6 py-3 font-bold text-foreground">{{ contact.name }}</td>
-                            <td class="px-6 py-3">
-                                <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
-                                    {{ contact.type }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-3 text-muted-foreground">{{ contact.phone || '—' }}</td>
-                            <td class="px-6 py-3 text-muted-foreground">{{ contact.street_address || '—' }}</td>
-                            <td class="px-6 py-3">
-                                <RoiBadge :value="contact.roi" />
-                            </td>
-                            <td class="px-6 py-3 text-right">
-                                <button
-                                    type="button"
-                                    @click="openEditContact(contact)"
-                                    class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    type="button"
-                                    @click="askDeleteContact(contact)"
-                                    class="ml-2 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50"
-                                >
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </template>
+            <ContactsTab
+                v-if="active_tab === 'contacts'"
+                :contacts="patient.contacts"
+                :contactable-type="contactable_type"
+                :contactable-id="patient.id"
+                :types="contact_types"
+                reload-key="patient"
+            />
         </div>
 
         <div class="rounded-xl border border-border bg-white shadow-sm">
@@ -316,22 +218,5 @@ setLayoutProps({
             </div>
         </div>
 
-        <ContactModal
-            v-model:open="contact_modal_open"
-            :contact="editing_contact"
-            :types="contact_types"
-            :contactable-type="PATIENT_CONTACTABLE"
-            :contactable-id="patient.id"
-            @saved="handleContactSaved"
-        />
-
-        <ConfirmDialog
-            v-model:open="confirm_open"
-            title="Delete contact?"
-            :description="deleting_contact ? `This will permanently remove ${deleting_contact.name}.` : ''"
-            confirm-label="Delete"
-            :processing="deleting"
-            @confirm="confirmDeleteContact"
-        />
     </div>
 </template>

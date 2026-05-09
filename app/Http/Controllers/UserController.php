@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ManageAvatarAction;
+use App\Enums\ContactType;
 use App\Enums\UserRole;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -64,7 +65,7 @@ class UserController extends Controller
     {
         $search = $request->string('search')->trim();
 
-        $user->load(['media', 'roles']);
+        $user->load(['media', 'roles', 'contacts' => fn ($q) => $q->orderBy('name')]);
 
         $appointments = $user->appointments()
             ->with(['patient.media'])
@@ -83,6 +84,8 @@ class UserController extends Controller
             'user' => $user,
             'appointments' => $appointments,
             'appointment_search' => $search->toString(),
+            'contact_types' => ContactType::values(),
+            'contactable_type' => User::class,
         ]);
     }
 
