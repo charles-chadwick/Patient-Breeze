@@ -8,12 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('discussions', function (Blueprint $table) {
+        Schema::create('discussion_participants', function (Blueprint $table) {
             $table->id();
-            $table->morphs('discussionable');
-            $table->string('type');
-            $table->string('title');
-            $table->string('status');
+            $table->foreignId('discussion_id')->constrained()->cascadeOnDelete();
+            $table->morphs('participantable', 'dp_participantable_index');
+            $table->timestamp('seen_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -21,6 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('discussions');
+        Schema::dropIfExists('discussion_participants');
     }
 };
