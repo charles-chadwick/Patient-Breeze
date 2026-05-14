@@ -18,6 +18,7 @@ class DiscussionPost extends Model
 
     protected $fillable = [
         'discussion_id',
+        'user_id',
         'status',
         'content',
     ];
@@ -25,6 +26,11 @@ class DiscussionPost extends Model
     public function discussion(): BelongsTo
     {
         return $this->belongsTo(Discussion::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     protected function casts(): array

@@ -7,6 +7,7 @@ import PatientCard from '@/Components/PatientCard.vue'
 import AppointmentStatusBadge from '@/Components/AppointmentStatusBadge.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import ContactsTab from '@/Components/ContactsTab.vue'
+import DiscussionList from '@/Components/DiscussionList.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -30,6 +31,18 @@ const props = defineProps({
     contactable_type: {
         type: String,
         required: true,
+    },
+    users: {
+        type: Array,
+        default: () => [],
+    },
+    discussions: {
+        type: Array,
+        default: null,
+    },
+    discussion_types: {
+        type: Array,
+        default: () => [],
     },
 })
 
@@ -79,6 +92,16 @@ setLayoutProps({
                 >
                     Contacts
                 </button>
+                <button
+                    type="button"
+                    @click="active_tab = 'discussions'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="active_tab === 'discussions'
+                        ? 'bg-white text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    Discussions
+                </button>
             </div>
 
             <PatientCard v-if="active_tab === 'demographics'" :patient="patient" flat />
@@ -90,6 +113,15 @@ setLayoutProps({
                 :contactable-id="patient.id"
                 :types="contact_types"
                 reload-key="patient"
+            />
+
+            <DiscussionList
+                v-if="active_tab === 'discussions'"
+                :discussions="discussions"
+                :discussionable-type="contactable_type"
+                :discussionable-id="patient.id"
+                :users="users"
+                :types="discussion_types"
             />
         </div>
 

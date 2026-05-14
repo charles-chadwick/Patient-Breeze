@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DiscussionType;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
 use Database\Factories\DiscussionFactory;
@@ -59,6 +60,13 @@ class Discussion extends Model implements HasMedia
     public function posts(): HasMany
     {
         return $this->hasMany(DiscussionPost::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'type' => DiscussionType::class,
+        ];
     }
 
     public function getActivitylogOptions(): LogOptions

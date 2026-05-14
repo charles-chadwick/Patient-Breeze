@@ -4,6 +4,8 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\DiscussionPostController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -28,4 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('discussions', DiscussionController::class)->only(['store']);
+    Route::resource('discussions.posts', DiscussionPostController::class)->only(['store']);
 });

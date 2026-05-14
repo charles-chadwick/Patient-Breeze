@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Actions\ManageAvatarAction;
 use App\Enums\BloodType;
 use App\Enums\ContactType;
+use App\Enums\DiscussionType;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -85,12 +87,30 @@ class PatientController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+        $users = User::with('media')->orderBy('last_name')->get()
+            ->map(fn ($u) => [
+                'id' => $u->id,
+                'first_name' => $u->first_name,
+                'last_name' => $u->last_name,
+                'avatar_url' => $u->avatar_url,
+            ]);
+
         return Inertia::render('Patients/Show', [
             'patient' => $patient,
             'appointments' => $appointments,
             'appointment_search' => $search->toString(),
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
+            'discussion_types' => DiscussionType::values(),
+            'users' => $users,
+            'discussions' => Inertia::defer(fn () => $patient->discussions()
+                ->with([
+                    'participants.participantable.media',
+                    'posts' => fn ($q) => $q->with('user.media')->orderBy('created_at'),
+                ])
+                ->latest()
+                ->get()
+            ),
         ]);
     }
 

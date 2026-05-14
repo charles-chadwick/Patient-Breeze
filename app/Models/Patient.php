@@ -70,6 +70,11 @@ class Patient extends Model implements HasMedia
         return $this->morphMany(Contact::class, 'contactable');
     }
 
+    public function discussions(): MorphMany
+    {
+        return $this->morphMany(Discussion::class, 'discussionable');
+    }
+
     public static function generateMrn(): string
     {
         $max = static::withTrashed()->lockForUpdate()->max('mrn');
