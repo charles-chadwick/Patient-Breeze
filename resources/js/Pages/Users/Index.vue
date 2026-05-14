@@ -6,7 +6,11 @@ import SortDropdown from '@/Components/SortDropdown.vue'
 
 defineOptions({ layout: DashboardLayout })
 
-setLayoutProps({ title: 'Users' })
+setLayoutProps({
+    breadcrumbs: [
+        { label: 'Users' },
+    ],
+})
 
 const props = defineProps({
     users: {

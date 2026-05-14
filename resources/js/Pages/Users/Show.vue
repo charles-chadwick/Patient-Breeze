@@ -36,19 +36,16 @@ const props = defineProps({
 const active_tab = ref('details')
 
 setLayoutProps({
-    title: `${props.user.first_name} ${props.user.last_name}`,
+    breadcrumbs: [
+        { label: 'Users', href: route('users.index') },
+        { label: `${props.user.first_name} ${props.user.last_name}` },
+    ],
 })
 </script>
 
 <template>
     <div class="grid gap-6">
-        <div class="flex items-center justify-between">
-            <Link
-                :href="route('users.index')"
-                class="text-sm font-bold text-primary hover:underline"
-            >
-                ← Back to Users
-            </Link>
+        <div class="flex justify-end">
             <Link
                 :href="route('users.edit', user.id)"
                 class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
