@@ -118,7 +118,7 @@ function lastActivity(discussion) {
                                     v-if="participant.participantable"
                                     :src="participant.participantable.avatar_url"
                                     :alt="`${participant.participantable.first_name} ${participant.participantable.last_name}`"
-                                    :title="`${participant.participantable.first_name} ${participant.participantable.last_name}`"
+                                    :title="`${participant.participantable.first_name} ${participant.participantable.last_name}` + `${participant.is_initiator ? '(Initiator)' : ''}`"
                                     class="size-7 rounded-full object-cover ring-2 ring-white"
                                 />
                             </template>
