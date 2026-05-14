@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { setLayoutProps } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import PatientForm from '@/Pages/Patients/Partials/Form.vue'
 
@@ -28,11 +28,19 @@ const props = defineProps({
 const isEditing = computed(() => props.patient !== null)
 
 setLayoutProps({
-    title: computed(() =>
-        isEditing.value
-            ? `Edit ${props.patient.first_name} ${props.patient.last_name}`
-            : 'New Patient'
-    ),
+    breadcrumbs: computed(() => {
+        if (isEditing.value) {
+            return [
+                { label: 'Patients', href: route('patients.index') },
+                { label: `${props.patient.first_name} ${props.patient.last_name}`, href: route('patients.show', props.patient.id) },
+                { label: `Edit ${props.patient.first_name} ${props.patient.last_name}` },
+            ]
+        }
+        return [
+            { label: 'Patients', href: route('patients.index') },
+            { label: 'New Patient' },
+        ]
+    }),
 })
 
 const backHref = computed(() =>
@@ -48,12 +56,6 @@ const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
 
 <template>
     <div class="grid gap-6">
-        <div>
-            <Link :href="backHref" class="text-sm font-bold text-primary hover:underline">
-                {{ isEditing ? '← Back to Patient' : '← Back to Patients' }}
-            </Link>
-        </div>
-
         <PatientForm
             :action="formAction"
             :method="formMethod"

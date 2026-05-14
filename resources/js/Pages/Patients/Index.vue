@@ -7,7 +7,11 @@ import { formatDate, DATE_SHORT } from '@/lib/utils'
 
 defineOptions({ layout: DashboardLayout })
 
-setLayoutProps({ title: 'Patients' })
+setLayoutProps({
+    breadcrumbs: [
+        { label: 'Patients' },
+    ],
+})
 
 const props = defineProps({
     patients: {
