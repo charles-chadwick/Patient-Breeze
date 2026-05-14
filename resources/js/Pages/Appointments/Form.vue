@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { setLayoutProps } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import AppointmentForm from '@/Pages/Appointments/Partials/AppointmentForm.vue'
 import PatientCard from '@/Components/PatientCard.vue'
@@ -33,9 +33,11 @@ const props = defineProps({
 const isEditing = computed(() => props.appointment !== null)
 
 setLayoutProps({
-    title: computed(() =>
-        isEditing.value ? 'Edit Appointment' : 'New Appointment'
-    ),
+    breadcrumbs: computed(() => [
+        { label: 'Patients', href: route('patients.index') },
+        { label: `${props.patient.first_name} ${props.patient.last_name}`, href: route('patients.show', props.patient.id) },
+        { label: isEditing.value ? 'Edit Appointment' : 'New Appointment' },
+    ]),
 })
 
 const backHref = computed(() => route('patients.show', props.patient.id))
@@ -51,12 +53,6 @@ const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
 
 <template>
     <div class="grid gap-6">
-        <div>
-            <Link :href="backHref" class="text-sm font-bold text-primary hover:underline">
-                ← Back to {{ patient.first_name }} {{ patient.last_name }}
-            </Link>
-        </div>
-
         <PatientCard :patient="patient" />
 
         <AppointmentForm

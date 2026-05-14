@@ -15,7 +15,11 @@ import { cn, formatDate, DATE_SHORT } from '@/lib/utils'
 
 defineOptions ( { layout: DashboardLayout } )
 
-setLayoutProps ( { title: 'Appointments' } )
+setLayoutProps({
+    breadcrumbs: [
+        { label: 'Appointments' },
+    ],
+})
 
 const props = defineProps ( {
   appointments: {
