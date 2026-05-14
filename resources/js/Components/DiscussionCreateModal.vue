@@ -55,6 +55,7 @@ const form = useForm({
     discussionable_type: props.discussionableType,
     discussionable_id: props.discussionableId,
     participant_ids: [],
+    initial_reply: '',
 })
 
 function handleOpenUpdate(value) {
@@ -124,6 +125,20 @@ function submit() {
                         placeholder="Add participants…"
                     />
                     <p v-if="form.errors.participant_ids" class="mt-1 text-xs text-red-600">{{ form.errors.participant_ids }}</p>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                        Initial Reply  <span class="text-red-500">*</span>
+                    </label>
+                    <textarea
+                        v-model="form.initial_reply"
+                        rows="3"
+                        placeholder="Write your message"
+                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        :class="{ 'border-red-400': form.errors.initial_reply }"
+                    ></textarea>
+                    <p v-if="form.errors.initial_reply" class="mt-1 text-xs text-red-600">{{ form.errors.initial_reply }}</p>
                 </div>
             </form>
 

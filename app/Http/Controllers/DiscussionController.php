@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DiscussionPostStatus;
 use App\Enums\DiscussionType;
 use App\Http\Requests\StoreDiscussionRequest;
 use App\Models\User;
@@ -17,6 +18,8 @@ class DiscussionController extends Controller
 
         $type = DiscussionType::from($validated['type']);
 
+        $user_id = auth()->id();
+
         $discussion = $discussionable->discussions()->create([
             'type' => $type,
             'title' => $validated['title'],
@@ -25,15 +28,15 @@ class DiscussionController extends Controller
 
         $discussion->participants()->create([
             'participantable_type' => User::class,
-            'participantable_id' => auth()->id(),
+            'participantable_id' => $user_id,
             'is_initiator' => true,
         ]);
 
-        foreach ($validated['participant_ids'] ?? [] as $user_id) {
-            if ($user_id !== auth()->id()) {
+        foreach ($validated['participant_ids'] ?? [] as $participant_id) {
+            if ($participant_id !== $user_id) {
                 $discussion->participants()->create([
                     'participantable_type' => User::class,
-                    'participantable_id' => $user_id,
+                    'participantable_id' => $participant_id,
                     'is_initiator' => false,
                 ]);
             }
@@ -46,6 +49,12 @@ class DiscussionController extends Controller
                 'is_initiator' => false,
             ]);
         }
+
+        $discussion->posts()->create([
+            'user_id' => $user_id,
+            'status' => DiscussionPostStatus::Published,
+            'content' => $validated['initial_reply'],
+        ]);
 
         return redirect()->back();
     }

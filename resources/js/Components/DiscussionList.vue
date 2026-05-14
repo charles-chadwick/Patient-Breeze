@@ -26,6 +26,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    patient: {
+        type: Object,
+        default: null,
+    },
 })
 
 const create_modal_open = ref(false)
@@ -145,6 +149,7 @@ function lastActivity(discussion) {
     <DiscussionSlideOver
         v-model:open="slide_over_open"
         :discussion="selected_discussion"
+        :patient="patient"
         @reply-posted="handleReplyPosted"
     />
 </template>

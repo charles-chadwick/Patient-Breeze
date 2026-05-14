@@ -122,6 +122,7 @@ setLayoutProps({
                 :discussionable-id="patient.id"
                 :users="users"
                 :types="discussion_types"
+                :patient="patient"
             />
         </div>
 

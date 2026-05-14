@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 
@@ -11,7 +12,17 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    patient: {
+        type: Object,
+        default: null,
+    },
 })
+
+const initiator = computed(() =>
+    props.discussion?.participants?.find((p) => p.is_initiator)?.participantable ?? null
+)
+
+const isPortalMessage = computed(() => props.discussion?.type === 'Portal Message')
 
 const emit = defineEmits(['update:open', 'reply-posted'])
 
@@ -46,6 +57,25 @@ function submitReply() {
                                 {{ discussion.type }}
                             </span>
                             <span class="text-xs text-muted-foreground">{{ formatDate(discussion.created_at, DATE_SHORT) }}</span>
+                        </div>
+                        <div class="mt-2 flex flex-wrap items-center gap-3">
+                            <div v-if="initiator" class="flex items-center gap-1.5">
+                                <img
+                                    :src="initiator.avatar_url"
+                                    :alt="`${initiator.first_name} ${initiator.last_name}`"
+                                    class="size-5 rounded-full object-cover ring-1 ring-border"
+                                />
+                                <span class="text-xs text-muted-foreground">{{ initiator.first_name }} {{ initiator.last_name }}</span>
+                            </div>
+                            <div v-if="isPortalMessage && patient" class="flex items-center gap-1.5">
+                                <span class="text-xs text-muted-foreground">→</span>
+                                <img
+                                    :src="patient.avatar_url"
+                                    :alt="`${patient.first_name} ${patient.last_name}`"
+                                    class="size-5 rounded-full object-cover ring-1 ring-border"
+                                />
+                                <span class="text-xs text-muted-foreground">{{ patient.first_name }} {{ patient.last_name }}</span>
+                            </div>
                         </div>
                     </div>
                     <button

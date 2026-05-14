@@ -26,6 +26,7 @@ class StoreDiscussionRequest extends FormRequest
             'discussionable_id' => ['required', 'integer'],
             'participant_ids' => ['nullable', 'array'],
             'participant_ids.*' => ['integer', Rule::exists('users', 'id')],
+            'initial_reply' => ['required', 'string', 'max:10000'],
         ];
     }
 }

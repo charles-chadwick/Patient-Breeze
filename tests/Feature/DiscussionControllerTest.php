@@ -1,9 +1,11 @@
 <?php
 
+use App\Enums\DiscussionPostStatus;
 use App\Enums\DiscussionType;
 use App\Enums\UserRole;
 use App\Models\Discussion;
 use App\Models\DiscussionParticipant;
+use App\Models\DiscussionPost;
 use App\Models\Patient;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -25,6 +27,7 @@ it('creates a discussion for a patient', function (): void {
         'type' => DiscussionType::Internal->value,
         'discussionable_type' => Patient::class,
         'discussionable_id' => $patient->id,
+        'initial_reply' => 'Opening message.',
     ]);
 
     $response->assertRedirect();
@@ -42,9 +45,8 @@ it('auto-adds the current user as initiator participant', function (): void {
         'type' => DiscussionType::Internal->value,
         'discussionable_type' => Patient::class,
         'discussionable_id' => $patient->id,
+        'initial_reply' => 'Opening message.',
     ]);
-
-    $discussion = Discussion::first();
 
     expect(DiscussionParticipant::count())->toBe(1)
         ->and(DiscussionParticipant::first()->participantable_id)->toBe($this->user->id)
@@ -61,6 +63,7 @@ it('adds additional participants to the discussion', function (): void {
         'discussionable_type' => Patient::class,
         'discussionable_id' => $patient->id,
         'participant_ids' => [$other_user->id],
+        'initial_reply' => 'Opening message.',
     ]);
 
     $discussion = Discussion::first();
@@ -78,6 +81,7 @@ it('does not duplicate the current user when included in participant_ids', funct
         'discussionable_type' => Patient::class,
         'discussionable_id' => $patient->id,
         'participant_ids' => [$this->user->id],
+        'initial_reply' => 'Opening message.',
     ]);
 
     expect(DiscussionParticipant::count())->toBe(1);
@@ -86,7 +90,7 @@ it('does not duplicate the current user when included in participant_ids', funct
 it('validates required fields', function (): void {
     $response = $this->post(route('discussions.store'), []);
 
-    $response->assertSessionHasErrors(['title', 'type', 'discussionable_type', 'discussionable_id']);
+    $response->assertSessionHasErrors(['title', 'type', 'discussionable_type', 'discussionable_id', 'initial_reply']);
 });
 
 it('rejects unknown discussionable types', function (): void {
@@ -95,6 +99,7 @@ it('rejects unknown discussionable types', function (): void {
         'type' => DiscussionType::Internal->value,
         'discussionable_type' => 'App\\Models\\Malicious',
         'discussionable_id' => 1,
+        'initial_reply' => 'Opening message.',
     ]);
 
     $response->assertSessionHasErrors(['discussionable_type']);
@@ -108,6 +113,7 @@ it('auto-adds the patient as a participant for portal messages', function (): vo
         'type' => DiscussionType::PortalMessage->value,
         'discussionable_type' => Patient::class,
         'discussionable_id' => $patient->id,
+        'initial_reply' => 'Opening message.',
     ]);
 
     $discussion = Discussion::first();
@@ -125,7 +131,25 @@ it('stores the correct type on the discussion', function (): void {
         'type' => DiscussionType::PortalMessage->value,
         'discussionable_type' => Patient::class,
         'discussionable_id' => $patient->id,
+        'initial_reply' => 'Opening message.',
     ]);
 
     expect(Discussion::first()->type)->toBe(DiscussionType::PortalMessage);
+});
+
+it('creates an initial post from the initial reply', function (): void {
+    $patient = Patient::factory()->create();
+
+    $this->post(route('discussions.store'), [
+        'title' => 'Test',
+        'type' => DiscussionType::Internal->value,
+        'discussionable_type' => Patient::class,
+        'discussionable_id' => $patient->id,
+        'initial_reply' => 'This is my opening message.',
+    ]);
+
+    expect(DiscussionPost::count())->toBe(1)
+        ->and(DiscussionPost::first()->content)->toBe('This is my opening message.')
+        ->and(DiscussionPost::first()->user_id)->toBe($this->user->id)
+        ->and(DiscussionPost::first()->status)->toBe(DiscussionPostStatus::Published);
 });
