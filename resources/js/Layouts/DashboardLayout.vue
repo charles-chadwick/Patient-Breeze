@@ -1,14 +1,24 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut } from 'lucide-vue-next'
 
-defineProps({
+const props = defineProps({
     title: {
         type: String,
         default: 'Dashboard',
     },
+    breadcrumbs: {
+        type: Array,
+        default: () => [],
+    },
 })
+
+const effective_title = computed(() =>
+    props.breadcrumbs.length
+        ? props.breadcrumbs[props.breadcrumbs.length - 1].label
+        : props.title
+)
 
 const nav_items = [
     { label: 'Dashboard', route: 'dashboard', icon: LayoutDashboard },
@@ -23,7 +33,7 @@ const sidebar_open = ref(false)
 </script>
 
 <template>
-    <Head :title="title" />
+    <Head :title="effective_title" />
     <div class="flex h-screen overflow-hidden">
         <!-- Mobile backdrop -->
         <div
@@ -98,7 +108,22 @@ const sidebar_open = ref(false)
                 >
                     <Menu class="size-5" />
                 </button>
-                <h1 class="text-lg font-bold text-foreground">{{ title }}</h1>
+                <nav v-if="breadcrumbs.length" aria-label="Breadcrumb" class="flex items-center">
+                    <template v-for="(crumb, index) in breadcrumbs" :key="index">
+                        <span v-if="index > 0" class="mx-1.5 text-sm text-muted-foreground">/</span>
+                        <Link
+                            v-if="crumb.href"
+                            :href="crumb.href"
+                            class="text-sm text-muted-foreground hover:text-foreground"
+                        >{{ crumb.label }}</Link>
+                        <span
+                            v-else
+                            aria-current="page"
+                            class="text-lg font-bold text-foreground"
+                        >{{ crumb.label }}</span>
+                    </template>
+                </nav>
+                <h1 v-else class="text-lg font-bold text-foreground">{{ title }}</h1>
             </header>
 
             <!-- Page content -->
