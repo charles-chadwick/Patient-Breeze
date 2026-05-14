@@ -35,7 +35,9 @@ setLayoutProps({
     }),
 })
 
-const backHref = computed(() => route('users.index'))
+const backHref = computed(() =>
+    isEditing.value ? route('users.show', props.user.id) : route('users.index')
+)
 
 const formAction = computed(() =>
     isEditing.value ? route('users.update', props.user.id) : route('users.store')

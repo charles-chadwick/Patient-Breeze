@@ -110,7 +110,7 @@ const sidebar_open = ref(false)
                 </button>
                 <nav v-if="breadcrumbs.length" aria-label="Breadcrumb" class="flex items-center">
                     <template v-for="(crumb, index) in breadcrumbs" :key="index">
-                        <span v-if="index > 0" class="mx-1.5 text-sm text-muted-foreground">/</span>
+                        <span v-if="index > 0" aria-hidden="true" class="mx-1.5 text-sm text-muted-foreground">/</span>
                         <Link
                             v-if="crumb.href"
                             :href="crumb.href"
