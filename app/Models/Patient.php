@@ -8,17 +8,17 @@ use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
 use Database\Factories\PatientFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Patient extends Model implements HasMedia
+class Patient extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<PatientFactory> */
     use HasFactory, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable;
@@ -30,12 +30,16 @@ class Patient extends Model implements HasMedia
         'last_name',
         'suffix',
         'email',
+        'password',
         'mrn',
         'date_of_birth',
         'gender_at_birth',
         'gender_identity',
         'blood_type',
     ];
+
+    /** @var array<int, string> */
+    protected $hidden = ['password', 'remember_token'];
 
     /** @var array<int, string> */
     protected $appends = ['avatar_url'];
@@ -110,6 +114,8 @@ class Patient extends Model implements HasMedia
     protected function casts(): array
     {
         return [
+            'password' => 'hashed',
+            'email_verified_at' => 'datetime',
             'date_of_birth' => 'date',
             'gender_at_birth' => GenderAtBirth::class,
             'gender_identity' => GenderIdentity::class,
@@ -118,6 +124,9 @@ class Patient extends Model implements HasMedia
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logOnlyDirty()->logFillable();
+        return LogOptions::defaults()->logOnlyDirty()->logOnly([
+            'prefix', 'first_name', 'middle_name', 'last_name', 'suffix',
+            'email', 'mrn', 'date_of_birth', 'gender_at_birth', 'gender_identity', 'blood_type',
+        ]);
     }
 }
