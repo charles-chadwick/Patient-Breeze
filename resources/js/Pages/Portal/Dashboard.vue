@@ -53,7 +53,7 @@ const props = defineProps({
                         :key="appt.id"
                         class="py-3 first:pt-0 last:pb-0"
                     >
-                        <p class="text-sm font-medium text-slate-700">{{ new Date(appt.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) }}</p>
+                        <p class="text-sm font-medium text-slate-700">{{ new Date(appt.date + 'T00:00:00').toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) }}</p>
                         <p class="text-xs text-slate-400">{{ appt.start_time?.slice(0, 5) }} – {{ appt.end_time?.slice(0, 5) }}</p>
                         <p v-if="appt.reason" class="mt-0.5 text-xs text-slate-500">{{ appt.reason }}</p>
                     </li>
