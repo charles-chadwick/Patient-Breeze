@@ -22,6 +22,10 @@ class LoginController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        if (Auth::guard('portal')->check()) {
+            return redirect()->route('portal.dashboard');
+        }
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],

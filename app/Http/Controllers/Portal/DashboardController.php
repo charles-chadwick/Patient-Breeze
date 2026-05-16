@@ -20,13 +20,12 @@ class DashboardController extends Controller
             ->orderBy('date')
             ->orderBy('start_time')
             ->limit(5)
-            ->with('users')
-            ->get();
+            ->get(['id', 'date', 'start_time', 'end_time', 'reason', 'status']);
 
         $discussions = $patient->discussions()
             ->latest()
             ->limit(3)
-            ->get();
+            ->get(['id', 'title', 'status', 'created_at']);
 
         $documents = $patient->getMedia('*')
             ->filter(fn ($media) => $media->collection_name !== 'avatar')

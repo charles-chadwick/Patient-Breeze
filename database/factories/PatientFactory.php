@@ -6,6 +6,7 @@ use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 class PatientFactory extends Factory
 {
@@ -28,6 +29,11 @@ class PatientFactory extends Factory
             'gender_identity' => fake()->randomElement(GenderIdentity::cases()),
             'blood_type' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
         ];
+    }
+
+    public function withPassword(string $password = 'password'): static
+    {
+        return $this->state(['password' => Hash::make($password)]);
     }
 
     private function prefixForGender(GenderAtBirth $gender): string

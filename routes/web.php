@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('portal')->name('portal.')->group(function () {
     Route::get('/login', [App\Http\Controllers\Portal\LoginController::class, 'create'])->name('login');
-    Route::post('/login', [App\Http\Controllers\Portal\LoginController::class, 'store']);
+    Route::post('/login', [App\Http\Controllers\Portal\LoginController::class, 'store'])->middleware('throttle:6,1');
     Route::post('/logout', [App\Http\Controllers\Portal\LoginController::class, 'destroy'])->name('logout');
 
     Route::middleware('portal.auth')->group(function () {
