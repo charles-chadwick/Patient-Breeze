@@ -33,3 +33,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('discussions', DiscussionController::class)->only(['store']);
     Route::resource('discussions.posts', DiscussionPostController::class)->only(['store']);
 });
+
+Route::prefix('portal')->name('portal.')->group(function () {
+    Route::get('/login', [App\Http\Controllers\Portal\LoginController::class, 'create'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Portal\LoginController::class, 'store']);
+    Route::post('/logout', [App\Http\Controllers\Portal\LoginController::class, 'destroy'])->name('logout');
+
+    Route::middleware('portal.auth')->group(function () {
+        Route::get('/', App\Http\Controllers\Portal\DashboardController::class)->name('dashboard');
+    });
+});
