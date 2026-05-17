@@ -36,6 +36,11 @@ class User extends Authenticatable implements HasMedia
         return $this->morphMany(Contact::class, 'contactable');
     }
 
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(Document::class, 'documentable');
+    }
+
     public function appointments(): BelongsToMany
     {
         return $this->belongsToMany(Appointment::class)
