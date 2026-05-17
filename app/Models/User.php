@@ -31,6 +31,13 @@ class User extends Authenticatable implements HasMedia
     /** @var array<int, string> */
     protected $appends = ['avatar_url'];
 
+    public function appointments(): BelongsToMany
+    {
+        return $this->belongsToMany(Appointment::class)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
     public function contacts(): MorphMany
     {
         return $this->morphMany(Contact::class, 'contactable');
@@ -39,13 +46,6 @@ class User extends Authenticatable implements HasMedia
     public function documents(): MorphMany
     {
         return $this->morphMany(Document::class, 'documentable');
-    }
-
-    public function appointments(): BelongsToMany
-    {
-        return $this->belongsToMany(Appointment::class)
-            ->withPivot('role')
-            ->withTimestamps();
     }
 
     /**

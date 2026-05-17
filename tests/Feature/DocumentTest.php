@@ -9,6 +9,14 @@ use App\Models\Patient;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
+beforeEach(function (): void {
+    foreach (UserRole::cases() as $role) {
+        Role::findOrCreate($role->value);
+    }
+
+    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
+});
+
 it('creates a document belonging to a patient', function (): void {
     $patient = Patient::factory()->create();
     $document = $patient->documents()->create([
@@ -27,9 +35,7 @@ it('creates a document belonging to a patient', function (): void {
 });
 
 it('creates a document belonging to an appointment', function (): void {
-    Role::findOrCreate(UserRole::Staff->value);
-    $provider = User::factory()->withRole(UserRole::Staff)->create();
-    $appointment = Appointment::factory()->withProvider($provider)->create();
+    $appointment = Appointment::factory()->create();
     $document = $appointment->documents()->create([
         'type' => DocumentType::Referral,
         'name' => 'Specialist Referral',
