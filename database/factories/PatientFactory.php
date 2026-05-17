@@ -28,6 +28,7 @@ class PatientFactory extends Factory
             'gender_at_birth' => $gender,
             'gender_identity' => fake()->randomElement(GenderIdentity::cases()),
             'blood_type' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+            'password' => bcrypt('password'),
         ];
     }
 
