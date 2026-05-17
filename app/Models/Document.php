@@ -45,8 +45,6 @@ class Document extends Model implements HasMedia
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logOnlyDirty()->logOnly([
-            'type', 'name', 'document_date', 'notes',
-        ]);
+        return LogOptions::defaults()->logOnlyDirty()->logFillable();
     }
 }
