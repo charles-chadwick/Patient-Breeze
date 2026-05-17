@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
 use Database\Factories\UserFactory;
@@ -55,7 +56,7 @@ class User extends Authenticatable implements HasMedia
 
     public function scopeStaff($query)
     {
-        return $query;
+        return $query->whereDoesntHave('roles', fn ($q) => $q->where('name', UserRole::SuperAdmin->value));
     }
 
     protected function searchableFields(): array
