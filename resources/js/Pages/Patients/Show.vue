@@ -46,7 +46,13 @@ const props = defineProps({
     },
 })
 
-const active_tab = ref('demographics')
+const url_params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
+const initial_tab = url_params.get('tab')
+const initial_discussion_id = url_params.get('discussion')
+    ? Number(url_params.get('discussion'))
+    : null
+
+const active_tab = ref(['demographics', 'contacts', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
 
 setLayoutProps({
     breadcrumbs: [
@@ -120,6 +126,7 @@ setLayoutProps({
                 :users="users"
                 :types="discussion_types"
                 :patient="patient"
+                :initial-discussion-id="initial_discussion_id"
             />
         </div>
 

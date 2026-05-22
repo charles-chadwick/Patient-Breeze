@@ -79,6 +79,11 @@ class Patient extends Authenticatable implements HasMedia
         return $this->morphMany(Discussion::class, 'discussionable');
     }
 
+    public function portalNotifications(): HasMany
+    {
+        return $this->hasMany(PortalNotification::class);
+    }
+
     public static function generateMrn(): string
     {
         $max = static::withTrashed()->lockForUpdate()->max('mrn');

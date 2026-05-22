@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionPostController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\Portal\MessageController;
+use App\Http\Controllers\PortalQueueController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('discussions', DiscussionController::class)->only(['store']);
     Route::resource('discussions.posts', DiscussionPostController::class)->only(['store']);
+
+    Route::get('/portal-queue', [PortalQueueController::class, 'index'])->name('portal-queue.index');
+    Route::post('/portal-queue/{notification}/read', [PortalQueueController::class, 'markRead'])->name('portal-queue.read');
 });
 
 Route::prefix('portal')->name('portal.')->group(function () {
@@ -41,5 +46,8 @@ Route::prefix('portal')->name('portal.')->group(function () {
 
     Route::middleware('portal.auth')->group(function () {
         Route::get('/', App\Http\Controllers\Portal\DashboardController::class)->name('dashboard');
+        Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+        Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+        Route::post('/messages/{discussion}/replies', [MessageController::class, 'reply'])->name('messages.reply');
     });
 });
