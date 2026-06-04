@@ -10,3 +10,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('portal-queue', function ($user) {
     return $user instanceof User;
 });
+
+Broadcast::channel('discussion.{discussionId}', function ($user, int $discussionId) {
+    return $user instanceof User;
+});

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watch, onUnmounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 
@@ -27,6 +27,35 @@ const isPortalMessage = computed(() => props.discussion?.type === 'Portal Messag
 const emit = defineEmits(['update:open', 'reply-posted'])
 
 const form = useForm({ content: '' })
+
+let subscribed_channel = null
+
+function leaveChannel() {
+    if (subscribed_channel !== null && window.Echo) {
+        window.Echo.leave(`discussion.${subscribed_channel}`)
+        subscribed_channel = null
+    }
+}
+
+watch(
+    () => props.discussion?.id,
+    (discussion_id) => {
+        leaveChannel()
+
+        if (!discussion_id || !window.Echo) {
+            return
+        }
+
+        subscribed_channel = discussion_id
+        window.Echo.private(`discussion.${discussion_id}`)
+            .listen('.DiscussionPostCreated', () => {
+                emit('reply-posted')
+            })
+    },
+    { immediate: true },
+)
+
+onUnmounted(leaveChannel)
 
 function close() {
     emit('update:open', false)

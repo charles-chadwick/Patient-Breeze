@@ -282,6 +282,12 @@ it('removes an avatar when remove_avatar is true', function (): void {
     expect($user->fresh()->getFirstMedia('avatar'))->toBeNull();
 });
 
+it('falls back to the local default avatar when no media is set', function (): void {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+
+    expect($user->avatar_url)->toBe(asset('storage/default-avatar.png'));
+});
+
 it('rejects an email belonging to another user on update', function (): void {
     User::factory()->create(['email' => 'other@example.com']);
     $user = User::factory()->create();
