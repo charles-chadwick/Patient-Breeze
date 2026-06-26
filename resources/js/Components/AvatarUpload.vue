@@ -63,7 +63,7 @@ function trigger() {
         <button
             type="button"
             class="shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-full"
-            :class="{ 'ring-2 ring-red-400': error }"
+            :class="{ 'ring-2 ring-vibrant-coral-400': error }"
             @click="trigger"
             title="Click to upload avatar"
         >
@@ -96,14 +96,14 @@ function trigger() {
                 <button
                     v-if="displayUrl"
                     type="button"
-                    class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50"
+                    class="rounded-lg border border-vibrant-coral-200 px-3 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
                     @click="remove"
                 >
                     Remove
                 </button>
             </div>
             <p class="text-xs text-muted-foreground">JPG, PNG or GIF · Max 2 MB</p>
-            <p v-if="error" class="text-xs text-red-600">{{ error }}</p>
+            <p v-if="error" class="text-xs text-vibrant-coral-600">{{ error }}</p>
         </div>
 
         <input

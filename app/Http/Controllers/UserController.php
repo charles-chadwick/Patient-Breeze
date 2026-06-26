@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\ManageAvatarAction;
+use App\Actions\CreateUserAction;
+use App\Actions\UpdateUserAction;
 use App\Enums\ContactType;
 use App\Enums\UserRole;
+use App\Http\Controllers\Concerns\WithSearch;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class UserController extends Controller
 {
+    use WithSearch;
+
     public function index(Request $request): Response
     {
-        $search = $request->string('search')->trim();
-        $sort_by = $request->string('sort_by', 'last_name')->toString();
-        $direction = $request->input('direction') === 'desc' ? 'desc' : 'asc';
+        ['search' => $search, 'sort_by' => $sort_by, 'direction' => $direction] = $this->searchParameters($request);
 
         $users = User::with(['media', 'roles'])
             ->staff()
@@ -32,7 +32,7 @@ class UserController extends Controller
 
         return Inertia::render('Users/Index', [
             'users' => $users,
-            'search' => $search->toString(),
+            'search' => $search,
             'sort_by' => $sort_by,
             'direction' => $direction,
         ]);
@@ -45,18 +45,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(StoreUserRequest $request, ManageAvatarAction $avatarAction): RedirectResponse
+    public function store(StoreUserRequest $request, CreateUserAction $createUser): RedirectResponse
     {
-        $validated = $request->validated();
-
-        DB::transaction(function () use ($request, $validated, $avatarAction) {
-            $user = User::create(array_merge(User::identityData($validated), [
-                'password' => Hash::make($validated['password']),
-            ]));
-
-            $user->syncRoles([$validated['role']]);
-            $avatarAction->execute($user, $request->file('avatar'), false);
-        });
+        $createUser->execute($request->validated(), $request->file('avatar'));
 
         return redirect()->route('users.index');
     }
@@ -99,18 +90,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(UpdateUserRequest $request, User $user, ManageAvatarAction $avatarAction): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $updateUser): RedirectResponse
     {
-        $validated = $request->validated();
-
-        $user->update(User::identityData($validated));
-
-        if (filled($validated['password'] ?? null)) {
-            $user->update(['password' => Hash::make($validated['password'])]);
-        }
-
-        $user->syncRoles([$validated['role']]);
-        $avatarAction->execute($user, $request->file('avatar'), (bool) ($validated['remove_avatar'] ?? false));
+        $updateUser->execute($user, $request->validated(), $request->file('avatar'));
 
         return redirect()->route('users.index');
     }

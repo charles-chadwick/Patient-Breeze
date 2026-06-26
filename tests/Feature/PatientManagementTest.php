@@ -68,6 +68,12 @@ it('removes an avatar when remove_avatar is true', function (): void {
     expect($patient->fresh()->getFirstMedia('avatar'))->toBeNull();
 });
 
+it('falls back to the local default avatar when no media is set', function (): void {
+    $patient = Patient::factory()->create();
+
+    expect($patient->avatar_url)->toBe(asset('storage/default-avatar.png'));
+});
+
 it('renders the patient show page with appointments and search props', function (): void {
     $patient = Patient::factory()->create();
 

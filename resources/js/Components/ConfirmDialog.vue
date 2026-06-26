@@ -74,7 +74,7 @@ function handleOpenUpdate(value) {
                     :disabled="processing"
                     @click="handleConfirm"
                     class="rounded-lg px-4 py-2 text-sm font-bold text-white disabled:opacity-50"
-                    :class="destructive ? 'bg-red-600 hover:bg-red-700' : 'bg-primary hover:bg-primary/90'"
+                    :class="destructive ? 'bg-vibrant-coral-600 hover:bg-vibrant-coral-700' : 'bg-primary hover:bg-primary/90'"
                 >
                     {{ confirmLabel }}
                 </button>

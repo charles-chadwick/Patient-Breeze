@@ -39,7 +39,7 @@ function removeValue(value) {
             {{ optionFor(val)?.label ?? val }}
             <button
                 type="button"
-                class="ml-0.5 cursor-pointer rounded hover:text-red-500 focus:outline-none"
+                class="ml-0.5 cursor-pointer rounded hover:text-vibrant-coral-500 focus:outline-none"
                 @click="removeValue(val)"
             >
                 <XIcon class="size-3" />

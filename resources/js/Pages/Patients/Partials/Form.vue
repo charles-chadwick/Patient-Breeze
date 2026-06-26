@@ -88,22 +88,22 @@ function submit() {
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         placeholder="Dr., Mr., Ms.…"
                     />
-                    <p v-if="form.errors.prefix" class="mt-1 text-xs text-red-600">{{ form.errors.prefix }}</p>
+                    <p v-if="form.errors.prefix" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.prefix }}</p>
                 </div>
 
                 <!-- First Name -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        First Name <span class="text-red-500">*</span>
+                        First Name <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.first_name"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.first_name }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.first_name }"
                         placeholder="First name"
                     />
-                    <p v-if="form.errors.first_name" class="mt-1 text-xs text-red-600">{{ form.errors.first_name }}</p>
+                    <p v-if="form.errors.first_name" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.first_name }}</p>
                 </div>
 
                 <!-- Middle Name -->
@@ -122,16 +122,16 @@ function submit() {
                 <!-- Last Name -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Last Name <span class="text-red-500">*</span>
+                        Last Name <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.last_name"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.last_name }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.last_name }"
                         placeholder="Last name"
                     />
-                    <p v-if="form.errors.last_name" class="mt-1 text-xs text-red-600">{{ form.errors.last_name }}</p>
+                    <p v-if="form.errors.last_name" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.last_name }}</p>
                 </div>
 
                 <!-- Suffix -->
@@ -150,16 +150,16 @@ function submit() {
                 <!-- Email -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Email <span class="text-red-500">*</span>
+                        Email <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.email"
                         type="email"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.email }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.email }"
                         placeholder="email@example.com"
                     />
-                    <p v-if="form.errors.email" class="mt-1 text-xs text-red-600">{{ form.errors.email }}</p>
+                    <p v-if="form.errors.email" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.email }}</p>
                 </div>
             </div>
         </div>
@@ -173,32 +173,32 @@ function submit() {
                 <!-- Date of Birth -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Date of Birth <span class="text-red-500">*</span>
+                        Date of Birth <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <DatePicker
                         v-model="form.date_of_birth"
                         placeholder="Select date of birth"
-                        :class="{ 'ring-2 ring-red-400 rounded-lg': form.errors.date_of_birth }"
+                        :class="{ 'ring-2 ring-vibrant-coral-400 rounded-lg': form.errors.date_of_birth }"
                     />
-                    <p v-if="form.errors.date_of_birth" class="mt-1 text-xs text-red-600">{{ form.errors.date_of_birth }}</p>
+                    <p v-if="form.errors.date_of_birth" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.date_of_birth }}</p>
                 </div>
 
                 <!-- Gender at Birth -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Gender at Birth <span class="text-red-500">*</span>
+                        Gender at Birth <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <select
                         v-model="form.gender_at_birth"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.gender_at_birth }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.gender_at_birth }"
                     >
                         <option value="">Select…</option>
                         <option v-for="opt in gender_at_birth_options" :key="opt" :value="opt">
                             {{ opt }}
                         </option>
                     </select>
-                    <p v-if="form.errors.gender_at_birth" class="mt-1 text-xs text-red-600">{{ form.errors.gender_at_birth }}</p>
+                    <p v-if="form.errors.gender_at_birth" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.gender_at_birth }}</p>
                 </div>
 
                 <!-- Gender Identity -->

@@ -78,58 +78,58 @@ function submit() {
                 <!-- Date -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Date <span class="text-red-500">*</span>
+                        Date <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <DatePicker
                         v-model="form.date"
                         placeholder="Select date"
-                        :class="{ 'ring-2 ring-red-400 rounded-lg': form.errors.date }"
+                        :class="{ 'ring-2 ring-vibrant-coral-400 rounded-lg': form.errors.date }"
                     />
-                    <p v-if="form.errors.date" class="mt-1 text-xs text-red-600">{{ form.errors.date }}</p>
+                    <p v-if="form.errors.date" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.date }}</p>
                 </div>
 
                 <!-- Start Time -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Start Time <span class="text-red-500">*</span>
+                        Start Time <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.start_time"
                         type="time"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.start_time }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.start_time }"
                     />
-                    <p v-if="form.errors.start_time" class="mt-1 text-xs text-red-600">{{ form.errors.start_time }}</p>
+                    <p v-if="form.errors.start_time" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.start_time }}</p>
                 </div>
 
                 <!-- End Time -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        End Time <span class="text-red-500">*</span>
+                        End Time <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.end_time"
                         type="time"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.end_time }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.end_time }"
                     />
-                    <p v-if="form.errors.end_time" class="mt-1 text-xs text-red-600">{{ form.errors.end_time }}</p>
+                    <p v-if="form.errors.end_time" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.end_time }}</p>
                 </div>
 
                 <!-- Status -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Status <span class="text-red-500">*</span>
+                        Status <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <select
                         v-model="form.status"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.status }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.status }"
                     >
                         <option value="">Select…</option>
                         <option v-for="opt in status_options" :key="opt" :value="opt">{{ opt }}</option>
                     </select>
-                    <p v-if="form.errors.status" class="mt-1 text-xs text-red-600">{{ form.errors.status }}</p>
+                    <p v-if="form.errors.status" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.status }}</p>
                 </div>
             </div>
         </div>
@@ -143,16 +143,16 @@ function submit() {
                 <!-- Reason -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Reason <span class="text-red-500">*</span>
+                        Reason <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.reason"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.reason }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.reason }"
                         placeholder="Reason for visit"
                     />
-                    <p v-if="form.errors.reason" class="mt-1 text-xs text-red-600">{{ form.errors.reason }}</p>
+                    <p v-if="form.errors.reason" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.reason }}</p>
                 </div>
 
                 <!-- Notes -->
@@ -164,10 +164,10 @@ function submit() {
                         v-model="form.notes"
                         rows="3"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.notes }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.notes }"
                         placeholder="Optional notes…"
                     />
-                    <p v-if="form.errors.notes" class="mt-1 text-xs text-red-600">{{ form.errors.notes }}</p>
+                    <p v-if="form.errors.notes" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.notes }}</p>
                 </div>
             </div>
         </div>
@@ -182,7 +182,7 @@ function submit() {
                     v-model="selectedStaffIds"
                     :options="staffOptions"
                     placeholder="Select staff…"
-                    :class="{ 'ring-2 ring-red-400 rounded-lg': form.errors.staff }"
+                    :class="{ 'ring-2 ring-vibrant-coral-400 rounded-lg': form.errors.staff }"
                 />
 
                 <div v-if="form.staff.length" class="grid gap-2">
@@ -205,7 +205,7 @@ function submit() {
 
                 <div
                     v-if="form.errors.staff"
-                    class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                    class="rounded-lg border border-vibrant-coral-200 bg-vibrant-coral-50 px-4 py-3 text-sm text-vibrant-coral-700"
                 >
                     {{ form.errors.staff }}
                 </div>

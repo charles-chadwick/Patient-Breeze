@@ -8,6 +8,7 @@ use App\Enums\ContactType;
 use App\Enums\DiscussionType;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
+use App\Http\Controllers\Concerns\WithSearch;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
@@ -19,13 +20,14 @@ use Inertia\Response;
 
 class PatientController extends Controller
 {
+    use WithSearch;
+
     public function index(Request $request): Response
     {
-        $search = $request->string('search')->trim();
-        $sort_by = $request->string('sort_by', 'last_name')->toString();
-        $direction = $request->input('direction') === 'desc' ? 'desc' : 'asc';
+        ['search' => $search, 'sort_by' => $sort_by, 'direction' => $direction] = $this->searchParameters($request);
 
-        $patients = Patient::with('media')
+        $patients = Patient::select('id', 'first_name', 'last_name', 'mrn', 'gender_at_birth', 'gender_identity', 'blood_type', 'date_of_birth', 'created_at', 'updated_at')
+            ->with('media')
             ->when($search, fn ($query) => $query->search($search))
             ->sort($sort_by, $direction)
             ->paginate(15)
@@ -33,7 +35,7 @@ class PatientController extends Controller
 
         return Inertia::render('Patients/Index', [
             'patients' => $patients,
-            'search' => $search->toString(),
+            'search' => $search,
             'sort_by' => $sort_by,
             'direction' => $direction,
         ]);
@@ -73,9 +75,12 @@ class PatientController extends Controller
 
     public function show(Patient $patient, Request $request): Response
     {
-        $search = $request->string('search')->trim();
+        $search = $this->searchTerm($request);
 
-        $patient->load(['media', 'contacts' => fn ($q) => $q->orderBy('name')]);
+        $patient->load([
+            'media',
+            'contacts' => fn ($q) => $q->orderBy('name'),
+        ]);
 
         $appointments = $patient->appointments()
             ->with(['users.media'])
@@ -87,7 +92,10 @@ class PatientController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $users = User::with('media')->orderBy('last_name')->get()
+        $users = User::select('id', 'first_name', 'last_name', 'email')
+            ->with(['media' => fn ($q) => $q->where('collection_name', 'avatar')])
+            ->orderBy('last_name')
+            ->get()
             ->map(fn ($u) => [
                 'id' => $u->id,
                 'first_name' => $u->first_name,
@@ -98,7 +106,7 @@ class PatientController extends Controller
         return Inertia::render('Patients/Show', [
             'patient' => $patient,
             'appointments' => $appointments,
-            'appointment_search' => $search->toString(),
+            'appointment_search' => $search,
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),
@@ -106,7 +114,8 @@ class PatientController extends Controller
             'discussions' => Inertia::defer(fn () => $patient->discussions()
                 ->with([
                     'participants.participantable.media',
-                    'posts' => fn ($q) => $q->with('user.media')->orderBy('created_at'),
+                    'posts' => fn ($q) => $q->with('user.media')
+                        ->orderBy('created_at'),
                 ])
                 ->latest()
                 ->get()

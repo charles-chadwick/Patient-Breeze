@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watch, onUnmounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 
@@ -27,6 +27,35 @@ const isPortalMessage = computed(() => props.discussion?.type === 'Portal Messag
 const emit = defineEmits(['update:open', 'reply-posted'])
 
 const form = useForm({ content: '' })
+
+let subscribed_channel = null
+
+function leaveChannel() {
+    if (subscribed_channel !== null && window.Echo) {
+        window.Echo.leave(`discussion.${subscribed_channel}`)
+        subscribed_channel = null
+    }
+}
+
+watch(
+    () => props.discussion?.id,
+    (discussion_id) => {
+        leaveChannel()
+
+        if (!discussion_id || !window.Echo) {
+            return
+        }
+
+        subscribed_channel = discussion_id
+        window.Echo.private(`discussion.${discussion_id}`)
+            .listen('.DiscussionPostCreated', () => {
+                emit('reply-posted')
+            })
+    },
+    { immediate: true },
+)
+
+onUnmounted(leaveChannel)
 
 function close() {
     emit('update:open', false)
@@ -149,7 +178,7 @@ function submitReply() {
                             rows="2"
                             placeholder="Write a reply…"
                             class="flex-1 resize-none rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                            :class="{ 'border-red-400': form.errors.content }"
+                            :class="{ 'border-vibrant-coral-400': form.errors.content }"
                         ></textarea>
                         <button
                             type="submit"
@@ -159,7 +188,7 @@ function submitReply() {
                             Reply
                         </button>
                     </form>
-                    <p v-if="form.errors.content" class="mt-1 text-xs text-red-600">{{ form.errors.content }}</p>
+                    <p v-if="form.errors.content" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.content }}</p>
                 </div>
             </div>
         </div>

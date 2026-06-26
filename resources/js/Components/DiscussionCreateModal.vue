@@ -87,32 +87,32 @@ function submit() {
             <form id="discussion-form" @submit.prevent="submit" class="grid gap-5">
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Title <span class="text-red-500">*</span>
+                        Title <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.title"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.title }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.title }"
                         placeholder="e.g. Follow-up re: medications"
                         autofocus
                     />
-                    <p v-if="form.errors.title" class="mt-1 text-xs text-red-600">{{ form.errors.title }}</p>
+                    <p v-if="form.errors.title" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.title }}</p>
                 </div>
 
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Type <span class="text-red-500">*</span>
+                        Type <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <select
                         v-model="form.type"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.type }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.type }"
                     >
                         <option value="">Select…</option>
                         <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
                     </select>
-                    <p v-if="form.errors.type" class="mt-1 text-xs text-red-600">{{ form.errors.type }}</p>
+                    <p v-if="form.errors.type" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.type }}</p>
                 </div>
 
                 <div>
@@ -124,21 +124,21 @@ function submit() {
                         :options="user_options"
                         placeholder="Add participants…"
                     />
-                    <p v-if="form.errors.participant_ids" class="mt-1 text-xs text-red-600">{{ form.errors.participant_ids }}</p>
+                    <p v-if="form.errors.participant_ids" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.participant_ids }}</p>
                 </div>
 
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Initial Reply  <span class="text-red-500">*</span>
+                        Initial Reply  <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <textarea
                         v-model="form.initial_reply"
                         rows="3"
                         placeholder="Write your message"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-red-400': form.errors.initial_reply }"
+                        :class="{ 'border-vibrant-coral-400': form.errors.initial_reply }"
                     ></textarea>
-                    <p v-if="form.errors.initial_reply" class="mt-1 text-xs text-red-600">{{ form.errors.initial_reply }}</p>
+                    <p v-if="form.errors.initial_reply" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.initial_reply }}</p>
                 </div>
             </form>
 

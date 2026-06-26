@@ -108,10 +108,10 @@ class User extends Authenticatable implements HasMedia
     {
         if ($this->relationLoaded('media')) {
             return $this->getFirstMediaUrl('avatar')
-                ?: "https://i.pravatar.cc/80?u={$this->email}";
+                ?: asset('storage/default-avatar.png');
         }
 
-        return "https://i.pravatar.cc/80?u={$this->email}";
+        return asset('storage/default-avatar.png');
     }
 
     public function getActivitylogOptions(): LogOptions

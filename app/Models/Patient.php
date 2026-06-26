@@ -79,9 +79,9 @@ class Patient extends Authenticatable implements HasMedia
         return $this->morphMany(Discussion::class, 'discussionable');
     }
 
-    public function documents(): MorphMany
+    public function portalNotifications(): HasMany
     {
-        return $this->morphMany(Document::class, 'documentable');
+        return $this->hasMany(PortalNotification::class);
     }
 
     public static function generateMrn(): string
@@ -110,10 +110,10 @@ class Patient extends Authenticatable implements HasMedia
     {
         if ($this->relationLoaded('media')) {
             return $this->getFirstMediaUrl('avatar')
-                ?: "https://i.pravatar.cc/80?u={$this->email}";
+                ?: asset('storage/default-avatar.png');
         }
 
-        return "https://i.pravatar.cc/80?u={$this->email}";
+        return asset('storage/default-avatar.png');
     }
 
     protected function casts(): array

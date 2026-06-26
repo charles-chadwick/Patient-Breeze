@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut } from 'lucide-vue-next'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox } from 'lucide-vue-next'
 
 const props = defineProps({
     title: {
@@ -24,6 +24,7 @@ const nav_items = [
     { label: 'Dashboard', route: 'dashboard', icon: LayoutDashboard },
     { label: 'Patients', route: 'patients.index', icon: HeartPulse },
     { label: 'Appointments', route: 'appointments.index', icon: CalendarDays },
+    { label: 'Portal Queue', route: 'portal-queue.index', icon: Inbox },
     { label: 'Users', route: 'users.index', icon: Users },
     { label: 'Settings', route: 'settings.index', icon: Settings },
 ]

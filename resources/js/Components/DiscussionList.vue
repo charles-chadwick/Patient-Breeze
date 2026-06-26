@@ -30,6 +30,10 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    initialDiscussionId: {
+        type: Number,
+        default: null,
+    },
 })
 
 const create_modal_open = ref(false)
@@ -49,6 +53,22 @@ function openDiscussion(discussion) {
     selected_discussion.value = discussion
     slide_over_open.value = true
 }
+
+let initial_open_handled = false
+watch(
+    () => props.discussions,
+    (updated) => {
+        if (initial_open_handled || !props.initialDiscussionId || !Array.isArray(updated)) {
+            return
+        }
+        const target = updated.find((d) => d.id === props.initialDiscussionId)
+        if (target) {
+            openDiscussion(target)
+            initial_open_handled = true
+        }
+    },
+    { immediate: true },
+)
 
 function handleDiscussionCreated() {
     router.reload({ only: ['discussions'] })
