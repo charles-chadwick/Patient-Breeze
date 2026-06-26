@@ -18,7 +18,7 @@ trait Sortable
      */
     abstract protected function sortableFields(): array;
 
-    public function scopeSort(Builder $query, string $sort_by, string $direction = 'asc'): void
+    public function scopeWithSort(Builder $query, string $sort_by, string $direction = 'asc'): void
     {
         $direction = in_array(strtolower($direction), ['asc', 'desc']) ? $direction : 'asc';
         $fields = $this->sortableFields();

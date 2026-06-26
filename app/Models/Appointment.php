@@ -8,12 +8,14 @@ use App\Enums\AppointmentRole;
 use App\Enums\AppointmentStatus;
 use Database\Factories\AppointmentFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
@@ -67,6 +69,63 @@ class Appointment extends Model
     public function scopeForDateRange(Builder $query, Carbon $start, Carbon $end): void
     {
         $query->whereBetween('date', [$start->toDateString(), $end->copy()->endOfDay()->toDateTimeString()]);
+    }
+
+    public function scopeMatchingReasonOrNotes(Builder $query, string $search): void
+    {
+        $query->where(fn (Builder $query) => $query
+            ->where('reason', 'like', "%{$search}%")
+            ->orWhere('notes', 'like', "%{$search}%")
+        );
+    }
+
+    public function scopeMatchingReasonOrPatientName(Builder $query, string $search): void
+    {
+        $query->where(fn (Builder $query) => $query
+            ->where('reason', 'like', "%{$search}%")
+            ->orWhereHas('patient', fn (Builder $query) => $query->matchingName($search))
+        );
+    }
+
+    public function scopeMatchingPatientName(Builder $query, string $search): void
+    {
+        $query->whereHas('patient', fn (Builder $query) => $query->matchingName($search));
+    }
+
+    /**
+     * Build the calendar listing (day/week range, search, staff filter) and its
+     * resolved query parameters and staff options.
+     *
+     * @return array{appointments: Collection<int, Appointment>, date: string, view: string, search: string, staff: list<int>, staff_options: Collection<int, User>}
+     */
+    public function scopeCalendar(Builder $query, Request $request): array
+    {
+        $date = Carbon::parse($request->string('date', 'today')->toString())->startOfDay();
+        $view = $request->input('view') === 'day' ? 'day' : 'week';
+        $search = $request->string('search')->trim()->toString();
+        $staff_ids = array_values(array_filter(array_map('intval', (array) $request->input('staff', []))));
+
+        [$range_start, $range_end] = $view === 'day'
+            ? [$date->copy(), $date->copy()]
+            : [$date->copy()->startOfWeek(), $date->copy()->endOfWeek()];
+
+        return [
+            'appointments' => $query->with(['patient.media', 'users.media'])
+                ->forDateRange($range_start, $range_end)
+                ->when($search, fn (Builder $query) => $query->matchingPatientName($search))
+                ->when($staff_ids, fn (Builder $query) => $query->whereHas(
+                    'users',
+                    fn (Builder $query) => $query->whereIn('users.id', $staff_ids)
+                ))
+                ->orderBy('date')
+                ->orderBy('start_time')
+                ->get(),
+            'date' => $date->toDateString(),
+            'view' => $view,
+            'search' => $search,
+            'staff' => $staff_ids,
+            'staff_options' => User::staff()->with('media')->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
+        ];
     }
 
     protected function casts(): array

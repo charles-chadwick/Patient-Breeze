@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Portal;
 
 use App\Actions\Portal\SendPortalMessage;
-use App\Enums\DiscussionType;
 use App\Http\Controllers\Controller;
 use App\Models\Discussion;
 use App\Models\Patient;
@@ -20,32 +19,8 @@ class MessageController extends Controller
         /** @var Patient $patient */
         $patient = Auth::guard('portal')->user();
 
-        $threads = $patient->discussions()
-            ->where('type', DiscussionType::PortalMessage)
-            ->with([
-                'posts' => fn ($query) => $query->orderBy('created_at'),
-                'posts.user:id,first_name,last_name',
-                'posts.patient:id,first_name,last_name',
-            ])
-            ->latest()
-            ->get()
-            ->map(fn (Discussion $discussion) => [
-                'id' => $discussion->id,
-                'title' => $discussion->title,
-                'created_at' => $discussion->created_at,
-                'posts' => $discussion->posts->map(fn ($post) => [
-                    'id' => $post->id,
-                    'content' => $post->content,
-                    'created_at' => $post->created_at,
-                    'from_patient' => $post->patient_id !== null,
-                    'author_name' => $post->patient_id
-                        ? 'You'
-                        : trim(($post->user?->first_name ?? 'Staff').' '.($post->user?->last_name ?? '')),
-                ]),
-            ]);
-
         return Inertia::render('Portal/Messages/Index', [
-            'threads' => $threads,
+            'threads' => $patient->portalMessageThreads(),
         ]);
     }
 

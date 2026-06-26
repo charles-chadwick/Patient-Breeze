@@ -17,7 +17,7 @@ trait Searchable
      */
     abstract protected function searchableFields(): array;
 
-    public function scopeSearch(Builder $query, string $search): void
+    public function scopeWithSearch(Builder $query, string $search): void
     {
         $direct_fields = [];
         $relation_fields = [];

@@ -6,7 +6,6 @@ use App\Actions\CreateUserAction;
 use App\Actions\UpdateUserAction;
 use App\Enums\ContactType;
 use App\Enums\UserRole;
-use App\Http\Controllers\Concerns\WithSearch;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -17,25 +16,9 @@ use Inertia\Response;
 
 class UserController extends Controller
 {
-    use WithSearch;
-
     public function index(Request $request): Response
     {
-        ['search' => $search, 'sort_by' => $sort_by, 'direction' => $direction] = $this->searchParameters($request);
-
-        $users = User::with(['media', 'roles'])
-            ->staff()
-            ->when($search, fn ($query) => $query->search($search))
-            ->sort($sort_by, $direction)
-            ->paginate(15)
-            ->withQueryString();
-
-        return Inertia::render('Users/Index', [
-            'users' => $users,
-            'search' => $search,
-            'sort_by' => $sort_by,
-            'direction' => $direction,
-        ]);
+        return Inertia::render('Users/Index', User::listing($request));
     }
 
     public function create(): Response
@@ -60,13 +43,7 @@ class UserController extends Controller
 
         $appointments = $user->appointments()
             ->with(['patient.media'])
-            ->when($search, fn ($query) => $query->where(fn ($q) => $q
-                ->where('reason', 'like', "%{$search}%")
-                ->orWhereHas('patient', fn ($pq) => $pq
-                    ->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                )
-            ))
+            ->when($search, fn ($query) => $query->matchingReasonOrPatientName($search))
             ->orderBy('date', 'desc')
             ->paginate(10)
             ->withQueryString();

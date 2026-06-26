@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ContactType;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
@@ -14,12 +13,7 @@ class ContactController extends Controller
 {
     public function index(): Response
     {
-        $contacts = Contact::orderByDesc('id')->paginate(15);
-
-        return Inertia::render('Contacts/Index', [
-            'contacts' => $contacts,
-            'types' => array_column(ContactType::cases(), 'value'),
-        ]);
+        return Inertia::render('Contacts/Index', Contact::listing());
     }
 
     public function store(StoreContactRequest $request): RedirectResponse

@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PatientSeeder::class,
             AppointmentSeeder::class,
-            SimpsonsAvatarSeeder::class,
         ]);
     }
 }

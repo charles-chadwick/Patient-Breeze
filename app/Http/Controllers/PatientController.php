@@ -8,7 +8,6 @@ use App\Enums\ContactType;
 use App\Enums\DiscussionType;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
-use App\Http\Controllers\Concerns\WithSearch;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
@@ -20,25 +19,9 @@ use Inertia\Response;
 
 class PatientController extends Controller
 {
-    use WithSearch;
-
     public function index(Request $request): Response
     {
-        ['search' => $search, 'sort_by' => $sort_by, 'direction' => $direction] = $this->searchParameters($request);
-
-        $patients = Patient::select('id', 'first_name', 'last_name', 'mrn', 'gender_at_birth', 'gender_identity', 'blood_type', 'date_of_birth', 'created_at', 'updated_at')
-            ->with('media')
-            ->when($search, fn ($query) => $query->search($search))
-            ->sort($sort_by, $direction)
-            ->paginate(15)
-            ->withQueryString();
-
-        return Inertia::render('Patients/Index', [
-            'patients' => $patients,
-            'search' => $search,
-            'sort_by' => $sort_by,
-            'direction' => $direction,
-        ]);
+        return Inertia::render('Patients/Index', Patient::listing($request));
     }
 
     public function create(): Response
@@ -75,7 +58,7 @@ class PatientController extends Controller
 
     public function show(Patient $patient, Request $request): Response
     {
-        $search = $this->searchTerm($request);
+        $search = $request->string('search')->trim()->toString();
 
         $patient->load([
             'media',
@@ -84,10 +67,7 @@ class PatientController extends Controller
 
         $appointments = $patient->appointments()
             ->with(['users.media'])
-            ->when($search, fn ($query) => $query->where(fn ($q) => $q
-                ->where('reason', 'like', "%{$search}%")
-                ->orWhere('notes', 'like', "%{$search}%")
-            ))
+            ->when($search, fn ($query) => $query->matchingReasonOrNotes($search))
             ->orderBy('date', 'desc')
             ->paginate(10)
             ->withQueryString();

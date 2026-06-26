@@ -21,15 +21,15 @@ it('uploads an avatar when creating a patient', function (): void {
     Storage::fake('public');
 
     $this->post(route('patients.store'), [
-        'first_name' => 'Homer',
-        'last_name' => 'Simpson',
-        'email' => 'homer@springfield.com',
+        'first_name' => 'Grace',
+        'last_name' => 'Holloway',
+        'email' => 'grace.holloway@example.com',
         'date_of_birth' => '1956-05-12',
         'gender_at_birth' => GenderAtBirth::Male->value,
         'avatar' => UploadedFile::fake()->image('avatar.jpg'),
     ])->assertRedirect();
 
-    $patient = Patient::where('email', 'homer@springfield.com')->first();
+    $patient = Patient::where('email', 'grace.holloway@example.com')->first();
     expect($patient->getFirstMedia('avatar'))->not->toBeNull();
 });
 

@@ -131,28 +131,28 @@ it('renders the create user page', function (): void {
 
 it('creates a new user with the given password', function (): void {
     $this->post(route('users.store'), [
-        'first_name' => 'Ned',
-        'last_name' => 'Flanders',
-        'email' => 'ned@springfield.com',
+        'first_name' => 'Owen',
+        'last_name' => 'Bennett',
+        'email' => 'owen.bennett@example.com',
         'role' => UserRole::Doctor->value,
-        'password' => 'okily-dokily1',
-        'password_confirmation' => 'okily-dokily1',
+        'password' => 'secret-pass1',
+        'password_confirmation' => 'secret-pass1',
     ])->assertRedirect(route('users.index'));
 
-    $user = User::where('email', 'ned@springfield.com')->first();
+    $user = User::where('email', 'owen.bennett@example.com')->first();
 
     expect($user)
         ->not->toBeNull()
-        ->and($user->first_name)->toBe('Ned')
+        ->and($user->first_name)->toBe('Owen')
         ->and($user->hasRole(UserRole::Doctor->value))->toBeTrue()
-        ->and(Hash::check('okily-dokily1', $user->password))->toBeTrue();
+        ->and(Hash::check('secret-pass1', $user->password))->toBeTrue();
 });
 
 it('requires a password on store', function (): void {
     $this->post(route('users.store'), [
-        'first_name' => 'Ned',
-        'last_name' => 'Flanders',
-        'email' => 'ned@springfield.com',
+        'first_name' => 'Owen',
+        'last_name' => 'Bennett',
+        'email' => 'owen.bennett@example.com',
         'role' => UserRole::Doctor->value,
     ])->assertSessionHasErrors(['password']);
 });
@@ -236,16 +236,16 @@ it('uploads an avatar when creating a user', function (): void {
     Storage::fake('public');
 
     $this->post(route('users.store'), [
-        'first_name' => 'Ned',
-        'last_name' => 'Flanders',
-        'email' => 'ned@springfield.com',
+        'first_name' => 'Owen',
+        'last_name' => 'Bennett',
+        'email' => 'owen.bennett@example.com',
         'role' => UserRole::Doctor->value,
-        'password' => 'okily-dokily1',
-        'password_confirmation' => 'okily-dokily1',
+        'password' => 'secret-pass1',
+        'password_confirmation' => 'secret-pass1',
         'avatar' => UploadedFile::fake()->image('avatar.jpg'),
     ])->assertRedirect(route('users.index'));
 
-    $user = User::where('email', 'ned@springfield.com')->first();
+    $user = User::where('email', 'owen.bennett@example.com')->first();
     expect($user->getFirstMedia('avatar'))->not->toBeNull();
 });
 

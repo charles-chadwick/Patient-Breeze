@@ -2,22 +2,24 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use Spatie\MediaLibrary\HasMedia;
 use Throwable;
 
 trait ReadsCsvData
 {
-    private function uniqueEmailFor(string $firstName, string $lastName): string
+    /**
+     * Attach a seeded avatar image to the model's "avatar" collection, copying
+     * the file from database/data/avatars/{directory} so the source is kept.
+     */
+    private function attachAvatar(HasMedia $model, string $directory, string $file): void
     {
-        $base = strtolower("{$firstName}.{$lastName}");
-        $email = "{$base}@example.com";
-        $suffix = 1;
+        $path = database_path("data/avatars/{$directory}/{$file}");
 
-        while (User::withTrashed()->where('email', $email)->exists()) {
-            $email = $base.(++$suffix).'@example.com';
+        if ($file === '' || ! file_exists($path)) {
+            return;
         }
 
-        return $email;
+        $model->addMedia($path)->preservingOriginal()->toMediaCollection('avatar');
     }
 
     /**

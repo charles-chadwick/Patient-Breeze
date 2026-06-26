@@ -3,17 +3,21 @@
 namespace App\Models;
 
 use App\Enums\UserRole;
+use App\Models\Concerns\HasListing;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
@@ -26,7 +30,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, InteractsWithMedia, LogsActivity, Notifiable, Searchable, SoftDeletes, Sortable;
+    use HasFactory, HasListing, HasRoles, InteractsWithMedia, LogsActivity, Notifiable, Searchable, SoftDeletes, Sortable;
 
     /** @var array<int, string> */
     protected $appends = ['avatar_url'];
@@ -62,6 +66,16 @@ class User extends Authenticatable implements HasMedia
     public function scopeStaff($query)
     {
         return $query->whereDoesntHave('roles', fn ($q) => $q->where('name', UserRole::SuperAdmin->value));
+    }
+
+    /**
+     * Build the paginated staff listing and its resolved query parameters.
+     *
+     * @return array{users: LengthAwarePaginator, search: string, sort_by: string, direction: string}
+     */
+    public function scopeListing(Builder $query, Request $request): array
+    {
+        return $this->paginatedListing($query->with(['media', 'roles'])->staff(), $request, 'users');
     }
 
     protected function searchableFields(): array
