@@ -6,6 +6,7 @@ use App\Actions\CreateUserAction;
 use App\Actions\UpdateUserAction;
 use App\Enums\ContactType;
 use App\Enums\UserRole;
+use App\Http\Controllers\Concerns\WithSearch;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -16,11 +17,11 @@ use Inertia\Response;
 
 class UserController extends Controller
 {
+    use WithSearch;
+
     public function index(Request $request): Response
     {
-        $search = $request->string('search')->trim();
-        $sort_by = $request->string('sort_by', 'last_name')->toString();
-        $direction = $request->input('direction') === 'desc' ? 'desc' : 'asc';
+        ['search' => $search, 'sort_by' => $sort_by, 'direction' => $direction] = $this->searchParameters($request);
 
         $users = User::with(['media', 'roles'])
             ->staff()
@@ -31,7 +32,7 @@ class UserController extends Controller
 
         return Inertia::render('Users/Index', [
             'users' => $users,
-            'search' => $search->toString(),
+            'search' => $search,
             'sort_by' => $sort_by,
             'direction' => $direction,
         ]);

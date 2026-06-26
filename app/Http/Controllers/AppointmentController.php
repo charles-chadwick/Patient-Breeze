@@ -6,6 +6,7 @@ use App\Actions\BookAppointmentAction;
 use App\Actions\UpdateAppointmentAction;
 use App\Enums\AppointmentRole;
 use App\Enums\AppointmentStatus;
+use App\Http\Controllers\Concerns\WithSearch;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
@@ -20,6 +21,8 @@ use Inertia\Response;
 
 class AppointmentController extends Controller
 {
+    use WithSearch;
+
     public function __construct(
         private BookAppointmentAction $bookAction,
         private UpdateAppointmentAction $updateAction,
@@ -29,7 +32,7 @@ class AppointmentController extends Controller
     {
         $date = Carbon::parse($request->string('date', 'today')->toString())->startOfDay();
         $view = $request->input('view') === 'day' ? 'day' : 'week';
-        $search = $request->string('search')->trim();
+        $search = $this->searchTerm($request);
         $staff_ids = array_values(array_filter(array_map('intval', (array) $request->input('staff', []))));
 
         [$range_start, $range_end] = $view === 'day'
@@ -57,7 +60,7 @@ class AppointmentController extends Controller
             'appointments' => $appointments,
             'date' => $date->toDateString(),
             'view' => $view,
-            'search' => $search->toString(),
+            'search' => $search,
             'staff' => $staff_ids,
             'staff_options' => User::staff()->with('media')->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
         ]);
