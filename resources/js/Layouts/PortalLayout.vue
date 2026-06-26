@@ -18,15 +18,15 @@ function logout() {
         <header class="border-b border-slate-100 bg-white shadow-sm">
             <div class="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
                 <div class="flex items-center gap-6">
-                    <span class="text-lg font-bold text-teal-600">PB Health Portal</span>
+                    <span class="text-lg font-bold text-cerulean-600">PB Health Portal</span>
                     <nav class="flex items-center gap-4 text-sm font-medium text-slate-600">
-                        <Link :href="route('portal.dashboard')" class="hover:text-teal-600">Dashboard</Link>
-                        <Link :href="route('portal.messages.index')" class="hover:text-teal-600">Messages</Link>
+                        <Link :href="route('portal.dashboard')" class="hover:text-cerulean-600">Dashboard</Link>
+                        <Link :href="route('portal.messages.index')" class="hover:text-cerulean-600">Messages</Link>
                     </nav>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="flex items-center gap-2">
-                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-700">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-cerulean-100 text-sm font-bold text-cerulean-700">
                             {{ patient?.first_name?.[0] ?? 'P' }}
                         </div>
                         <span class="text-sm font-medium text-slate-700">

@@ -99,7 +99,7 @@ const {
                     <button
                         type="button"
                         @click="askDeleteContact(contact)"
-                        class="ml-2 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50"
+                        class="ml-2 rounded-lg border border-vibrant-coral-200 px-3 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
                     >
                         Delete
                     </button>

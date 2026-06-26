@@ -57,12 +57,12 @@ const staffSelectOptions = computed ( () =>
 )
 
 const statusClasses = {
-  Scheduled: 'bg-blue-100 text-blue-700',
-  Confirmed: 'bg-green-100 text-green-700',
+  Scheduled: 'bg-cerulean-100 text-cerulean-700',
+  Confirmed: 'bg-tropical-teal-100 text-tropical-teal-700',
   Completed: 'bg-gray-100 text-gray-600',
-  Cancelled: 'bg-red-100 text-red-700',
-  Rescheduled: 'bg-yellow-100 text-yellow-700',
-  NoShow: 'bg-orange-100 text-orange-700',
+  Cancelled: 'bg-vibrant-coral-100 text-vibrant-coral-700',
+  Rescheduled: 'bg-light-yellow-100 text-light-yellow-700',
+  NoShow: 'bg-soft-apricot-100 text-soft-apricot-700',
 }
 
 const appointmentsByDate = computed ( () => {

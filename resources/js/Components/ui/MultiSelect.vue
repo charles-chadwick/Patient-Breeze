@@ -71,7 +71,7 @@ function optionFor(value) {
                 {{ optionFor(val)?.label ?? val }}
                 <button
                     type="button"
-                    class="ml-0.5 rounded hover:text-red-500 focus:outline-none"
+                    class="ml-0.5 rounded hover:text-vibrant-coral-500 focus:outline-none"
                     @click.stop="removeOption(val)"
                 >
                     <XIcon class="size-3" />

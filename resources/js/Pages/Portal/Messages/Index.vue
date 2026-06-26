@@ -43,7 +43,7 @@ function submitReply(discussion_id) {
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-slate-800">Messages</h1>
             <button
-                class="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+                class="rounded-lg bg-cerulean-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cerulean-700"
                 @click="composer_open = !composer_open"
             >
                 {{ composer_open ? 'Cancel' : 'New Message' }}
@@ -69,11 +69,11 @@ function submitReply(discussion_id) {
                 required
                 class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
             />
-            <p v-if="new_message_form.errors.content" class="mt-1 text-xs text-red-600">{{ new_message_form.errors.content }}</p>
+            <p v-if="new_message_form.errors.content" class="mt-1 text-xs text-vibrant-coral-600">{{ new_message_form.errors.content }}</p>
             <button
                 type="submit"
                 :disabled="new_message_form.processing"
-                class="mt-4 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:opacity-50"
+                class="mt-4 rounded-lg bg-cerulean-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cerulean-700 disabled:opacity-50"
             >
                 Send
             </button>
@@ -98,7 +98,7 @@ function submitReply(discussion_id) {
                     v-for="post in thread.posts"
                     :key="post.id"
                     class="rounded-lg border border-slate-100 p-3"
-                    :class="post.from_patient ? 'bg-teal-50/60' : 'bg-slate-50'"
+                    :class="post.from_patient ? 'bg-cerulean-50/60' : 'bg-slate-50'"
                 >
                     <p class="text-xs font-semibold text-slate-500">
                         {{ post.author_name }} · {{ formatDate(post.created_at, DATE_SHORT) }}
@@ -110,7 +110,7 @@ function submitReply(discussion_id) {
             <div class="mt-4">
                 <button
                     v-if="reply_target_id !== thread.id"
-                    class="text-sm font-semibold text-teal-600 hover:text-teal-700"
+                    class="text-sm font-semibold text-cerulean-600 hover:text-cerulean-700"
                     @click="reply_target_id = thread.id; reply_form.content = ''"
                 >
                     Reply
@@ -127,7 +127,7 @@ function submitReply(discussion_id) {
                         <button
                             type="submit"
                             :disabled="reply_form.processing"
-                            class="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:opacity-50"
+                            class="rounded-lg bg-cerulean-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cerulean-700 disabled:opacity-50"
                         >
                             Send Reply
                         </button>

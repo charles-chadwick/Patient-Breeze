@@ -53,31 +53,31 @@ function submit() {
     <form id="contact-form" action="#" method="post" @submit.prevent="submit" class="grid gap-5">
         <div>
             <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                Name <span class="text-red-500">*</span>
+                Name <span class="text-vibrant-coral-500">*</span>
             </label>
             <input
                 v-model="form.name"
                 type="text"
                 class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                :class="{ 'border-red-400': form.errors.name }"
+                :class="{ 'border-vibrant-coral-400': form.errors.name }"
                 placeholder="Contact name"
             />
-            <p v-if="form.errors.name" class="mt-1 text-xs text-red-600">{{ form.errors.name }}</p>
+            <p v-if="form.errors.name" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.name }}</p>
         </div>
 
         <div>
             <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                Type <span class="text-red-500">*</span>
+                Type <span class="text-vibrant-coral-500">*</span>
             </label>
             <select
                 v-model="form.type"
                 class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                :class="{ 'border-red-400': form.errors.type }"
+                :class="{ 'border-vibrant-coral-400': form.errors.type }"
             >
                 <option value="">Select…</option>
                 <option v-for="opt in types" :key="opt" :value="opt">{{ opt }}</option>
             </select>
-            <p v-if="form.errors.type" class="mt-1 text-xs text-red-600">{{ form.errors.type }}</p>
+            <p v-if="form.errors.type" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.type }}</p>
         </div>
 
         <div>
@@ -88,10 +88,10 @@ function submit() {
                 v-model="form.phone"
                 type="text"
                 class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                :class="{ 'border-red-400': form.errors.phone }"
+                :class="{ 'border-vibrant-coral-400': form.errors.phone }"
                 placeholder="555-0100"
             />
-            <p v-if="form.errors.phone" class="mt-1 text-xs text-red-600">{{ form.errors.phone }}</p>
+            <p v-if="form.errors.phone" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.phone }}</p>
         </div>
 
         <div>
@@ -102,10 +102,10 @@ function submit() {
                 v-model="form.street_address"
                 type="text"
                 class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                :class="{ 'border-red-400': form.errors.street_address }"
+                :class="{ 'border-vibrant-coral-400': form.errors.street_address }"
                 placeholder="123 Main St"
             />
-            <p v-if="form.errors.street_address" class="mt-1 text-xs text-red-600">{{ form.errors.street_address }}</p>
+            <p v-if="form.errors.street_address" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.street_address }}</p>
         </div>
 
         <div>
@@ -117,7 +117,7 @@ function submit() {
                 />
                 <span class="text-sm font-bold text-foreground">Release of Information (ROI)</span>
             </label>
-            <p v-if="form.errors.roi" class="mt-1 text-xs text-red-600">{{ form.errors.roi }}</p>
+            <p v-if="form.errors.roi" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.roi }}</p>
         </div>
     </form>
 </template>

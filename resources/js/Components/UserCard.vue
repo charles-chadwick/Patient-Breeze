@@ -25,9 +25,9 @@ const show_avatar_modal = ref(false)
 
 const role_badge_classes = {
     'Super Admin': 'bg-purple-100 text-purple-700',
-    'Doctor': 'bg-blue-100 text-blue-700',
-    'Nurse': 'bg-teal-100 text-teal-700',
-    'Medical Assistant': 'bg-cyan-100 text-cyan-700',
+    'Doctor': 'bg-cerulean-100 text-cerulean-700',
+    'Nurse': 'bg-cerulean-100 text-cerulean-700',
+    'Medical Assistant': 'bg-tropical-teal-100 text-tropical-teal-700',
     'Staff': 'bg-gray-100 text-gray-600',
 }
 </script>

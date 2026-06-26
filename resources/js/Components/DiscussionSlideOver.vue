@@ -178,7 +178,7 @@ function submitReply() {
                             rows="2"
                             placeholder="Write a reply…"
                             class="flex-1 resize-none rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                            :class="{ 'border-red-400': form.errors.content }"
+                            :class="{ 'border-vibrant-coral-400': form.errors.content }"
                         ></textarea>
                         <button
                             type="submit"
@@ -188,7 +188,7 @@ function submitReply() {
                             Reply
                         </button>
                     </form>
-                    <p v-if="form.errors.content" class="mt-1 text-xs text-red-600">{{ form.errors.content }}</p>
+                    <p v-if="form.errors.content" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.content }}</p>
                 </div>
             </div>
         </div>

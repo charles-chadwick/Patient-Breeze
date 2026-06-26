@@ -14,6 +14,67 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-cerulean-50: #e0f8ff;
+    --color-cerulean-100: #c2f1ff;
+    --color-cerulean-200: #87e3ff;
+    --color-cerulean-300: #4dd5ff;
+    --color-cerulean-400: #15c8ff;
+    --color-cerulean-500: #00aade;
+    --color-cerulean-600: #0082aa;
+    --color-cerulean-700: #005c78;
+    --color-cerulean-800: #00394a;
+    --color-cerulean-900: #001920;
+    --color-cerulean-950: #001015;
+
+    --color-tropical-teal-50: #e5feff;
+    --color-tropical-teal-100: #ccfcff;
+    --color-tropical-teal-200: #99faff;
+    --color-tropical-teal-300: #66f7ff;
+    --color-tropical-teal-400: #33f5ff;
+    --color-tropical-teal-500: #00f2ff;
+    --color-tropical-teal-600: #00c2cc;
+    --color-tropical-teal-700: #009199;
+    --color-tropical-teal-800: #006166;
+    --color-tropical-teal-900: #003033;
+    --color-tropical-teal-950: #002224;
+
+    --color-light-yellow-50: #fefde7;
+    --color-light-yellow-100: #fcfbcf;
+    --color-light-yellow-200: #f9f69f;
+    --color-light-yellow-300: #f7f26e;
+    --color-light-yellow-400: #f4ee3e;
+    --color-light-yellow-500: #f1e90e;
+    --color-light-yellow-600: #c1bb0b;
+    --color-light-yellow-700: #918c08;
+    --color-light-yellow-800: #605d06;
+    --color-light-yellow-900: #302f03;
+    --color-light-yellow-950: #222102;
+
+    --color-soft-apricot-50: #fff2e6;
+    --color-soft-apricot-100: #fee5cd;
+    --color-soft-apricot-200: #fdca9b;
+    --color-soft-apricot-300: #fdb068;
+    --color-soft-apricot-400: #fc9636;
+    --color-soft-apricot-500: #fb7b04;
+    --color-soft-apricot-600: #c96303;
+    --color-soft-apricot-700: #974a02;
+    --color-soft-apricot-800: #643102;
+    --color-soft-apricot-900: #321901;
+    --color-soft-apricot-950: #231101;
+
+    --color-vibrant-coral-50: #fde9e8;
+    --color-vibrant-coral-100: #fad3d1;
+    --color-vibrant-coral-200: #f6a8a2;
+    --color-vibrant-coral-300: #f17c74;
+    --color-vibrant-coral-400: #ed5145;
+    --color-vibrant-coral-500: #e82517;
+    --color-vibrant-coral-600: #ba1e12;
+    --color-vibrant-coral-700: #8b160e;
+    --color-vibrant-coral-800: #5d0f09;
+    --color-vibrant-coral-900: #2e0705;
+    --color-vibrant-coral-950: #200503;
+
 }
 
 @theme inline {
@@ -65,33 +126,33 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.437 0.078 188);
+    --primary: var(--color-cerulean-600);
     --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.72 0.12 182);
-    --accent-foreground: oklch(0.15 0.04 186);
-    --darker: oklch(0.35 0.06 188);
+    --accent: var(--color-tropical-teal-600);
+    --accent-foreground: var(--color-tropical-teal-950);
+    --darker: var(--color-cerulean-800);
     --darker-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
+    --destructive: var(--color-vibrant-coral-500);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
-    --ring: oklch(0.6 0.12 184);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
+    --ring: var(--color-cerulean-500);
+    --chart-1: var(--color-cerulean-500);
+    --chart-2: var(--color-tropical-teal-500);
+    --chart-3: var(--color-soft-apricot-500);
+    --chart-4: var(--color-light-yellow-500);
+    --chart-5: var(--color-vibrant-coral-500);
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.437 0.078 188);
+    --sidebar-primary: var(--color-cerulean-600);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(0.97 0 0);
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.6 0.12 184);
+    --sidebar-ring: var(--color-cerulean-500);
 }
 
 .dark {
@@ -101,33 +162,33 @@
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.205 0 0);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.6 0.118 184);
+    --primary: var(--color-cerulean-500);
     --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.269 0 0);
     --secondary-foreground: oklch(0.985 0 0);
     --muted: oklch(0.269 0 0);
     --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.65 0.14 182);
-    --accent-foreground: oklch(0.985 0 0);
-    --darker: oklch(0.25 0.055 188);
+    --accent: var(--color-tropical-teal-500);
+    --accent-foreground: var(--color-tropical-teal-950);
+    --darker: var(--color-cerulean-900);
     --darker-foreground: oklch(0.97 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
+    --destructive: var(--color-vibrant-coral-400);
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.511 0.096 186);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
+    --ring: var(--color-cerulean-400);
+    --chart-1: var(--color-cerulean-400);
+    --chart-2: var(--color-tropical-teal-400);
+    --chart-3: var(--color-soft-apricot-400);
+    --chart-4: var(--color-light-yellow-400);
+    --chart-5: var(--color-vibrant-coral-400);
     --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.6 0.118 184);
+    --sidebar-primary: var(--color-cerulean-500);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(0.269 0 0);
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.511 0.096 186);
+    --sidebar-ring: var(--color-cerulean-400);
 }
 
 @layer base {
@@ -138,3 +199,7 @@
     @apply bg-background text-foreground;
     }
 }
+
+
+
+
