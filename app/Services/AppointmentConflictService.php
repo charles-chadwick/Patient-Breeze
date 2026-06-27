@@ -23,7 +23,7 @@ class AppointmentConflictService
                 $query->whereDate('date', $date)
                     ->where('start_time', '<', $end_time)
                     ->where('end_time', '>', $start_time)
-                    ->when($exclude_appointment_id, fn ($q) => $q->where('appointments.id', '!=', $exclude_appointment_id));
+                    ->when($exclude_appointment_id, fn ($query) => $query->where('appointments.id', '!=', $exclude_appointment_id));
             })
             ->get();
     }

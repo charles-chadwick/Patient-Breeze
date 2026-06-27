@@ -65,7 +65,7 @@ class User extends Authenticatable implements HasMedia
 
     public function scopeStaff($query)
     {
-        return $query->whereDoesntHave('roles', fn ($q) => $q->where('name', UserRole::SuperAdmin->value));
+        return $query->whereDoesntHave('roles', fn ($query) => $query->where('name', UserRole::SuperAdmin->value));
     }
 
     /**

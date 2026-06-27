@@ -42,7 +42,7 @@ class UpdateAppointmentRequest extends FormRequest
             }
 
             $primaryCount = collect($this->input('staff', []))
-                ->filter(fn ($s) => ($s['role'] ?? '') === AppointmentRole::Primary->value)
+                ->filter(fn ($staff) => ($staff['role'] ?? '') === AppointmentRole::Primary->value)
                 ->count();
 
             if ($primaryCount !== 1) {

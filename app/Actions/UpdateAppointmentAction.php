@@ -32,7 +32,7 @@ class UpdateAppointmentAction
         );
 
         if ($conflicts->isNotEmpty()) {
-            $names = $conflicts->map(fn (User $u) => "{$u->first_name} {$u->last_name}")->join(', ');
+            $names = $conflicts->map(fn (User $user) => "{$user->first_name} {$user->last_name}")->join(', ');
             throw ValidationException::withMessages([
                 'staff' => "The following staff have conflicting appointments: {$names}.",
             ]);

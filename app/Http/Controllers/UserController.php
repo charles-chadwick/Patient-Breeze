@@ -39,7 +39,7 @@ class UserController extends Controller
     {
         $search = $request->string('search')->trim();
 
-        $user->load(['media', 'roles', 'contacts' => fn ($q) => $q->orderBy('name')]);
+        $user->load(['media', 'roles', 'contacts' => fn ($query) => $query->orderBy('name')]);
 
         $appointments = $user->appointments()
             ->with(['patient.media'])

@@ -62,7 +62,7 @@ class PatientController extends Controller
 
         $patient->load([
             'media',
-            'contacts' => fn ($q) => $q->orderBy('name'),
+            'contacts' => fn ($query) => $query->orderBy('name'),
         ]);
 
         $appointments = $patient->appointments()
@@ -73,14 +73,14 @@ class PatientController extends Controller
             ->withQueryString();
 
         $users = User::select('id', 'first_name', 'last_name', 'email')
-            ->with(['media' => fn ($q) => $q->where('collection_name', 'avatar')])
+            ->with(['media' => fn ($query) => $query->where('collection_name', 'avatar')])
             ->orderBy('last_name')
             ->get()
-            ->map(fn ($u) => [
-                'id' => $u->id,
-                'first_name' => $u->first_name,
-                'last_name' => $u->last_name,
-                'avatar_url' => $u->avatar_url,
+            ->map(fn ($user) => [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'avatar_url' => $user->avatar_url,
             ]);
 
         return Inertia::render('Patients/Show', [
@@ -94,7 +94,7 @@ class PatientController extends Controller
             'discussions' => Inertia::defer(fn () => $patient->discussions()
                 ->with([
                     'participants.participantable.media',
-                    'posts' => fn ($q) => $q->with('user.media')
+                    'posts' => fn ($query) => $query->with('user.media')
                         ->orderBy('created_at'),
                 ])
                 ->latest()
