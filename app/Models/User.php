@@ -69,13 +69,13 @@ class User extends Authenticatable implements HasMedia
     }
 
     /**
-     * Build the paginated staff listing and its resolved query parameters.
+     * Build the paginated user listing and its resolved query parameters.
      *
      * @return array{users: LengthAwarePaginator, search: string, sort_by: string, direction: string}
      */
     public function scopeListing(Builder $query, Request $request): array
     {
-        return $this->paginatedListing($query->with(['media', 'roles'])->staff(), $request, 'users');
+        return $this->paginatedListing($query->with(['media', 'roles']), $request, 'users');
     }
 
     protected function searchableFields(): array
