@@ -75,7 +75,7 @@ class User extends Authenticatable implements HasMedia
      */
     public function scopeListing(Builder $query, Request $request): array
     {
-        return $this->paginatedListing($query->with(['media', 'roles']), $request, 'users');
+        return $this->paginatedListing($query->with(['media', 'roles'])->staff(), $request, 'users');
     }
 
     protected function searchableFields(): array

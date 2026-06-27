@@ -119,6 +119,19 @@ it('renders the users index page', function (): void {
         );
 });
 
+it('excludes super admins from the users index listing', function (): void {
+    $superAdmin = User::factory()->withRole(UserRole::SuperAdmin)->create();
+    $doctor = User::factory()->withRole(UserRole::Doctor)->create();
+
+    $this->get(route('users.index'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->where('users.data', fn ($users) => collect($users)->pluck('id')->contains($doctor->id)
+                && ! collect($users)->pluck('id')->contains($superAdmin->id)
+            )
+        );
+});
+
 it('renders the create user page', function (): void {
     $this->get(route('users.create'))
         ->assertSuccessful()
