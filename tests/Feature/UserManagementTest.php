@@ -116,6 +116,66 @@ it('renders the users index page', function (): void {
             ->has('search')
             ->has('sort_by')
             ->has('direction')
+            ->has('filters')
+            ->has('role_options')
+        );
+});
+
+it('filters the users index by a single role', function (): void {
+    $doctor = User::factory()->withRole(UserRole::Doctor)->create();
+    $nurse = User::factory()->withRole(UserRole::Nurse)->create();
+
+    $this->get(route('users.index', ['roles' => [UserRole::Doctor->value]]))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->where('users.data', fn ($users) => collect($users)->pluck('id')->contains($doctor->id)
+                && ! collect($users)->pluck('id')->contains($nurse->id)
+            )
+            ->where('filters.roles', [UserRole::Doctor->value])
+        );
+});
+
+it('filters the users index by multiple roles using OR', function (): void {
+    $doctor = User::factory()->withRole(UserRole::Doctor)->create();
+    $nurse = User::factory()->withRole(UserRole::Nurse)->create();
+    $staff = User::factory()->withRole(UserRole::Staff)->create();
+
+    $this->get(route('users.index', ['roles' => [UserRole::Doctor->value, UserRole::Nurse->value]]))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->where('users.data', fn ($users) => collect($users)->pluck('id')->contains($doctor->id)
+                && collect($users)->pluck('id')->contains($nurse->id)
+                && ! collect($users)->pluck('id')->contains($staff->id)
+            )
+        );
+});
+
+it('combines the role filter with search', function (): void {
+    $matching = User::factory()->withRole(UserRole::Doctor)->create(['last_name' => 'Zylinski']);
+    $wrongRole = User::factory()->withRole(UserRole::Nurse)->create(['last_name' => 'Zylinski']);
+    $wrongName = User::factory()->withRole(UserRole::Doctor)->create(['last_name' => 'Anderson']);
+
+    $this->get(route('users.index', ['roles' => [UserRole::Doctor->value], 'search' => 'Zylinski']))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->where('users.data', fn ($users) => collect($users)->pluck('id')->contains($matching->id)
+                && ! collect($users)->pluck('id')->contains($wrongRole->id)
+                && ! collect($users)->pluck('id')->contains($wrongName->id)
+            )
+        );
+});
+
+it('ignores empty role filter values', function (): void {
+    $doctor = User::factory()->withRole(UserRole::Doctor)->create();
+    $nurse = User::factory()->withRole(UserRole::Nurse)->create();
+
+    $this->get(route('users.index', ['roles' => ['']]))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->where('users.data', fn ($users) => collect($users)->pluck('id')->contains($doctor->id)
+                && collect($users)->pluck('id')->contains($nurse->id)
+            )
+            ->where('filters.roles', [])
         );
 });
 

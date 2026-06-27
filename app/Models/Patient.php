@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\DiscussionType;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
+use App\Models\Concerns\Filterable;
 use App\Models\Concerns\HasListing;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
@@ -27,7 +28,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class Patient extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<PatientFactory> */
-    use HasFactory, HasListing, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable;
+    use Filterable, HasFactory, HasListing, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable;
 
     protected $fillable = [
         'prefix',
@@ -68,6 +69,11 @@ class Patient extends Authenticatable implements HasMedia
             'date_of_birth' => 'date_of_birth',
             'blood_type' => 'blood_type',
         ];
+    }
+
+    protected function filterableFields(): array
+    {
+        return [];
     }
 
     public function appointments(): HasMany

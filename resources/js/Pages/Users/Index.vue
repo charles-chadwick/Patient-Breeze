@@ -3,6 +3,7 @@ import { Link, setLayoutProps } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import SortDropdown from '@/Components/SortDropdown.vue'
+import FilterDropdown from '@/Components/FilterDropdown.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -28,6 +29,14 @@ const props = defineProps({
     direction: {
         type: String,
         default: 'asc',
+    },
+    filters: {
+        type: Object,
+        default: () => ({ roles: [] }),
+    },
+    role_options: {
+        type: Array,
+        default: () => [],
     },
 })
 
@@ -67,16 +76,24 @@ const role_badge_classes = {
                 >
                     + New User
                 </Link>
+                <FilterDropdown
+                    label="Role"
+                    param-name="roles"
+                    :selected="props.filters.roles"
+                    :options="props.role_options"
+                    :params="{ search: props.search || undefined, sort_by: props.sort_by, direction: props.direction }"
+                    route-name="users.index"
+                />
                 <SortDropdown
                     :sort-by="props.sort_by"
                     :direction="props.direction"
                     :options="sort_options"
-                    :params="{ search: props.search || undefined }"
+                    :params="{ search: props.search || undefined, roles: props.filters.roles }"
                     route-name="users.index"
                 />
                 <SearchInput
                     :model-value="props.search"
-                    :params="{ sort_by: props.sort_by, direction: props.direction }"
+                    :params="{ sort_by: props.sort_by, direction: props.direction, roles: props.filters.roles }"
                     placeholder="Search by name or email…"
                     route-name="users.index"
                     class="w-full sm:w-72"

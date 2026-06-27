@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\UserRole;
+use App\Models\Concerns\Filterable;
 use App\Models\Concerns\HasListing;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
@@ -30,7 +31,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasListing, HasRoles, InteractsWithMedia, LogsActivity, Notifiable, Searchable, SoftDeletes, Sortable;
+    use Filterable, HasFactory, HasListing, HasRoles, InteractsWithMedia, LogsActivity, Notifiable, Searchable, SoftDeletes, Sortable;
 
     /** @var array<int, string> */
     protected $appends = ['avatar_url'];
@@ -81,6 +82,11 @@ class User extends Authenticatable implements HasMedia
     protected function searchableFields(): array
     {
         return ['first_name', 'last_name', 'email'];
+    }
+
+    protected function filterableFields(): array
+    {
+        return ['roles' => 'roles.name'];
     }
 
     protected function sortableFields(): array

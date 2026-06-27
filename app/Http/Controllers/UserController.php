@@ -18,7 +18,10 @@ class UserController extends Controller
 {
     public function index(Request $request): Response
     {
-        return Inertia::render('Users/Index', User::listing($request));
+        return Inertia::render('Users/Index', [
+            ...User::listing($request),
+            'role_options' => array_column(UserRole::cases(), 'value'),
+        ]);
     }
 
     public function create(): Response

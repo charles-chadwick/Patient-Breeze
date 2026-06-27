@@ -12,9 +12,9 @@ trait HasListing
      * and return the paginated results keyed by $key alongside those resolved
      * parameters, ready to hand straight to an Inertia view.
      *
-     * Requires the model to use the Searchable and Sortable concerns.
+     * Requires the model to use the Searchable, Sortable, and Filterable concerns.
      *
-     * @return array{search: string, sort_by: string, direction: string}&array<string, mixed>
+     * @return array{search: string, sort_by: string, direction: string, filters: array<string, list<string>>}&array<string, mixed>
      */
     protected function paginatedListing(Builder $query, Request $request, string $key, string $default_sort = 'last_name', int $per_page = 15): array
     {
@@ -22,11 +22,13 @@ trait HasListing
             'search' => $request->string('search')->trim()->toString(),
             'sort_by' => $request->string('sort_by', $default_sort)->toString(),
             'direction' => $request->input('direction') === 'desc' ? 'desc' : 'asc',
+            'filters' => $this->resolveFilters($request),
         ];
 
         return [
             $key => $query
                 ->when($params['search'], fn (Builder $query) => $query->withSearch($params['search']))
+                ->withFilters($params['filters'])
                 ->withSort($params['sort_by'], $params['direction'])
                 ->paginate($per_page)
                 ->withQueryString(),
