@@ -1,5 +1,6 @@
 <?php
 
+use App\Broadcasting\DiscussionChannel;
 use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -11,6 +12,4 @@ Broadcast::channel('portal-queue', function ($user) {
     return $user instanceof User;
 });
 
-Broadcast::channel('discussion.{discussionId}', function ($user, int $discussionId) {
-    return $user instanceof User;
-});
+Broadcast::channel('discussion.{discussionId}', DiscussionChannel::class);
