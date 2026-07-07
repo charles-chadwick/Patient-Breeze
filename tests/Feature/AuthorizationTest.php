@@ -6,6 +6,8 @@ use App\Enums\UserRole;
 use App\Models\Contact;
 use App\Models\Patient;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 function actingAsRole(UserRole $role): User
 {
@@ -89,4 +91,18 @@ it('forbids front-desk staff from deleting a contact', function (): void {
     test()->delete(route('contacts.destroy', $contact))->assertForbidden();
 
     expect(Contact::whereKey($contact->id)->exists())->toBeTrue();
+});
+
+it('returns a 403 as a non-inertia response so the client can intercept it', function (): void {
+    $patient = Patient::factory()->create();
+
+    $user = User::factory()->withRole(UserRole::Staff)->create();
+    Role::findByName(UserRole::Staff->value)->revokePermissionTo('create_appointments');
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    test()->actingAs($user);
+
+    $response = test()->get(route('patients.appointments.create', $patient));
+
+    $response->assertForbidden();
+    $response->assertHeaderMissing('X-Inertia');
 });
