@@ -14,7 +14,7 @@ class RoleAndPermissionSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        foreach ($this->permissions() as $permission) {
+        foreach (UserRole::allPermissions() as $permission) {
             Permission::findOrCreate($permission);
         }
 
@@ -22,44 +22,7 @@ class RoleAndPermissionSeeder extends Seeder
 
         foreach (UserRole::cases() as $userRole) {
             $role = Role::findOrCreate($userRole->value);
-            $role->syncPermissions($this->permissionsFor($userRole));
+            $role->syncPermissions($userRole->permissions());
         }
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function permissions(): array
-    {
-        return [
-            'view_patients',
-            'create_patients',
-            'update_patients',
-            'delete_patients',
-            'view_users',
-            'create_users',
-            'update_users',
-            'delete_users',
-        ];
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function permissionsFor(UserRole $role): array
-    {
-        return match ($role) {
-            UserRole::SuperAdmin => $this->permissions(),
-            UserRole::Doctor => [
-                'view_patients', 'create_patients', 'update_patients',
-            ],
-            UserRole::Nurse, UserRole::MedicalAssistant => [
-                'view_patients', 'update_patients',
-            ],
-            UserRole::Staff => [
-                'view_patients',
-            ],
-            UserRole::Patient => [],
-        };
     }
 }

@@ -7,7 +7,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 /**
  * @extends Factory<User>
@@ -50,7 +52,16 @@ class UserFactory extends Factory
     public function withRole(UserRole $role): static
     {
         return $this->afterCreating(function (User $user) use ($role): void {
-            Role::findOrCreate($role->value);
+            $permissions = $role->permissions();
+
+            foreach ($permissions as $permission) {
+                Permission::findOrCreate($permission);
+            }
+
+            Role::findOrCreate($role->value)->syncPermissions($permissions);
+
+            app(PermissionRegistrar::class)->forgetCachedPermissions();
+
             $user->assignRole($role->value);
         });
     }

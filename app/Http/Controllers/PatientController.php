@@ -21,11 +21,15 @@ class PatientController extends Controller
 {
     public function index(Request $request): Response
     {
+        $this->authorize('viewAny', Patient::class);
+
         return Inertia::render('Patients/Index', Patient::listing($request));
     }
 
     public function create(): Response
     {
+        $this->authorize('create', Patient::class);
+
         return Inertia::render('Patients/Form', [
             'gender_at_birth_options' => array_column(GenderAtBirth::cases(), 'value'),
             'gender_identity_options' => array_column(GenderIdentity::cases(), 'value'),
@@ -35,6 +39,8 @@ class PatientController extends Controller
 
     public function store(StorePatientRequest $request, ManageAvatarAction $avatarAction): RedirectResponse
     {
+        $this->authorize('create', Patient::class);
+
         $validated = $request->validated();
 
         $patient = Patient::create([
@@ -58,6 +64,8 @@ class PatientController extends Controller
 
     public function show(Patient $patient, Request $request): Response
     {
+        $this->authorize('view', $patient);
+
         $search = $request->string('search')->trim()->toString();
 
         $patient->load([
@@ -105,6 +113,8 @@ class PatientController extends Controller
 
     public function edit(Patient $patient): Response
     {
+        $this->authorize('update', $patient);
+
         $patient->load('media');
 
         return Inertia::render('Patients/Form', [
@@ -117,6 +127,8 @@ class PatientController extends Controller
 
     public function update(UpdatePatientRequest $request, Patient $patient, ManageAvatarAction $avatarAction): RedirectResponse
     {
+        $this->authorize('update', $patient);
+
         $validated = $request->validated();
 
         $patient->update([

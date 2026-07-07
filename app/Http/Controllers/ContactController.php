@@ -13,11 +13,15 @@ class ContactController extends Controller
 {
     public function index(): Response
     {
+        $this->authorize('viewAny', Contact::class);
+
         return Inertia::render('Contacts/Index', Contact::listing());
     }
 
     public function store(StoreContactRequest $request): RedirectResponse
     {
+        $this->authorize('create', Contact::class);
+
         $validated = $request->validated();
 
         $parent = $validated['contactable_type']::query()->findOrFail($validated['contactable_id']);
@@ -35,6 +39,8 @@ class ContactController extends Controller
 
     public function update(UpdateContactRequest $request, Contact $contact): RedirectResponse
     {
+        $this->authorize('update', $contact);
+
         $contact->update($request->validated());
 
         return redirect()->back();
@@ -42,6 +48,8 @@ class ContactController extends Controller
 
     public function destroy(Contact $contact): RedirectResponse
     {
+        $this->authorize('delete', $contact);
+
         $contact->delete();
 
         return redirect()->back();

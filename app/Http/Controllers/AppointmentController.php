@@ -25,11 +25,15 @@ class AppointmentController extends Controller
 
     public function index(Request $request): Response
     {
+        $this->authorize('viewAny', Appointment::class);
+
         return Inertia::render('Appointments/Index', Appointment::calendar($request));
     }
 
     public function create(Patient $patient): Response
     {
+        $this->authorize('create', Appointment::class);
+
         return Inertia::render('Appointments/Form', [
             'patient' => $patient->load('media'),
             ...$this->sharedProps(),
@@ -38,6 +42,8 @@ class AppointmentController extends Controller
 
     public function store(StoreAppointmentRequest $request, Patient $patient): RedirectResponse
     {
+        $this->authorize('create', Appointment::class);
+
         $this->bookAction->execute($patient, $request->validated());
 
         return redirect()->route('patients.show', $patient);
@@ -45,6 +51,8 @@ class AppointmentController extends Controller
 
     public function edit(Patient $patient, Appointment $appointment): Response
     {
+        $this->authorize('update', $appointment);
+
         $appointment->load('users');
 
         return Inertia::render('Appointments/Form', [
@@ -56,6 +64,8 @@ class AppointmentController extends Controller
 
     public function update(UpdateAppointmentRequest $request, Patient $patient, Appointment $appointment): RedirectResponse
     {
+        $this->authorize('update', $appointment);
+
         $this->updateAction->execute($appointment, $request->validated());
 
         return redirect()->route('patients.show', $patient);

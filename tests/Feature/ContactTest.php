@@ -117,6 +117,9 @@ it('updates a contact via the controller', function (): void {
 });
 
 it('deletes a contact via the controller', function (): void {
+    // Deleting contacts requires delete_contacts, which front-desk Staff lack.
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+
     $patient = Patient::factory()->create();
     $contact = Contact::factory()->for($patient, 'contactable')->create();
 

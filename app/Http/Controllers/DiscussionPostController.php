@@ -12,6 +12,8 @@ class DiscussionPostController extends Controller
 {
     public function store(StoreDiscussionPostRequest $request, Discussion $discussion): RedirectResponse
     {
+        $this->authorize('update', $discussion);
+
         $post = $discussion->posts()->create([
             'user_id' => auth()->id(),
             'status' => DiscussionPostStatus::Published,

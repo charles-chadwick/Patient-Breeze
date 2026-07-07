@@ -12,7 +12,7 @@ beforeEach(function (): void {
         Role::findOrCreate($role->value);
     }
 
-    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
 });
 
 it('renders the create patient page', function (): void {

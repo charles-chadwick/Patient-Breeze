@@ -18,6 +18,8 @@ class UserController extends Controller
 {
     public function index(Request $request): Response
     {
+        $this->authorize('viewAny', User::class);
+
         return Inertia::render('Users/Index', [
             ...User::listing($request),
             'role_options' => array_column(UserRole::cases(), 'value'),
@@ -26,6 +28,8 @@ class UserController extends Controller
 
     public function create(): Response
     {
+        $this->authorize('create', User::class);
+
         return Inertia::render('Users/Form', [
             'role_options' => array_column(UserRole::cases(), 'value'),
         ]);
@@ -33,6 +37,8 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request, CreateUserAction $createUser): RedirectResponse
     {
+        $this->authorize('create', User::class);
+
         $createUser->execute($request->validated(), $request->file('avatar'));
 
         return redirect()->route('users.index');
@@ -40,6 +46,8 @@ class UserController extends Controller
 
     public function show(User $user, Request $request): Response
     {
+        $this->authorize('view', $user);
+
         $search = $request->string('search')->trim();
 
         $user->load(['media', 'roles', 'contacts' => fn ($query) => $query->orderBy('name')]);
@@ -62,6 +70,8 @@ class UserController extends Controller
 
     public function edit(User $user): Response
     {
+        $this->authorize('update', $user);
+
         $user->load(['media', 'roles']);
 
         return Inertia::render('Users/Form', [
@@ -72,6 +82,8 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user, UpdateUserAction $updateUser): RedirectResponse
     {
+        $this->authorize('update', $user);
+
         $updateUser->execute($user, $request->validated(), $request->file('avatar'));
 
         return redirect()->route('users.index');

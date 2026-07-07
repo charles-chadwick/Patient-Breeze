@@ -14,7 +14,7 @@ beforeEach(function (): void {
         Role::findOrCreate($role->value);
     }
 
-    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
 });
 
 it('uploads an avatar when creating a patient', function (): void {

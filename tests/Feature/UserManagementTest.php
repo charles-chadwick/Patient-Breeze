@@ -15,7 +15,7 @@ beforeEach(function (): void {
         Role::findOrCreate($role->value);
     }
 
-    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
 });
 
 it('renders the user show page', function (): void {

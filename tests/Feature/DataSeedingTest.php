@@ -8,6 +8,7 @@ use Database\Seeders\RoleAndPermissionSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\Permission\Models\Role;
 
 use function Pest\Laravel\seed;
 
@@ -39,6 +40,29 @@ it('maps CRM roles onto application roles, randomising Admin into clinical roles
     expect($roleCount(UserRole::SuperAdmin))->toBe(5)
         ->and($roleCount(UserRole::Staff))->toBe(39)
         ->and($roleCount(UserRole::Doctor) + $roleCount(UserRole::Nurse) + $roleCount(UserRole::MedicalAssistant))->toBe(11);
+});
+
+it('syncs each role with exactly the permissions its enum declares', function () {
+    foreach (UserRole::cases() as $role) {
+        $seeded = Role::findByName($role->value)->permissions->pluck('name')->sort()->values()->all();
+        $expected = collect($role->permissions())->sort()->values()->all();
+
+        expect($seeded)->toBe($expected);
+    }
+});
+
+it('applies the intended privilege boundaries per role', function () {
+    // Super Admins hold every permission; front-desk Staff can schedule but never delete.
+    expect(UserRole::SuperAdmin->permissions())->toBe(UserRole::allPermissions())
+        ->and(UserRole::Staff->permissions())
+        ->toContain('view_patients', 'create_appointments', 'update_contacts')
+        ->not->toContain('create_patients', 'delete_appointments', 'delete_contacts', 'view_users')
+        ->and(UserRole::Doctor->permissions())
+        ->toContain('delete_appointments', 'create_patients')
+        ->not->toContain('delete_patients', 'view_users')
+        ->and(UserRole::Nurse->permissions())
+        ->toContain('update_patients', 'create_documents')
+        ->not->toContain('create_patients', 'delete_documents');
 });
 
 it('imports every CRM customer as a patient with generated medical data', function () {
