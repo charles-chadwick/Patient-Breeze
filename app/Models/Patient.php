@@ -12,6 +12,7 @@ use App\Models\Concerns\Sortable;
 use App\Models\Concerns\TwoFactorAuthenticatable;
 use Database\Factories\PatientFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -136,6 +137,92 @@ class Patient extends Authenticatable implements HasMedia
                         ? 'You'
                         : trim(($post->user?->first_name ?? 'Staff').' '.($post->user?->last_name ?? '')),
                 ]),
+            ]);
+    }
+
+    /**
+     * Paginate this patient's appointments for the chart, optionally filtered by
+     * a reason/notes search term.
+     */
+    public function paginatedAppointments(string $search): LengthAwarePaginator
+    {
+        return $this->appointments()
+            ->with(['users.media'])
+            ->when($search !== '', fn (Builder $query) => $query->matchingReasonOrNotes($search))
+            ->orderBy('date', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+    }
+
+    /**
+     * Load this patient's discussion threads for the chart's discussion tab.
+     *
+     * @return EloquentCollection<int, Discussion>
+     */
+    public function discussionThread(): EloquentCollection
+    {
+        return $this->discussions()
+            ->with([
+                'participants.participantable.media',
+                'posts' => fn ($query) => $query->with([
+                    'user:id,first_name,last_name',
+                    'user.media',
+                    'patient:id,first_name,last_name',
+                    'patient.media',
+                ])->orderBy('created_at'),
+            ])
+            ->latest()
+            ->get();
+    }
+
+    /**
+     * Fetch this patient's upcoming appointments for the portal dashboard.
+     *
+     * @return EloquentCollection<int, Appointment>
+     */
+    public function upcomingAppointments(int $limit = 5): EloquentCollection
+    {
+        return $this->appointments()
+            ->where('date', '>=', now()->toDateString())
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->limit($limit)
+            ->get(['id', 'date', 'start_time', 'end_time', 'reason', 'status']);
+    }
+
+    /**
+     * Fetch this patient's most recent discussions for the portal dashboard.
+     *
+     * @return EloquentCollection<int, Discussion>
+     */
+    public function recentDiscussions(int $limit = 3): EloquentCollection
+    {
+        return $this->discussions()
+            ->latest()
+            ->limit($limit)
+            ->get(['id', 'title', 'status', 'created_at']);
+    }
+
+    /**
+     * Build this patient's documents, shaped for the portal dashboard.
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function portalDocuments(): Collection
+    {
+        return $this->documents()
+            ->with(['media', 'uploader'])
+            ->latest()
+            ->get()
+            ->map(fn (Document $document) => [
+                'id' => $document->id,
+                'type_label' => $document->type->label(),
+                'name' => $document->name,
+                'document_date' => $document->document_date?->toDateString(),
+                'notes' => $document->notes,
+                'created_at' => $document->created_at->toDateString(),
+                'download_url' => route('portal.documents.download', $document->id),
+                'can_delete' => $document->uploader_type === self::class && $document->uploader_id === $this->id,
             ]);
     }
 

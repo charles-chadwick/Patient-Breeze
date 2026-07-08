@@ -35,19 +35,7 @@ class UserController extends Controller
     {
         $search = $request->string('search')->trim()->toString();
 
-        $users = User::query()
-            ->whereKeyNot(Auth::id())
-            ->when($search !== '', fn ($query) => $query->withSearch($search))
-            ->with(['media' => fn ($query) => $query->where('collection_name', 'avatar')])
-            ->orderBy('last_name')
-            ->limit(20)
-            ->get(['id', 'first_name', 'last_name'])
-            ->map(fn (User $user): array => [
-                'id' => $user->id,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'avatar_url' => $user->avatar_url,
-            ]);
+        $users = User::whereKeyNot(Auth::id())->forPicker($search);
 
         return response()->json(['users' => $users]);
     }
@@ -75,21 +63,14 @@ class UserController extends Controller
     {
         $this->authorize('view', $user);
 
-        $search = $request->string('search')->trim();
+        $search = $request->string('search')->trim()->toString();
 
         $user->load(['media', 'roles', 'contacts' => fn ($query) => $query->orderBy('name')]);
 
-        $appointments = $user->appointments()
-            ->with(['patient.media'])
-            ->when($search, fn ($query) => $query->matchingReasonOrPatientName($search))
-            ->orderBy('date', 'desc')
-            ->paginate(10)
-            ->withQueryString();
-
         return Inertia::render('Users/Show', [
             'user' => $user,
-            'appointments' => $appointments,
-            'appointment_search' => $search->toString(),
+            'appointments' => $user->paginatedAppointments($search),
+            'appointment_search' => $search,
             'contact_types' => ContactType::values(),
             'contactable_type' => User::class,
         ]);

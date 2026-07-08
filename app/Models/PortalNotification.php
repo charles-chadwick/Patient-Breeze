@@ -76,6 +76,30 @@ class PortalNotification extends Model
         ];
     }
 
+    /**
+     * Build the most recent notifications for the staff dashboard widget.
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function scopeDashboardQueue(Builder $query, int $limit = 5): Collection
+    {
+        return $query->with('patient:id,first_name,last_name,mrn')
+            ->latest()
+            ->limit($limit)
+            ->get()
+            ->map(fn (PortalNotification $notification) => [
+                'id' => $notification->id,
+                'type' => $notification->type,
+                'title' => $notification->title,
+                'body' => $notification->body,
+                'read_at' => $notification->read_at,
+                'created_at' => $notification->created_at,
+                'patient' => $notification->patient
+                    ? $notification->patient->only(['id', 'first_name', 'last_name', 'mrn'])
+                    : null,
+            ]);
+    }
+
     public function markAsRead(): void
     {
         if ($this->read_at === null) {

@@ -71,6 +71,16 @@ class Appointment extends Model
         $query->whereBetween('date', [$start->toDateString(), $end->copy()->endOfDay()->toDateTimeString()]);
     }
 
+    public function scopeForDate(Builder $query, mixed $date): void
+    {
+        $query->whereDate('date', $date);
+    }
+
+    public function scopeWithStatus(Builder $query, AppointmentStatus ...$statuses): void
+    {
+        $query->whereIn('status', array_column($statuses, 'value'));
+    }
+
     public function scopeMatchingReasonOrNotes(Builder $query, string $search): void
     {
         $query->where(fn (Builder $query) => $query

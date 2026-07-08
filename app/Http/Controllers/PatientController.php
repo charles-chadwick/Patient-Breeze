@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\ManageAvatarAction;
+use App\Actions\CreatePatientAction;
+use App\Actions\UpdatePatientAction;
 use App\Enums\BloodType;
 use App\Enums\ContactType;
 use App\Enums\DiscussionType;
@@ -40,27 +41,11 @@ class PatientController extends Controller
         ]);
     }
 
-    public function store(StorePatientRequest $request, ManageAvatarAction $avatarAction): RedirectResponse
+    public function store(StorePatientRequest $request, CreatePatientAction $createPatient): RedirectResponse
     {
         $this->authorize('create', Patient::class);
 
-        $validated = $request->validated();
-
-        $patient = Patient::create([
-            'prefix' => $validated['prefix'] ?? '',
-            'first_name' => $validated['first_name'],
-            'middle_name' => $validated['middle_name'] ?? '',
-            'last_name' => $validated['last_name'],
-            'suffix' => $validated['suffix'] ?? '',
-            'email' => $validated['email'],
-            'mrn' => Patient::generateMrn(),
-            'date_of_birth' => $validated['date_of_birth'],
-            'gender_at_birth' => $validated['gender_at_birth'],
-            'gender_identity' => $validated['gender_identity'] ?? null,
-            'blood_type' => $validated['blood_type'] ?? null,
-        ]);
-
-        $avatarAction->execute($patient, $request->file('avatar'), false);
+        $patient = $createPatient->execute($request->validated(), $request->file('avatar'));
 
         return redirect()->route('patients.show', $patient)
             ->with('success', __('flash.patients.created'));
@@ -102,16 +87,9 @@ class PatientController extends Controller
             'created_at' => $medication->created_at->toDateString(),
         ]);
 
-        $appointments = $patient->appointments()
-            ->with(['users.media'])
-            ->when($search, fn ($query) => $query->matchingReasonOrNotes($search))
-            ->orderBy('date', 'desc')
-            ->paginate(10)
-            ->withQueryString();
-
         return Inertia::render('Patients/Show', [
             'patient' => $patient,
-            'appointments' => $appointments,
+            'appointments' => $patient->paginatedAppointments($search),
             'appointment_search' => $search,
             'documents' => $documents,
             'document_type_options' => DocumentType::values(),
@@ -120,19 +98,7 @@ class PatientController extends Controller
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),
-            'discussions' => Inertia::defer(fn () => $patient->discussions()
-                ->with([
-                    'participants.participantable.media',
-                    'posts' => fn ($query) => $query->with([
-                        'user:id,first_name,last_name',
-                        'user.media',
-                        'patient:id,first_name,last_name',
-                        'patient.media',
-                    ])->orderBy('created_at'),
-                ])
-                ->latest()
-                ->get()
-            ),
+            'discussions' => Inertia::defer(fn () => $patient->discussionThread()),
         ]);
     }
 
@@ -150,26 +116,11 @@ class PatientController extends Controller
         ]);
     }
 
-    public function update(UpdatePatientRequest $request, Patient $patient, ManageAvatarAction $avatarAction): RedirectResponse
+    public function update(UpdatePatientRequest $request, Patient $patient, UpdatePatientAction $updatePatient): RedirectResponse
     {
         $this->authorize('update', $patient);
 
-        $validated = $request->validated();
-
-        $patient->update([
-            'prefix' => $validated['prefix'] ?? '',
-            'first_name' => $validated['first_name'],
-            'middle_name' => $validated['middle_name'] ?? '',
-            'last_name' => $validated['last_name'],
-            'suffix' => $validated['suffix'] ?? '',
-            'email' => $validated['email'],
-            'date_of_birth' => $validated['date_of_birth'],
-            'gender_at_birth' => $validated['gender_at_birth'],
-            'gender_identity' => $validated['gender_identity'] ?? null,
-            'blood_type' => $validated['blood_type'] ?? null,
-        ]);
-
-        $avatarAction->execute($patient, $request->file('avatar'), (bool) ($validated['remove_avatar'] ?? false));
+        $updatePatient->execute($patient, $request->validated(), $request->file('avatar'));
 
         return redirect()->route('patients.show', $patient)
             ->with('success', __('flash.patients.updated'));

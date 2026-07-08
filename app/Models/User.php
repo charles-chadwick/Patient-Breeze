@@ -20,6 +20,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
@@ -81,6 +82,42 @@ class User extends Authenticatable implements HasMedia
     public function scopeListing(Builder $query, Request $request): array
     {
         return $this->paginatedListing($query->with(['media', 'roles']), $request, 'users');
+    }
+
+    /**
+     * Resolve the assignable-user picker results for the given base query,
+     * shaped for the frontend provider/participant pickers.
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function scopeForPicker(Builder $query, string $search): Collection
+    {
+        return $query
+            ->when($search !== '', fn (Builder $query) => $query->withSearch($search))
+            ->with(['media' => fn ($query) => $query->where('collection_name', 'avatar')])
+            ->orderBy('last_name')
+            ->limit(20)
+            ->get(['id', 'first_name', 'last_name'])
+            ->map(fn (User $user): array => [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'avatar_url' => $user->avatar_url,
+            ]);
+    }
+
+    /**
+     * Paginate this user's appointments, optionally filtered by a
+     * reason/patient-name search term.
+     */
+    public function paginatedAppointments(string $search): LengthAwarePaginator
+    {
+        return $this->appointments()
+            ->with(['patient.media'])
+            ->when($search !== '', fn (Builder $query) => $query->matchingReasonOrPatientName($search))
+            ->orderBy('date', 'desc')
+            ->paginate(10)
+            ->withQueryString();
     }
 
     protected function searchableFields(): array

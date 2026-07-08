@@ -38,20 +38,7 @@ class AppointmentController extends Controller
     {
         $search = $request->string('search')->trim()->toString();
 
-        $staff = User::staff()
-            ->when($search !== '', fn ($query) => $query->withSearch($search))
-            ->with(['media' => fn ($query) => $query->where('collection_name', 'avatar')])
-            ->orderBy('last_name')
-            ->limit(20)
-            ->get(['id', 'first_name', 'last_name'])
-            ->map(fn (User $user): array => [
-                'id' => $user->id,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'avatar_url' => $user->avatar_url,
-            ]);
-
-        return response()->json(['staff' => $staff]);
+        return response()->json(['staff' => User::staff()->forPicker($search)]);
     }
 
     public function create(Patient $patient): Response

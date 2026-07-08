@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateContactAction;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
@@ -18,21 +19,11 @@ class ContactController extends Controller
         return Inertia::render('Contacts/Index', Contact::listing());
     }
 
-    public function store(StoreContactRequest $request): RedirectResponse
+    public function store(StoreContactRequest $request, CreateContactAction $createContact): RedirectResponse
     {
         $this->authorize('create', Contact::class);
 
-        $validated = $request->validated();
-
-        $parent = $validated['contactable_type']::query()->findOrFail($validated['contactable_id']);
-
-        $parent->contacts()->create([
-            'name' => $validated['name'],
-            'type' => $validated['type'],
-            'phone' => $validated['phone'] ?? null,
-            'street_address' => $validated['street_address'] ?? null,
-            'roi' => $validated['roi'] ?? null,
-        ]);
+        $createContact->execute($request->validated());
 
         return redirect()->back()->with('success', __('flash.contacts.created'));
     }
