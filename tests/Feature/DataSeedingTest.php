@@ -16,54 +16,81 @@ beforeEach(function (): void {
     seed(UserSeeder::class);
 });
 
-it('imports exactly the CRM users with no synthetic accounts', function () {
-    // 5 Super Admin + 11 Admin + 39 Staff in the CRM; no extra seeded admin.
+it('seeds the configured number of users with no synthetic accounts', function () {
+    // 5 Super Admins + 11 clinical + 39 Staff.
     expect(User::count())->toBe(55)
         ->and(User::where('email', 'admin@example.com')->exists())->toBeFalse();
 });
 
-it('preserves CRM identities and timestamps and resets passwords to "password"', function () {
-    $rick = User::where('email', 'slow.rick@example.com')->firstOrFail();
+it('always seeds the same Super Admins', function () {
+    $emails = [
+        'slow.rick@example.com',
+        'doofus.rick@example.com',
+        'president.curtis@example.com',
+        'frankensteins.monster@example.com',
+        'reverse.giraffe@example.com',
+    ];
 
-    expect($rick->first_name)->toBe('Slow')
-        ->and($rick->last_name)->toBe('Rick')
-        ->and($rick->created_at->toDateTimeString())->toBe('2021-07-29 11:03:21')
-        ->and(Hash::check('password', $rick->password))->toBeTrue()
-        ->and($rick->hasRole(UserRole::SuperAdmin->value))->toBeTrue();
+    foreach ($emails as $email) {
+        $super_admin = User::where('email', $email)->firstOrFail();
+
+        expect($super_admin->hasRole(UserRole::SuperAdmin->value))->toBeTrue()
+            ->and($super_admin->created_at->toDateTimeString())->toBe('2020-01-01 00:00:00')
+            ->and(Hash::check('password', $super_admin->password))->toBeTrue();
+    }
+
+    expect(User::role(UserRole::SuperAdmin->value)->count())->toBe(5);
 });
 
-it('maps CRM roles onto application roles, randomising Admin into clinical roles', function () {
+it('splits the remaining users across staff and clinical roles', function () {
     $roleCount = fn (UserRole $role) => User::role($role->value)->count();
 
-    // 5 CRM Super Admins; 39 Staff; 11 Admins spread across clinical roles.
-    expect($roleCount(UserRole::SuperAdmin))->toBe(5)
-        ->and($roleCount(UserRole::Staff))->toBe(39)
+    expect($roleCount(UserRole::Staff))->toBe(39)
         ->and($roleCount(UserRole::Doctor) + $roleCount(UserRole::Nurse) + $roleCount(UserRole::MedicalAssistant))->toBe(11);
 });
 
-it('imports every CRM customer as a patient with generated medical data', function () {
+it('attaches an avatar to each seeded user', function () {
+    $super_admin = User::where('email', 'slow.rick@example.com')->firstOrFail()->load('media');
+
+    expect($super_admin->getFirstMedia('avatar'))->not->toBeNull();
+});
+
+it('seeds the configured number of patients with generated medical data', function () {
     seed(PatientSeeder::class);
 
     expect(Patient::count())->toBe(519);
 
-    $patient = Patient::where('email', 'slippery.stair9735@example.com')->firstOrFail();
+    $patient = Patient::query()->with('media')->first();
 
-    $patient->load('media');
-
-    expect($patient->first_name)->toBe('Slippery')
-        ->and($patient->last_name)->toBe('Stair')
-        ->and($patient->created_at->toDateTimeString())->toBe('2025-08-26 20:19:52')
-        ->and($patient->mrn)->toStartWith('MRN-')
+    expect($patient->mrn)->toStartWith('MRN-')
         ->and($patient->gender_at_birth)->not->toBeNull()
         ->and($patient->date_of_birth)->not->toBeNull()
         ->and($patient->getFirstMedia('avatar'))->not->toBeNull()
         ->and(Hash::check('password', $patient->password))->toBeTrue();
 });
 
-it('attaches the imported avatar to each seeded user', function () {
-    $user = User::where('email', 'slow.rick@example.com')->firstOrFail()->load('media');
+it('routes the middle words of multi-word characters into the middle_name column', function () {
+    seed(PatientSeeder::class);
 
-    expect($user->getFirstMedia('avatar'))->not->toBeNull();
+    // First and last names are always single words; every extra word becomes the middle name.
+    expect(Patient::where('first_name', 'like', '% %')->exists())->toBeFalse()
+        ->and(Patient::where('last_name', 'like', '% %')->exists())->toBeFalse()
+        ->and(Patient::where('last_name', '')->exists())->toBeFalse()
+        ->and(Patient::where('middle_name', '!=', '')->exists())->toBeTrue();
+});
+
+it('sanitizes every seeded email address', function () {
+    seed(PatientSeeder::class);
+
+    $emails = User::pluck('email')->merge(Patient::pluck('email'));
+
+    foreach ($emails as $email) {
+        expect($email)
+            ->toBe(strtolower($email))
+            ->not->toContain(' ')
+            ->not->toContain("'")
+            ->toEndWith('@example.com');
+    }
 });
 
 it('logs a creation activity attributed to an existing user for each patient', function () {

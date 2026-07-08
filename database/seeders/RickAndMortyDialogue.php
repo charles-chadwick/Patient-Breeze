@@ -38,7 +38,7 @@ class RickAndMortyDialogue
      */
     private static function load(): void
     {
-        $handle = fopen(database_path('rickandmorty/rickandmorty-scripts.csv'), 'r');
+        $handle = fopen(database_path('data/rickandmorty-scripts.csv'), 'r');
 
         $header = array_map(
             fn (string $column): string => trim($column, "\u{FEFF} \t"),
@@ -91,7 +91,7 @@ class RickAndMortyDialogue
      */
     private static function loadAll(): void
     {
-        $handle = fopen(database_path('rickandmorty/rickandmorty-scripts.csv'), 'r');
+        $handle = fopen(database_path('data/rickandmorty-scripts.csv'), 'r');
 
         fgetcsv($handle, 0, ',', '"', ''); // Skip the header row.
 

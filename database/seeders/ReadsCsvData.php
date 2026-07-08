@@ -23,6 +23,28 @@ trait ReadsCsvData
     }
 
     /**
+     * Build a sanitized, lower-cased example email address from a full name.
+     * Apostrophes are dropped and every other non-alphanumeric run collapses
+     * to a single dot, so "Frankenstein's Monster" becomes
+     * "frankensteins.monster". An optional suffix (the character id) keeps
+     * generated addresses unique.
+     */
+    private function emailFor(string $name, ?int $suffix = null): string
+    {
+        $local_part = str($name)
+            ->lower()
+            ->replace("'", '')
+            ->replaceMatches('/[^a-z0-9]+/', '.')
+            ->trim('.');
+
+        if ($suffix !== null) {
+            $local_part = $local_part->append('.'.$suffix);
+        }
+
+        return $local_part->append('@example.com')->value();
+    }
+
+    /**
      * @return list<array<string, string>>
      *
      * @throws Throwable

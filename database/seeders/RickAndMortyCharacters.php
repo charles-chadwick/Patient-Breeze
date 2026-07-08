@@ -41,6 +41,19 @@ class RickAndMortyCharacters
     }
 
     /**
+     * Clear the shuffled pool and used-character tracking. The pool is static
+     * and therefore survives between seeders in a single process, so a full
+     * seed run should reset it first to start from a clean, freshly shuffled
+     * set of characters.
+     */
+    public static function reset(): void
+    {
+        self::$cursor = 0;
+        self::$used = [];
+        self::load();
+    }
+
+    /**
      * Characters that haven't been assigned to a record yet.
      *
      * @return Collection<int, array{id: int, first_name: string, last_name: string}>
@@ -63,6 +76,6 @@ class RickAndMortyCharacters
 
     private static function load(): void
     {
-        self::$pool = collect(File::json(database_path('rickandmorty/characters.json')))->shuffle();
+        self::$pool = collect(File::json(database_path('data/characters.json')))->shuffle();
     }
 }
