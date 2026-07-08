@@ -140,5 +140,8 @@ it('resolves the patient as the author of their own discussion posts on the show
         ->assertSuccessful()
         ->assertJsonPath('props.discussions.0.posts.0.user', null)
         ->assertJsonPath('props.discussions.0.posts.0.patient.first_name', 'Marisol')
-        ->assertJsonPath('props.discussions.0.posts.0.patient.last_name', 'Vega');
+        ->assertJsonPath('props.discussions.0.posts.0.patient.last_name', 'Vega')
+        ->assertJsonMissingPath('props.discussions.0.posts.0.patient.email')
+        ->assertJsonMissingPath('props.discussions.0.posts.0.patient.mrn')
+        ->assertJsonMissingPath('props.discussions.0.posts.0.patient.date_of_birth');
 });

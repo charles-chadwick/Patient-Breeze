@@ -95,8 +95,12 @@ class PatientController extends Controller
             'discussions' => Inertia::defer(fn () => $patient->discussions()
                 ->with([
                     'participants.participantable.media',
-                    'posts' => fn ($query) => $query->with(['user.media', 'patient.media'])
-                        ->orderBy('created_at'),
+                    'posts' => fn ($query) => $query->with([
+                        'user:id,first_name,last_name',
+                        'user.media',
+                        'patient:id,first_name,last_name',
+                        'patient.media',
+                    ])->orderBy('created_at'),
                 ])
                 ->latest()
                 ->get()
