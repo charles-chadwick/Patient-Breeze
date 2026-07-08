@@ -49,7 +49,7 @@ function submit() {
         <!-- Avatar -->
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Avatar</h2>
+                <h2 class="font-bold text-foreground">{{ $t('users.form.section_avatar') }}</h2>
             </div>
             <div class="px-6 py-5">
                 <AvatarUpload
@@ -64,19 +64,19 @@ function submit() {
         <!-- Identity -->
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Identity</h2>
+                <h2 class="font-bold text-foreground">{{ $t('users.form.section_identity') }}</h2>
             </div>
             <div class="grid gap-5 px-6 py-5 sm:grid-cols-2 lg:grid-cols-3">
                 <!-- Prefix -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Prefix
+                        {{ $t('users.form.label_prefix') }}
                     </label>
                     <input
                         v-model="form.prefix"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        placeholder="Dr., Mr., Ms.…"
+                        :placeholder="$t('users.form.placeholder_prefix')"
                     />
                     <p v-if="form.errors.prefix" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.prefix }}</p>
                 </div>
@@ -84,14 +84,14 @@ function submit() {
                 <!-- First Name -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        First Name <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('users.form.label_first_name') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.first_name"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.first_name }"
-                        placeholder="First name"
+                        :placeholder="$t('users.form.placeholder_first_name')"
                     />
                     <p v-if="form.errors.first_name" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.first_name }}</p>
                 </div>
@@ -99,27 +99,27 @@ function submit() {
                 <!-- Middle Name -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Middle Name
+                        {{ $t('users.form.label_middle_name') }}
                     </label>
                     <input
                         v-model="form.middle_name"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        placeholder="Middle name"
+                        :placeholder="$t('users.form.placeholder_middle_name')"
                     />
                 </div>
 
                 <!-- Last Name -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Last Name <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('users.form.label_last_name') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.last_name"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.last_name }"
-                        placeholder="Last name"
+                        :placeholder="$t('users.form.placeholder_last_name')"
                     />
                     <p v-if="form.errors.last_name" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.last_name }}</p>
                 </div>
@@ -127,27 +127,27 @@ function submit() {
                 <!-- Suffix -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Suffix
+                        {{ $t('users.form.label_suffix') }}
                     </label>
                     <input
                         v-model="form.suffix"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        placeholder="MD, DO, Jr.…"
+                        :placeholder="$t('users.form.placeholder_suffix')"
                     />
                 </div>
 
                 <!-- Email -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Email <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('users.form.label_email') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.email"
                         type="email"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.email }"
-                        placeholder="email@example.com"
+                        :placeholder="$t('users.form.placeholder_email')"
                     />
                     <p v-if="form.errors.email" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.email }}</p>
                 </div>
@@ -157,22 +157,22 @@ function submit() {
         <!-- Access -->
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Access</h2>
+                <h2 class="font-bold text-foreground">{{ $t('users.form.section_access') }}</h2>
             </div>
             <div class="grid gap-5 px-6 py-5 sm:grid-cols-2 lg:grid-cols-3">
                 <!-- Role -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Role <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('users.form.label_role') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <select
                         v-model="form.role"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.role }"
                     >
-                        <option value="">Select…</option>
+                        <option value="">{{ $t('common.actions.select_placeholder') }}</option>
                         <option v-for="opt in role_options" :key="opt" :value="opt">
-                            {{ opt }}
+                            {{ $t('enums.user_role.' + opt) }}
                         </option>
                     </select>
                     <p v-if="form.errors.role" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.role }}</p>
@@ -184,15 +184,15 @@ function submit() {
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">
-                    {{ user ? 'Change Password' : 'Password' }}
+                    {{ user ? $t('users.form.section_change_password') : $t('users.form.section_password') }}
                 </h2>
-                <p v-if="user" class="mt-0.5 text-xs text-muted-foreground">Leave blank to keep the current password.</p>
+                <p v-if="user" class="mt-0.5 text-xs text-muted-foreground">{{ $t('users.form.password_hint') }}</p>
             </div>
             <div class="grid gap-5 px-6 py-5 sm:grid-cols-2">
                 <!-- Password -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        {{ user ? 'New Password' : 'Password' }} <span v-if="!user" class="text-vibrant-coral-500">*</span>
+                        {{ user ? $t('users.form.label_new_password') : $t('users.form.label_password') }} <span v-if="!user" class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.password"
@@ -200,7 +200,7 @@ function submit() {
                         autocomplete="new-password"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.password }"
-                        placeholder="Min. 8 characters"
+                        :placeholder="$t('users.form.placeholder_password')"
                     />
                     <p v-if="form.errors.password" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.password }}</p>
                 </div>
@@ -208,14 +208,14 @@ function submit() {
                 <!-- Confirm Password -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Confirm Password <span v-if="!user" class="text-vibrant-coral-500">*</span>
+                        {{ $t('users.form.label_confirm_password') }} <span v-if="!user" class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.password_confirmation"
                         type="password"
                         autocomplete="new-password"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        placeholder="Repeat password"
+                        :placeholder="$t('users.form.placeholder_confirm_password')"
                     />
                 </div>
             </div>
@@ -227,14 +227,14 @@ function submit() {
                 :href="cancelHref"
                 class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
             >
-                Cancel
+                {{ $t('common.actions.cancel') }}
             </Link>
             <button
                 type="submit"
                 :disabled="form.processing"
                 class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90 disabled:opacity-50"
             >
-                {{ form.processing ? 'Saving…' : 'Save User' }}
+                {{ form.processing ? $t('users.form.submitting') : $t('users.form.submit') }}
             </button>
         </div>
     </form>

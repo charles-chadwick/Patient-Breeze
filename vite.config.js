@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
+import i18n from 'laravel-vue-i18n/vite';
 
 export default defineConfig({
     plugins: [
@@ -11,6 +12,7 @@ export default defineConfig({
             refresh: true,
         }),
         tailwindcss(),
+        i18n(),
         vue({
             template: {
                 transformAssetUrls: {

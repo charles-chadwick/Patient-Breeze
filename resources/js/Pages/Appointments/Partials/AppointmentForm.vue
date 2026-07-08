@@ -1,8 +1,7 @@
 <script setup>
-import { computed } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import DatePicker from '@/Components/ui/DatePicker.vue'
-import MultiSelect from '@/Components/ui/MultiSelect.vue'
+import StaffSelect from '@/Components/StaffSelect.vue'
 
 const props = defineProps({
     action: {
@@ -29,10 +28,6 @@ const props = defineProps({
         type: Array,
         required: true,
     },
-    staff_options: {
-        type: Array,
-        required: true,
-    },
 })
 
 const form = useForm({
@@ -48,19 +43,14 @@ const form = useForm({
     })) ?? [],
 })
 
-const staffOptions = computed(() =>
-    props.staff_options.map((u) => ({ value: u.id, label: `${u.last_name}, ${u.first_name}`, avatar: u.avatar_url })),
-)
-
-const selectedStaffIds = computed({
-    get: () => form.staff.map((s) => s.user_id),
-    set: (newIds) => {
-        form.staff = newIds.map((id) => {
-            const existing = form.staff.find((s) => s.user_id === id)
-            return existing ?? { user_id: id, role: 'Assistant' }
-        })
-    },
-})
+// Seed the staff picker's display rows from the appointment's assigned providers.
+const initial_staff = props.appointment?.users?.map((u) => ({
+    id: u.id,
+    first_name: u.first_name,
+    last_name: u.last_name,
+    avatar_url: u.avatar_url,
+    role: u.pivot.role,
+})) ?? []
 
 function submit() {
     form[props.method](props.action)
@@ -72,17 +62,17 @@ function submit() {
         <!-- Scheduling -->
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Scheduling</h2>
+                <h2 class="font-bold text-foreground">{{ $t('appointments.form.section_scheduling') }}</h2>
             </div>
             <div class="grid gap-5 px-6 py-5 sm:grid-cols-2 lg:grid-cols-4">
                 <!-- Date -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Date <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('appointments.form.label_date') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <DatePicker
                         v-model="form.date"
-                        placeholder="Select date"
+                        :placeholder="$t('appointments.form.placeholder_date')"
                         :class="{ 'ring-2 ring-vibrant-coral-400 rounded-lg': form.errors.date }"
                     />
                     <p v-if="form.errors.date" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.date }}</p>
@@ -91,7 +81,7 @@ function submit() {
                 <!-- Start Time -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Start Time <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('appointments.form.label_start_time') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.start_time"
@@ -105,7 +95,7 @@ function submit() {
                 <!-- End Time -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        End Time <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('appointments.form.label_end_time') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.end_time"
@@ -119,15 +109,15 @@ function submit() {
                 <!-- Status -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Status <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('appointments.form.label_status') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <select
                         v-model="form.status"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.status }"
                     >
-                        <option value="">Select…</option>
-                        <option v-for="opt in status_options" :key="opt" :value="opt">{{ opt }}</option>
+                        <option value="">{{ $t('common.actions.select_placeholder') }}</option>
+                        <option v-for="opt in status_options" :key="opt" :value="opt">{{ $t('enums.appointment_status.' + opt) }}</option>
                     </select>
                     <p v-if="form.errors.status" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.status }}</p>
                 </div>
@@ -137,20 +127,20 @@ function submit() {
         <!-- Details -->
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Details</h2>
+                <h2 class="font-bold text-foreground">{{ $t('appointments.form.section_details') }}</h2>
             </div>
             <div class="grid gap-5 px-6 py-5">
                 <!-- Reason -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Reason <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('appointments.form.label_reason') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.reason"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.reason }"
-                        placeholder="Reason for visit"
+                        :placeholder="$t('appointments.form.placeholder_reason')"
                     />
                     <p v-if="form.errors.reason" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.reason }}</p>
                 </div>
@@ -158,14 +148,14 @@ function submit() {
                 <!-- Notes -->
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Notes
+                        {{ $t('appointments.form.label_notes') }}
                     </label>
                     <textarea
                         v-model="form.notes"
                         rows="3"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.notes }"
-                        placeholder="Optional notes…"
+                        :placeholder="$t('appointments.form.placeholder_notes')"
                     />
                     <p v-if="form.errors.notes" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.notes }}</p>
                 </div>
@@ -175,33 +165,15 @@ function submit() {
         <!-- Staff -->
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Staff</h2>
+                <h2 class="font-bold text-foreground">{{ $t('appointments.form.section_staff') }}</h2>
             </div>
             <div class="grid gap-4 px-6 py-5">
-                <MultiSelect
-                    v-model="selectedStaffIds"
-                    :options="staffOptions"
-                    placeholder="Select staff…"
-                    :class="{ 'ring-2 ring-vibrant-coral-400 rounded-lg': form.errors.staff }"
+                <StaffSelect
+                    v-model="form.staff"
+                    :initial-staff="initial_staff"
+                    :role-options="role_options"
+                    :placeholder="$t('appointments.form.placeholder_staff')"
                 />
-
-                <div v-if="form.staff.length" class="grid gap-2">
-                    <div
-                        v-for="entry in form.staff"
-                        :key="entry.user_id"
-                        class="flex items-center gap-3"
-                    >
-                        <span class="flex-1 text-sm text-foreground">
-                            {{ staffOptions.find((o) => o.value === entry.user_id)?.label }}
-                        </span>
-                        <select
-                            v-model="entry.role"
-                            class="w-36 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        >
-                            <option v-for="role in role_options" :key="role" :value="role">{{ role }}</option>
-                        </select>
-                    </div>
-                </div>
 
                 <div
                     v-if="form.errors.staff"
@@ -218,14 +190,14 @@ function submit() {
                 :href="cancelHref"
                 class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
             >
-                Cancel
+                {{ $t('common.actions.cancel') }}
             </Link>
             <button
                 type="submit"
                 :disabled="form.processing"
                 class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90 disabled:opacity-50"
             >
-                {{ form.processing ? 'Saving…' : 'Save Appointment' }}
+                {{ form.processing ? $t('appointments.form.submitting') : $t('appointments.form.submit') }}
             </button>
         </div>
     </form>

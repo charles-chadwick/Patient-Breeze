@@ -94,9 +94,10 @@ class Appointment extends Model
 
     /**
      * Build the calendar listing (day/week range, search, staff filter) and its
-     * resolved query parameters and staff options.
+     * resolved query parameters. Only the staff currently applied to the filter
+     * are resolved for display; the picker searches the full list on demand.
      *
-     * @return array{appointments: Collection<int, Appointment>, date: string, view: string, search: string, staff: list<int>, staff_options: Collection<int, User>}
+     * @return array{appointments: Collection<int, Appointment>, date: string, view: string, search: string, staff: list<int>, selected_staff: array<int, array{id: int, first_name: string, last_name: string, avatar_url: string}>}
      */
     public function scopeCalendar(Builder $query, Request $request): array
     {
@@ -124,7 +125,19 @@ class Appointment extends Model
             'view' => $view,
             'search' => $search,
             'staff' => $staff_ids,
-            'staff_options' => User::staff()->with('media')->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
+            'selected_staff' => $staff_ids === []
+                ? []
+                : User::whereIn('id', $staff_ids)
+                    ->with(['media' => fn ($query) => $query->where('collection_name', 'avatar')])
+                    ->orderBy('last_name')
+                    ->get(['id', 'first_name', 'last_name'])
+                    ->map(fn (User $user): array => [
+                        'id' => $user->id,
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'avatar_url' => $user->avatar_url,
+                    ])
+                    ->all(),
         ];
     }
 

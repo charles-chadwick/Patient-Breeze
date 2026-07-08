@@ -11,6 +11,11 @@ enum ContactType: string
     case Spouse = 'Spouse';
     case Other = 'Other';
 
+    public function label(): string
+    {
+        return __('enums.contact_type.'.$this->value);
+    }
+
     /** @return string[] */
     public static function values(): array
     {

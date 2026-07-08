@@ -9,8 +9,10 @@ use App\Enums\UserRole;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -24,6 +26,30 @@ class UserController extends Controller
             ...User::listing($request),
             'role_options' => array_column(UserRole::cases(), 'value'),
         ]);
+    }
+
+    /**
+     * Search users for participant/assignee pickers, excluding the current user.
+     */
+    public function search(Request $request): JsonResponse
+    {
+        $search = $request->string('search')->trim()->toString();
+
+        $users = User::query()
+            ->whereKeyNot(Auth::id())
+            ->when($search !== '', fn ($query) => $query->withSearch($search))
+            ->with(['media' => fn ($query) => $query->where('collection_name', 'avatar')])
+            ->orderBy('last_name')
+            ->limit(20)
+            ->get(['id', 'first_name', 'last_name'])
+            ->map(fn (User $user): array => [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'avatar_url' => $user->avatar_url,
+            ]);
+
+        return response()->json(['users' => $users]);
     }
 
     public function create(): Response
@@ -41,7 +67,8 @@ class UserController extends Controller
 
         $createUser->execute($request->validated(), $request->file('avatar'));
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')
+            ->with('success', __('flash.users.created'));
     }
 
     public function show(User $user, Request $request): Response
@@ -86,6 +113,7 @@ class UserController extends Controller
 
         $updateUser->execute($user, $request->validated(), $request->file('avatar'));
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')
+            ->with('success', __('flash.users.updated'));
     }
 }

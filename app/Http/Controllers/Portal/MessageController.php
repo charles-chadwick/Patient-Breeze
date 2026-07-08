@@ -39,7 +39,7 @@ class MessageController extends Controller
             'content' => $data['content'],
         ]);
 
-        return redirect()->route('portal.messages.index');
+        return redirect()->route('portal.messages.index')->with('success', __('flash.portal_messages.sent'));
     }
 
     public function reply(Request $request, Discussion $discussion): RedirectResponse

@@ -34,7 +34,7 @@ class ContactController extends Controller
             'roi' => $validated['roi'] ?? null,
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', __('flash.contacts.created'));
     }
 
     public function update(UpdateContactRequest $request, Contact $contact): RedirectResponse
@@ -43,7 +43,7 @@ class ContactController extends Controller
 
         $contact->update($request->validated());
 
-        return redirect()->back();
+        return redirect()->back()->with('success', __('flash.contacts.updated'));
     }
 
     public function destroy(Contact $contact): RedirectResponse
@@ -52,6 +52,6 @@ class ContactController extends Controller
 
         $contact->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', __('flash.contacts.deleted'));
     }
 }

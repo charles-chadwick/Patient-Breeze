@@ -23,10 +23,20 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (! Auth::validate($credentials)) {
             return back()->withErrors(['email' => 'These credentials do not match our records.']);
         }
 
+        $user = Auth::getLastAttempted();
+
+        if ($user->hasEnabledTwoFactorAuthentication()) {
+            $request->session()->put('web.login.id', $user->getKey());
+            $request->session()->put('web.login.remember', $request->boolean('remember'));
+
+            return redirect()->route('two-factor.login');
+        }
+
+        Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard'));

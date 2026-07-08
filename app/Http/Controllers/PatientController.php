@@ -6,12 +6,15 @@ use App\Actions\ManageAvatarAction;
 use App\Enums\BloodType;
 use App\Enums\ContactType;
 use App\Enums\DiscussionType;
+use App\Enums\DocumentType;
+use App\Enums\DoseForm;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use App\Models\Document;
 use App\Models\Patient;
-use App\Models\User;
+use App\Models\PatientMedication;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -59,7 +62,8 @@ class PatientController extends Controller
 
         $avatarAction->execute($patient, $request->file('avatar'), false);
 
-        return redirect()->route('patients.show', $patient);
+        return redirect()->route('patients.show', $patient)
+            ->with('success', __('flash.patients.created'));
     }
 
     public function show(Patient $patient, Request $request): Response
@@ -71,6 +75,31 @@ class PatientController extends Controller
         $patient->load([
             'media',
             'contacts' => fn ($query) => $query->orderBy('name'),
+            'documents' => fn ($query) => $query->with(['media', 'uploader'])->latest(),
+            'patientMedications' => fn ($query) => $query->latest(),
+        ]);
+
+        $documents = $patient->documents->map(fn (Document $document) => [
+            'id' => $document->id,
+            'type' => $document->type->value,
+            'type_label' => $document->type->label(),
+            'name' => $document->name,
+            'document_date' => $document->document_date?->toDateString(),
+            'notes' => $document->notes,
+            'uploaded_by' => $this->uploaderName($document),
+            'created_at' => $document->created_at->toDateString(),
+            'download_url' => route('patients.documents.download', [$patient->id, $document->id]),
+        ]);
+
+        $medications = $patient->patientMedications->map(fn (PatientMedication $medication) => [
+            'id' => $medication->id,
+            'type' => $medication->type,
+            'name' => $medication->name,
+            'dosage' => $medication->dosage,
+            'dose_form' => $medication->dose_form->value,
+            'dose_form_label' => $medication->dose_form->label(),
+            'ndc' => $medication->ndc,
+            'created_at' => $medication->created_at->toDateString(),
         ]);
 
         $appointments = $patient->appointments()
@@ -80,30 +109,26 @@ class PatientController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $users = User::select('id', 'first_name', 'last_name', 'email')
-            ->with(['media' => fn ($query) => $query->where('collection_name', 'avatar')])
-            ->orderBy('last_name')
-            ->get()
-            ->map(fn ($user) => [
-                'id' => $user->id,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'avatar_url' => $user->avatar_url,
-            ]);
-
         return Inertia::render('Patients/Show', [
             'patient' => $patient,
             'appointments' => $appointments,
             'appointment_search' => $search,
+            'documents' => $documents,
+            'document_type_options' => DocumentType::values(),
+            'medications' => $medications,
+            'dose_form_options' => DoseForm::values(),
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),
-            'users' => $users,
             'discussions' => Inertia::defer(fn () => $patient->discussions()
                 ->with([
                     'participants.participantable.media',
-                    'posts' => fn ($query) => $query->with('user.media')
-                        ->orderBy('created_at'),
+                    'posts' => fn ($query) => $query->with([
+                        'user:id,first_name,last_name',
+                        'user.media',
+                        'patient:id,first_name,last_name',
+                        'patient.media',
+                    ])->orderBy('created_at'),
                 ])
                 ->latest()
                 ->get()
@@ -146,6 +171,18 @@ class PatientController extends Controller
 
         $avatarAction->execute($patient, $request->file('avatar'), (bool) ($validated['remove_avatar'] ?? false));
 
-        return redirect()->route('patients.show', $patient);
+        return redirect()->route('patients.show', $patient)
+            ->with('success', __('flash.patients.updated'));
+    }
+
+    private function uploaderName(Document $document): ?string
+    {
+        $uploader = $document->uploader;
+
+        if ($uploader === null) {
+            return null;
+        }
+
+        return trim("{$uploader->first_name} {$uploader->last_name}");
     }
 }

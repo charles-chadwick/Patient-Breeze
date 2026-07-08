@@ -10,4 +10,9 @@ enum AppointmentStatus: string
     case Cancelled = 'Cancelled';
     case Rescheduled = 'Rescheduled';
     case NoShow = 'NoShow';
+
+    public function label(): string
+    {
+        return __('enums.appointment_status.'.$this->value);
+    }
 }

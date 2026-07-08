@@ -24,6 +24,17 @@ const initiator = computed(() =>
 
 const isPortalMessage = computed(() => props.discussion?.type === 'Portal Message')
 
+function postAuthor(post) {
+    const author = post.user ?? post.patient ?? null
+
+    return {
+        name: author
+            ? `${author.first_name} ${author.last_name}`
+            : null,
+        avatar_url: author?.avatar_url ?? null,
+    }
+}
+
 const emit = defineEmits(['update:open', 'reply-posted'])
 
 const form = useForm({ content: '' })
@@ -83,7 +94,7 @@ function submitReply() {
                         <h2 class="text-base font-bold text-foreground">{{ discussion.title }}</h2>
                         <div class="mt-1 flex items-center gap-2">
                             <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
-                                {{ discussion.type }}
+                                {{ $t('enums.discussion_type.' + discussion.type) }}
                             </span>
                             <span class="text-xs text-muted-foreground">{{ formatDate(discussion.created_at, DATE_SHORT) }}</span>
                         </div>
@@ -119,7 +130,7 @@ function submitReply() {
                 </div>
 
                 <div class="border-b border-border px-6 py-3">
-                    <p class="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Participants</p>
+                    <p class="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">{{ $t('discussions.slide_over.participants_heading') }}</p>
                     <div class="flex flex-wrap gap-2">
                         <div
                             v-for="participant in discussion.participants"
@@ -135,16 +146,16 @@ function submitReply() {
                             <span class="text-xs font-medium text-foreground">
                                 {{ participant.participantable
                                     ? `${participant.participantable.first_name} ${participant.participantable.last_name}`
-                                    : 'Unknown' }}
+                                    : $t('discussions.slide_over.unknown_participant') }}
                             </span>
-                            <span v-if="participant.is_initiator" class="text-xs text-muted-foreground">(initiator)</span>
+                            <span v-if="participant.is_initiator" class="text-xs text-muted-foreground">{{ $t('discussions.slide_over.initiator_marker') }}</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex-1 overflow-y-auto px-6 py-4">
                     <div v-if="discussion.posts.length === 0" class="py-8 text-center text-sm text-muted-foreground">
-                        No messages yet. Start the conversation below.
+                        {{ $t('discussions.slide_over.empty_posts') }}
                     </div>
                     <div v-else class="space-y-4">
                         <div
@@ -153,15 +164,15 @@ function submitReply() {
                             class="flex gap-3"
                         >
                             <img
-                                v-if="post.user"
-                                :src="post.user.avatar_url"
-                                :alt="`${post.user.first_name} ${post.user.last_name}`"
+                                v-if="postAuthor(post).avatar_url"
+                                :src="postAuthor(post).avatar_url"
+                                :alt="postAuthor(post).name"
                                 class="size-8 shrink-0 rounded-full object-cover ring-1 ring-border"
                             />
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-baseline gap-2">
                                     <span class="text-sm font-bold text-foreground">
-                                        {{ post.user ? `${post.user.first_name} ${post.user.last_name}` : 'Unknown' }}
+                                        {{ postAuthor(post).name ?? $t('discussions.slide_over.unknown_participant') }}
                                     </span>
                                     <span class="text-xs text-muted-foreground">{{ formatDate(post.created_at, DATE_SHORT) }}</span>
                                 </div>
@@ -176,7 +187,7 @@ function submitReply() {
                         <textarea
                             v-model="form.content"
                             rows="2"
-                            placeholder="Write a reply…"
+                            :placeholder="$t('discussions.slide_over.placeholder_reply')"
                             class="flex-1 resize-none rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                             :class="{ 'border-vibrant-coral-400': form.errors.content }"
                         ></textarea>
@@ -185,7 +196,7 @@ function submitReply() {
                             :disabled="form.processing || !form.content.trim()"
                             class="self-end rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90 disabled:opacity-50"
                         >
-                            Reply
+                            {{ $t('discussions.slide_over.reply') }}
                         </button>
                     </form>
                     <p v-if="form.errors.content" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.content }}</p>

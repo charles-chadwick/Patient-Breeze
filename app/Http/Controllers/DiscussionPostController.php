@@ -22,6 +22,6 @@ class DiscussionPostController extends Controller
 
         DiscussionPostCreated::dispatch($post);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', __('flash.discussion_posts.created'));
     }
 }

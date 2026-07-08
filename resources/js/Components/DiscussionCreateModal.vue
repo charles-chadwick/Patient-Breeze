@@ -1,6 +1,5 @@
 <script setup>
-import { computed } from 'vue'
-import { useForm, usePage } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import {
     Dialog,
     DialogContent,
@@ -9,7 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/Components/ui/dialog'
-import MultiSelect from '@/Components/ui/MultiSelect.vue'
+import ParticipantSelect from '@/Components/ParticipantSelect.vue'
 
 const props = defineProps({
     open: {
@@ -24,10 +23,6 @@ const props = defineProps({
         type: Number,
         required: true,
     },
-    users: {
-        type: Array,
-        required: true,
-    },
     types: {
         type: Array,
         required: true,
@@ -35,19 +30,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:open', 'saved'])
-
-const page = usePage()
-const current_user_id = computed(() => page.props.auth.user.id)
-
-const user_options = computed(() =>
-    props.users
-        .filter((u) => u.id !== current_user_id.value)
-        .map((u) => ({
-            value: u.id,
-            label: `${u.first_name} ${u.last_name}`,
-            avatar: u.avatar_url,
-        }))
-)
 
 const form = useForm({
     title: '',
@@ -80,21 +62,21 @@ function submit() {
     <Dialog :open="open" @update:open="handleOpenUpdate">
         <DialogContent class="sm:max-w-lg">
             <DialogHeader>
-                <DialogTitle>New Discussion</DialogTitle>
-                <DialogDescription>Start a discussion thread about this patient.</DialogDescription>
+                <DialogTitle>{{ $t('discussions.create.title') }}</DialogTitle>
+                <DialogDescription>{{ $t('discussions.create.description') }}</DialogDescription>
             </DialogHeader>
 
             <form id="discussion-form" @submit.prevent="submit" class="grid gap-5">
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Title <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('discussions.create.label_title') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <input
                         v-model="form.title"
                         type="text"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.title }"
-                        placeholder="e.g. Follow-up re: medications"
+                        :placeholder="$t('discussions.create.placeholder_title')"
                         autofocus
                     />
                     <p v-if="form.errors.title" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.title }}</p>
@@ -102,39 +84,38 @@ function submit() {
 
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Type <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('discussions.create.label_type') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <select
                         v-model="form.type"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.type }"
                     >
-                        <option value="">Select…</option>
-                        <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
+                        <option value="">{{ $t('common.actions.select_placeholder') }}</option>
+                        <option v-for="type_option in types" :key="type_option" :value="type_option">{{ $t('enums.discussion_type.' + type_option) }}</option>
                     </select>
                     <p v-if="form.errors.type" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.type }}</p>
                 </div>
 
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Additional Participants
+                        {{ $t('discussions.create.label_participants') }}
                     </label>
-                    <MultiSelect
+                    <ParticipantSelect
                         v-model="form.participant_ids"
-                        :options="user_options"
-                        placeholder="Add participants…"
+                        :placeholder="$t('discussions.create.placeholder_participants')"
                     />
                     <p v-if="form.errors.participant_ids" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.participant_ids }}</p>
                 </div>
 
                 <div>
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                        Initial Reply  <span class="text-vibrant-coral-500">*</span>
+                        {{ $t('discussions.create.label_initial_reply') }}  <span class="text-vibrant-coral-500">*</span>
                     </label>
                     <textarea
                         v-model="form.initial_reply"
                         rows="3"
-                        placeholder="Write your message"
+                        :placeholder="$t('discussions.create.placeholder_initial_reply')"
                         class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.initial_reply }"
                     ></textarea>
@@ -148,7 +129,7 @@ function submit() {
                     @click="handleOpenUpdate(false)"
                     class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
                 >
-                    Cancel
+                    {{ $t('common.actions.cancel') }}
                 </button>
                 <button
                     type="submit"
@@ -156,7 +137,7 @@ function submit() {
                     :disabled="form.processing"
                     class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90 disabled:opacity-50"
                 >
-                    Create Discussion
+                    {{ $t('discussions.create.submit') }}
                 </button>
             </DialogFooter>
         </DialogContent>

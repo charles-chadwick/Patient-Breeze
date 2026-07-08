@@ -15,7 +15,7 @@ const props = defineProps({
     },
     title: {
         type: String,
-        default: 'Are you sure?',
+        default: '',
     },
     description: {
         type: String,
@@ -23,11 +23,11 @@ const props = defineProps({
     },
     confirmLabel: {
         type: String,
-        default: 'Confirm',
+        default: '',
     },
     cancelLabel: {
         type: String,
-        default: 'Cancel',
+        default: '',
     },
     destructive: {
         type: Boolean,
@@ -58,7 +58,7 @@ function handleOpenUpdate(value) {
     <Dialog :open="open" @update:open="handleOpenUpdate">
         <DialogContent class="sm:max-w-md">
             <DialogHeader>
-                <DialogTitle>{{ title }}</DialogTitle>
+                <DialogTitle>{{ title || $t('common.confirm.default_title') }}</DialogTitle>
                 <DialogDescription v-if="description">{{ description }}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -67,7 +67,7 @@ function handleOpenUpdate(value) {
                     @click="handleCancel"
                     class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
                 >
-                    {{ cancelLabel }}
+                    {{ cancelLabel || $t('common.actions.cancel') }}
                 </button>
                 <button
                     type="button"
@@ -76,7 +76,7 @@ function handleOpenUpdate(value) {
                     class="rounded-lg px-4 py-2 text-sm font-bold text-white disabled:opacity-50"
                     :class="destructive ? 'bg-vibrant-coral-600 hover:bg-vibrant-coral-700' : 'bg-primary hover:bg-primary/90'"
                 >
-                    {{ confirmLabel }}
+                    {{ confirmLabel || $t('common.actions.confirm') }}
                 </button>
             </DialogFooter>
         </DialogContent>

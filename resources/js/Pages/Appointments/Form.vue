@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import AppointmentForm from '@/Pages/Appointments/Partials/AppointmentForm.vue'
 import PatientCard from '@/Components/PatientCard.vue'
@@ -24,19 +25,15 @@ const props = defineProps({
         type: Array,
         required: true,
     },
-    staff_options: {
-        type: Array,
-        required: true,
-    },
 })
 
 const isEditing = computed(() => props.appointment !== null)
 
 setLayoutProps({
     breadcrumbs: computed(() => [
-        { label: 'Patients', href: route('patients.index') },
+        { label: trans('nav.patients'), href: route('patients.index') },
         { label: `${props.patient.first_name} ${props.patient.last_name}`, href: route('patients.show', props.patient.id) },
-        { label: isEditing.value ? 'Edit Appointment' : 'New Appointment' },
+        { label: isEditing.value ? trans('appointments.form.edit_title') : trans('appointments.form.new_title') },
     ]),
 })
 
@@ -62,7 +59,6 @@ const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
             :cancel-href="backHref"
             :status_options="status_options"
             :role_options="role_options"
-            :staff_options="staff_options"
         />
     </div>
 </template>

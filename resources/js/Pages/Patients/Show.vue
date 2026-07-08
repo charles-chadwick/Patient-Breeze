@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 import PatientCard from '@/Components/PatientCard.vue'
@@ -8,6 +9,8 @@ import AppointmentStatusBadge from '@/Components/AppointmentStatusBadge.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import ContactsTab from '@/Components/ContactsTab.vue'
 import DiscussionList from '@/Components/DiscussionList.vue'
+import DocumentsBlock from '@/Components/DocumentsBlock.vue'
+import MedicationsBlock from '@/Components/MedicationsBlock.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -20,9 +23,25 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    appointmentSearch: {
+    appointment_search: {
         type: String,
         default: '',
+    },
+    documents: {
+        type: Array,
+        default: () => [],
+    },
+    document_type_options: {
+        type: Array,
+        default: () => [],
+    },
+    medications: {
+        type: Array,
+        default: () => [],
+    },
+    dose_form_options: {
+        type: Array,
+        default: () => [],
     },
     contact_types: {
         type: Array,
@@ -31,10 +50,6 @@ const props = defineProps({
     contactable_type: {
         type: String,
         required: true,
-    },
-    users: {
-        type: Array,
-        default: () => [],
     },
     discussions: {
         type: Array,
@@ -55,10 +70,10 @@ const initial_discussion_id = url_params.get('discussion')
 const active_tab = ref(['demographics', 'contacts', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
 
 setLayoutProps({
-    breadcrumbs: [
-        { label: 'Patients', href: route('patients.index') },
+    breadcrumbs: computed(() => [
+        { label: trans('nav.patients'), href: route('patients.index') },
         { label: `${props.patient.first_name} ${props.patient.last_name}` },
-    ],
+    ]),
 })
 </script>
 
@@ -69,7 +84,7 @@ setLayoutProps({
                 :href="route('patients.edit', patient.id)"
                 class="inline-flex h-10 items-center rounded-lg border border-border px-4 text-sm font-bold text-foreground hover:bg-muted/40"
             >
-                Edit Patient
+                {{ $t('patients.show.edit_patient') }}
             </Link>
         </div>
 
@@ -83,7 +98,7 @@ setLayoutProps({
                         ? 'bg-white text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
-                    Demographics
+                    {{ $t('patients.show.tab_demographics') }}
                 </button>
                 <button
                     type="button"
@@ -93,7 +108,7 @@ setLayoutProps({
                         ? 'bg-white text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
-                    Contacts
+                    {{ $t('patients.show.tab_contacts') }}
                 </button>
                 <button
                     type="button"
@@ -103,7 +118,7 @@ setLayoutProps({
                         ? 'bg-white text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
-                    Discussions
+                    {{ $t('patients.show.tab_discussions') }}
                 </button>
             </div>
 
@@ -123,7 +138,6 @@ setLayoutProps({
                 :discussions="discussions"
                 :discussionable-type="contactable_type"
                 :discussionable-id="patient.id"
-                :users="users"
                 :types="discussion_types"
                 :patient="patient"
                 :initial-discussion-id="initial_discussion_id"
@@ -132,37 +146,37 @@ setLayoutProps({
 
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="flex items-center justify-between border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Appointments</h2>
+                <h2 class="font-bold text-foreground">{{ $t('patients.show.appointments_heading') }}</h2>
                 <div class="flex items-center gap-3">
                     <SearchInput
-                        :model-value="appointmentSearch"
+                        :model-value="appointment_search"
                         :route-params="patient.id"
                         route-name="patients.show"
-                        placeholder="Search reason or notes…"
+                        :placeholder="$t('patients.show.appointments_search_placeholder')"
                         class="w-56"
                     />
                     <Link
                         :href="route('patients.appointments.create', patient.id)"
                         class="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white hover:bg-primary/90"
                     >
-                        + New Appointment
+                        {{ $t('patients.show.new_appointment') }}
                     </Link>
                 </div>
             </div>
 
             <div v-if="appointments.data.length === 0" class="px-6 py-8 text-center text-sm text-muted-foreground">
-                {{ appointmentSearch ? 'No appointments match your search.' : 'No appointments on record.' }}
+                {{ appointment_search ? $t('patients.show.appointments_empty_search') : $t('patients.show.appointments_empty') }}
             </div>
 
             <table v-else class="w-full text-sm">
                 <thead>
                     <tr class="border-b border-border text-left">
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Date</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Time</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Reason</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Staff</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Status</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Notes</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_date') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_time') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_reason') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_staff') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_status') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_notes') }}</th>
                         <th class="px-6 py-3"></th>
                     </tr>
                 </thead>
@@ -190,21 +204,21 @@ setLayoutProps({
                                         class="size-6 rounded-full object-cover ring-1 ring-border"
                                     />
                                     <span class="text-foreground">{{ user.first_name }} {{ user.last_name }}</span>
-                                    <span class="text-xs text-muted-foreground">({{ user.pivot.role }})</span>
+                                    <span class="text-xs text-muted-foreground">({{ $t('enums.appointment_role.' + user.pivot.role) }})</span>
                                 </div>
                             </div>
-                            <span v-else class="text-muted-foreground">—</span>
+                            <span v-else class="text-muted-foreground">{{ $t('common.placeholders.em_dash') }}</span>
                         </td>
                         <td class="px-6 py-3">
                             <AppointmentStatusBadge :status="appointment.status" />
                         </td>
-                        <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? '—' }}</td>
+                        <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? $t('common.placeholders.em_dash') }}</td>
                         <td class="px-6 py-3">
                             <Link
                                 :href="route('patients.appointments.edit', [patient.id, appointment.id])"
                                 class="text-xs font-bold text-primary hover:underline"
                             >
-                                Edit
+                                {{ $t('common.actions.edit') }}
                             </Link>
                         </td>
                     </tr>
@@ -216,7 +230,7 @@ setLayoutProps({
                 class="flex items-center justify-between border-t border-border px-6 py-4"
             >
                 <p class="text-sm text-muted-foreground">
-                    Showing {{ appointments.from }}–{{ appointments.to }} of {{ appointments.total }} appointments
+                    {{ $t('common.pagination.summary', { from: appointments.from, to: appointments.to, total: appointments.total, label: $t('patients.show.appointments_record_label') }) }}
                 </p>
                 <div class="flex items-center gap-1">
                     <Link
@@ -254,6 +268,18 @@ setLayoutProps({
                 </div>
             </div>
         </div>
+
+        <MedicationsBlock
+            :patient-id="patient.id"
+            :medications="medications"
+            :dose-form-options="dose_form_options"
+        />
+
+        <DocumentsBlock
+            :patient-id="patient.id"
+            :documents="documents"
+            :types="document_type_options"
+        />
 
     </div>
 </template>

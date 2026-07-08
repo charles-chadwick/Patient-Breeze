@@ -46,27 +46,27 @@ const show_avatar_modal = ref(false)
         </div>
         <div class="grid grid-cols-2 gap-x-8 gap-y-4 px-6 py-5 sm:grid-cols-3 lg:grid-cols-4">
             <div>
-                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Full Name</p>
+                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">{{ $t('patients.card.full_name') }}</p>
                 <p class="mt-1 text-sm font-bold text-foreground">{{ full_name }}</p>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Date of Birth</p>
+                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">{{ $t('patients.card.date_of_birth') }}</p>
                 <p class="mt-1 text-sm text-foreground">{{ formatDate(patient.date_of_birth, DATE_LONG) }}</p>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Gender at Birth</p>
-                <p class="mt-1 text-sm text-foreground">{{ patient.gender_at_birth }}</p>
+                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">{{ $t('patients.card.gender_at_birth') }}</p>
+                <p class="mt-1 text-sm text-foreground">{{ $t('enums.gender_at_birth.' + patient.gender_at_birth) }}</p>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Gender Identity</p>
-                <p class="mt-1 text-sm text-foreground">{{ patient.gender_identity }}</p>
+                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">{{ $t('patients.card.gender_identity') }}</p>
+                <p class="mt-1 text-sm text-foreground">{{ patient.gender_identity ? $t('enums.gender_identity.' + patient.gender_identity) : $t('common.placeholders.em_dash') }}</p>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Blood Type</p>
-                <p class="mt-1 text-sm text-foreground">{{ patient.blood_type ?? '—' }}</p>
+                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">{{ $t('patients.card.blood_type') }}</p>
+                <p class="mt-1 text-sm text-foreground">{{ patient.blood_type ? $t('enums.blood_type.' + patient.blood_type) : $t('common.placeholders.em_dash') }}</p>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Email</p>
+                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">{{ $t('patients.card.email') }}</p>
                 <p class="mt-1 text-sm text-foreground">{{ patient.email }}</p>
             </div>
         </div>

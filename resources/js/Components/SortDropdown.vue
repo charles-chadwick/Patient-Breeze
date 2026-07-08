@@ -66,7 +66,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
             @click="open = !open"
         >
             <component :is="sort_icon" class="size-4 text-muted-foreground" />
-            <span>{{ current_option?.label ?? 'Sort' }}</span>
+            <span>{{ current_option?.label ?? $t('common.actions.sort') }}</span>
             <ChevronDown
                 class="size-4 text-muted-foreground transition-transform"
                 :class="{ 'rotate-180': open }"

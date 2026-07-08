@@ -53,23 +53,16 @@ const role_badge_classes = {
                     class="mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-bold"
                     :class="role_badge_classes[user.roles[0].name] ?? 'bg-gray-100 text-gray-600'"
                 >
-                    {{ user.roles[0].name }}
+                    {{ $t('enums.user_role.' + user.roles[0].name) }}
                 </span>
             </div>
         </div>
         <div class="grid grid-cols-2 gap-x-8 gap-y-4 px-6 py-5 sm:grid-cols-3 lg:grid-cols-4">
             <div>
-                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Full Name</p>
-                <p class="mt-1 text-sm font-bold text-foreground">{{ full_name }}</p>
-            </div>
-            <div>
-                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Email</p>
+                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">{{ $t('users.card.email') }}</p>
                 <p class="mt-1 text-sm text-foreground">{{ user.email }}</p>
             </div>
-            <div v-if="user.roles[0]">
-                <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">Role</p>
-                <p class="mt-1 text-sm text-foreground">{{ user.roles[0].name }}</p>
-            </div>
+
         </div>
     </div>
 

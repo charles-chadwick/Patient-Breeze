@@ -14,6 +14,11 @@ enum DocumentType: string
     case Note = 'Note';
     case Other = 'Other';
 
+    public function label(): string
+    {
+        return __('enums.document_type.'.$this->value);
+    }
+
     /** @return string[] */
     public static function values(): array
     {
