@@ -3,6 +3,7 @@
         "junie",
         "claude_code"
     ],
+    "cloud": false,
     "guidelines": true,
     "mcp": true,
     "nightwatch_mcp": false,
@@ -10,8 +11,6 @@
     "skills": [
         "laravel-best-practices",
         "pest-testing",
-        "inertia-vue-development",
-        "echo-development",
         "tailwindcss-development"
     ]
 }

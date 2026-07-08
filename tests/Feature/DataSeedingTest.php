@@ -11,6 +11,8 @@ use Database\Seeders\RoleAndPermissionSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 use function Pest\Laravel\seed;
 
@@ -43,6 +45,39 @@ it('always seeds the same Super Admins', function () {
     }
 
     expect(User::role(UserRole::SuperAdmin->value)->count())->toBe(5);
+});
+
+it('seeds every permission the enum declares', function () {
+    expect(Permission::count())->toBe(count(UserRole::allPermissions()))
+        ->and(Permission::pluck('name')->sort()->values()->all())
+        ->toBe(collect(UserRole::allPermissions())->sort()->values()->all());
+});
+
+it('grants the Super Admin role every permission', function () {
+    $role = Role::findByName(UserRole::SuperAdmin->value);
+
+    expect($role->permissions->pluck('name')->sort()->values()->all())
+        ->toBe(collect(UserRole::allPermissions())->sort()->values()->all());
+});
+
+it('grants each role exactly the permissions its enum case declares', function (UserRole $role) {
+    $granted = Role::findByName($role->value)->permissions->pluck('name')->sort()->values()->all();
+
+    expect($granted)->toBe(collect($role->permissions())->sort()->values()->all());
+})->with(fn () => collect(UserRole::cases())->mapWithKeys(fn (UserRole $role) => [$role->value => [$role]])->all());
+
+it('never grants a role a permission outside the master list', function (UserRole $role) {
+    expect($role->permissions())->each->toBeIn(UserRole::allPermissions());
+})->with(fn () => collect(UserRole::cases())->mapWithKeys(fn (UserRole $role) => [$role->value => [$role]])->all());
+
+it('only lets the Super Admin manage users', function () {
+    foreach (UserRole::cases() as $role) {
+        if ($role === UserRole::SuperAdmin) {
+            continue;
+        }
+
+        expect($role->permissions())->not->toContain('view_users', 'create_users', 'update_users', 'delete_users');
+    }
 });
 
 it('splits the remaining users across staff and clinical roles', function () {

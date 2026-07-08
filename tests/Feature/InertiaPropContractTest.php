@@ -27,7 +27,7 @@ it('passes appointment_search to the users show page reflecting the query', func
         Role::findOrCreate($role->value);
     }
 
-    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
     $user = User::factory()->withRole(UserRole::Doctor)->create();
 
     $this->get(route('users.show', ['user' => $user, 'search' => 'cardiology']))

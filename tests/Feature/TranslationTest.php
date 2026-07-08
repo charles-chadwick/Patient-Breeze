@@ -22,7 +22,7 @@ beforeEach(function (): void {
 });
 
 it('shares the active locale with the frontend', function (): void {
-    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
 
     $this->get(route('users.index'))
         ->assertSuccessful()
@@ -51,7 +51,7 @@ it('resolves a translated, non-key label for every enum case', function (string 
 ]);
 
 it('flashes a translated success message when a user is created', function (): void {
-    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
 
     $this->post(route('users.store'), [
         'first_name' => 'Ada',
