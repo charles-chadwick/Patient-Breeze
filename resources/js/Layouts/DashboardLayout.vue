@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox } from 'lucide-vue-next'
+import AuthorizationModal from '@/Components/AuthorizationModal.vue'
 
 const props = defineProps({
     title: {
@@ -130,6 +131,7 @@ const sidebar_open = ref(false)
             <!-- Page content -->
             <main class="flex-1 overflow-y-auto bg-background p-6">
                 <slot />
+                <AuthorizationModal />
             </main>
         </div>
     </div>
