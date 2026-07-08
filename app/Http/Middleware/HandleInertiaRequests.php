@@ -37,6 +37,7 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
+            'locale' => fn () => app()->getLocale(),
             'auth' => [
                 'user' => fn () => $request->user('web')?->only([
                     'id', 'first_name', 'last_name', 'email', 'prefix', 'suffix',

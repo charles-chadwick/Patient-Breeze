@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 import UserCard from '@/Components/UserCard.vue'
@@ -36,10 +37,10 @@ const props = defineProps({
 const active_tab = ref('details')
 
 setLayoutProps({
-    breadcrumbs: [
-        { label: 'Users', href: route('users.index') },
+    breadcrumbs: computed(() => [
+        { label: trans('nav.users'), href: route('users.index') },
         { label: `${props.user.first_name} ${props.user.last_name}` },
-    ],
+    ]),
 })
 </script>
 
@@ -50,7 +51,7 @@ setLayoutProps({
                 :href="route('users.edit', user.id)"
                 class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
             >
-                Edit User
+                {{ $t('users.show.edit_user') }}
             </Link>
         </div>
 
@@ -64,7 +65,7 @@ setLayoutProps({
                         ? 'bg-white text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
-                    Details
+                    {{ $t('users.show.tab_details') }}
                 </button>
                 <button
                     type="button"
@@ -74,7 +75,7 @@ setLayoutProps({
                         ? 'bg-white text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
-                    Contacts
+                    {{ $t('users.show.tab_contacts') }}
                 </button>
             </div>
 
@@ -92,30 +93,30 @@ setLayoutProps({
 
         <div class="rounded-xl border border-border bg-white shadow-sm">
             <div class="flex items-center justify-between border-b border-border px-6 py-4">
-                <h2 class="font-bold text-foreground">Appointments</h2>
+                <h2 class="font-bold text-foreground">{{ $t('users.show.appointments_heading') }}</h2>
                 <SearchInput
                     :model-value="appointmentSearch"
                     :route-params="user.id"
                     route-name="users.show"
-                    placeholder="Search patient or reason…"
+                    :placeholder="$t('users.show.appointments_search_placeholder')"
                     class="w-56"
                 />
             </div>
 
             <div v-if="appointments.data.length === 0" class="px-6 py-8 text-center text-sm text-muted-foreground">
-                {{ appointmentSearch ? 'No appointments match your search.' : 'No appointments on record.' }}
+                {{ appointmentSearch ? $t('users.show.appointments_empty_search') : $t('users.show.appointments_empty') }}
             </div>
 
             <table v-else class="w-full text-sm">
                 <thead>
                     <tr class="border-b border-border text-left">
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Date</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Time</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Patient</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Reason</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Role</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Status</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Notes</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('users.show.column_date') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('users.show.column_time') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('users.show.column_patient') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('users.show.column_reason') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('users.show.column_role') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('users.show.column_status') }}</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('users.show.column_notes') }}</th>
                         <th class="px-6 py-3"></th>
                     </tr>
                 </thead>
@@ -149,13 +150,13 @@ setLayoutProps({
                         <td class="px-6 py-3">
                             <AppointmentStatusBadge :status="appointment.status" />
                         </td>
-                        <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? '—' }}</td>
+                        <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? $t('common.placeholders.em_dash') }}</td>
                         <td class="px-6 py-3">
                             <Link
                                 :href="route('patients.appointments.edit', [appointment.patient_id, appointment.id])"
                                 class="text-xs font-bold text-primary hover:underline"
                             >
-                                Edit
+                                {{ $t('common.actions.edit') }}
                             </Link>
                         </td>
                     </tr>
@@ -167,7 +168,7 @@ setLayoutProps({
                 class="flex items-center justify-between border-t border-border px-6 py-4"
             >
                 <p class="text-sm text-muted-foreground">
-                    Showing {{ appointments.from }}–{{ appointments.to }} of {{ appointments.total }} appointments
+                    {{ $t('common.pagination.summary', { from: appointments.from, to: appointments.to, total: appointments.total, label: $t('users.show.appointments_record_label') }) }}
                 </p>
                 <div class="flex items-center gap-1">
                     <Link

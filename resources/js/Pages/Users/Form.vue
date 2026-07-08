@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import UserForm from '@/Pages/Users/Partials/Form.vue'
 
@@ -23,14 +24,14 @@ setLayoutProps({
     breadcrumbs: computed(() => {
         if (isEditing.value) {
             return [
-                { label: 'Users', href: route('users.index') },
+                { label: trans('nav.users'), href: route('users.index') },
                 { label: `${props.user.first_name} ${props.user.last_name}`, href: route('users.show', props.user.id) },
-                { label: `Edit ${props.user.first_name} ${props.user.last_name}` },
+                { label: trans('users.form.edit_title', { name: `${props.user.first_name} ${props.user.last_name}` }) },
             ]
         }
         return [
-            { label: 'Users', href: route('users.index') },
-            { label: 'New User' },
+            { label: trans('nav.users'), href: route('users.index') },
+            { label: trans('users.form.new_title') },
         ]
     }),
 })

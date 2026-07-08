@@ -35,7 +35,8 @@ class UserController extends Controller
     {
         $createUser->execute($request->validated(), $request->file('avatar'));
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')
+            ->with('success', __('flash.users.created'));
     }
 
     public function show(User $user, Request $request): Response
@@ -74,6 +75,7 @@ class UserController extends Controller
     {
         $updateUser->execute($user, $request->validated(), $request->file('avatar'));
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')
+            ->with('success', __('flash.users.updated'));
     }
 }
