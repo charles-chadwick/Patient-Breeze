@@ -1,8 +1,11 @@
 <?php
 
+use App\Enums\DoseForm;
 use App\Enums\UserRole;
+use App\Models\Medication;
 use App\Models\Patient;
 use App\Models\User;
+use Database\Seeders\MedicationSeeder;
 use Database\Seeders\PatientSeeder;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Database\Seeders\UserSeeder;
@@ -90,6 +93,38 @@ it('sanitizes every seeded email address', function () {
             ->not->toContain(' ')
             ->not->toContain("'")
             ->toEndWith('@example.com');
+    }
+});
+
+it('seeds the medications catalog from the JSON dataset', function () {
+    seed(MedicationSeeder::class);
+
+    $expected = count(json_decode(file_get_contents(database_path('data/medications.json')), true));
+
+    expect(Medication::count())->toBe($expected);
+});
+
+it('stores every seeded medication with a dose form from the enum', function () {
+    seed(MedicationSeeder::class);
+
+    $doseForms = Medication::query()->pluck('dose_form');
+
+    expect($doseForms->every(fn (DoseForm $doseForm): bool => $doseForm instanceof DoseForm))->toBeTrue()
+        ->and($doseForms->unique())->toHaveCount(count(DoseForm::cases()));
+});
+
+it('gives every seeded medication a unique ndc and required fields', function () {
+    seed(MedicationSeeder::class);
+
+    $medications = Medication::query()->get();
+
+    expect($medications->pluck('ndc')->unique())->toHaveCount($medications->count());
+
+    foreach ($medications as $medication) {
+        expect($medication->type)->not->toBe('')
+            ->and($medication->name)->not->toBe('')
+            ->and($medication->dosage)->not->toBe('')
+            ->and($medication->ndc)->toMatch('/^\d{5}-\d{4}-\d{2}$/');
     }
 });
 
