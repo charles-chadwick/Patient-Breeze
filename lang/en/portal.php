@@ -31,6 +31,7 @@ return [
         'messages_empty' => 'No messages.',
         'documents_heading' => 'Documents',
         'documents_empty' => 'No documents on file.',
+        'documents_upload' => 'Upload',
     ],
 
     'messages' => [

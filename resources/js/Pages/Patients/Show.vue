@@ -9,6 +9,7 @@ import AppointmentStatusBadge from '@/Components/AppointmentStatusBadge.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import ContactsTab from '@/Components/ContactsTab.vue'
 import DiscussionList from '@/Components/DiscussionList.vue'
+import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -24,6 +25,14 @@ const props = defineProps({
     appointment_search: {
         type: String,
         default: '',
+    },
+    documents: {
+        type: Array,
+        default: () => [],
+    },
+    document_type_options: {
+        type: Array,
+        default: () => [],
     },
     contact_types: {
         type: Array,
@@ -255,6 +264,12 @@ setLayoutProps({
                 </div>
             </div>
         </div>
+
+        <DocumentsBlock
+            :patient-id="patient.id"
+            :documents="documents"
+            :types="document_type_options"
+        />
 
     </div>
 </template>

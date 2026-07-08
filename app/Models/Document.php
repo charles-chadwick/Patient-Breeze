@@ -30,6 +30,11 @@ class Document extends Model implements HasMedia
         return $this->morphTo();
     }
 
+    public function uploader(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('file')->singleFile();

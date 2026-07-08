@@ -39,4 +39,9 @@ return [
     'portal_messages' => [
         'sent' => 'Message sent successfully.',
     ],
+
+    'documents' => [
+        'uploaded' => 'Document uploaded successfully.',
+        'deleted' => 'Document removed successfully.',
+    ],
 ];

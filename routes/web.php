@@ -6,7 +6,9 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionPostController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\Portal\DocumentController as PortalDocumentController;
 use App\Http\Controllers\Portal\MessageController;
 use App\Http\Controllers\PortalQueueController;
 use App\Http\Controllers\UserController;
@@ -30,6 +32,12 @@ Route::middleware('auth')->group(function () {
         ->only(['create', 'store', 'edit', 'update'])
         ->scoped();
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::resource('patients.documents', DocumentController::class)
+        ->only(['store', 'destroy'])
+        ->scoped();
+    Route::get('/patients/{patient}/documents/{document}/download', [DocumentController::class, 'download'])
+        ->scopeBindings()
+        ->name('patients.documents.download');
     Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('discussions', DiscussionController::class)->only(['store']);
@@ -49,5 +57,9 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
         Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
         Route::post('/messages/{discussion}/replies', [MessageController::class, 'reply'])->name('messages.reply');
+
+        Route::post('/documents', [PortalDocumentController::class, 'store'])->name('documents.store');
+        Route::delete('/documents/{document}', [PortalDocumentController::class, 'destroy'])->name('documents.destroy');
+        Route::get('/documents/{document}/download', [PortalDocumentController::class, 'download'])->name('documents.download');
     });
 });

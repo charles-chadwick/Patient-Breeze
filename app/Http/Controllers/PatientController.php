@@ -6,10 +6,12 @@ use App\Actions\ManageAvatarAction;
 use App\Enums\BloodType;
 use App\Enums\ContactType;
 use App\Enums\DiscussionType;
+use App\Enums\DocumentType;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use App\Models\Document;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -64,6 +66,19 @@ class PatientController extends Controller
         $patient->load([
             'media',
             'contacts' => fn ($query) => $query->orderBy('name'),
+            'documents' => fn ($query) => $query->with(['media', 'uploader'])->latest(),
+        ]);
+
+        $documents = $patient->documents->map(fn (Document $document) => [
+            'id' => $document->id,
+            'type' => $document->type->value,
+            'type_label' => $document->type->label(),
+            'name' => $document->name,
+            'document_date' => $document->document_date?->toDateString(),
+            'notes' => $document->notes,
+            'uploaded_by' => $this->uploaderName($document),
+            'created_at' => $document->created_at->toDateString(),
+            'download_url' => route('patients.documents.download', [$patient->id, $document->id]),
         ]);
 
         $appointments = $patient->appointments()
@@ -88,6 +103,8 @@ class PatientController extends Controller
             'patient' => $patient,
             'appointments' => $appointments,
             'appointment_search' => $search,
+            'documents' => $documents,
+            'document_type_options' => DocumentType::values(),
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),
@@ -141,5 +158,16 @@ class PatientController extends Controller
 
         return redirect()->route('patients.show', $patient)
             ->with('success', __('flash.patients.updated'));
+    }
+
+    private function uploaderName(Document $document): ?string
+    {
+        $uploader = $document->uploader;
+
+        if ($uploader === null) {
+            return null;
+        }
+
+        return trim("{$uploader->first_name} {$uploader->last_name}");
     }
 }
