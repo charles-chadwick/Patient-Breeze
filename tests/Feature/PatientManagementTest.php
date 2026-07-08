@@ -1,8 +1,12 @@
 <?php
 
+use App\Enums\DiscussionType;
 use App\Enums\GenderAtBirth;
 use App\Enums\UserRole;
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Appointment;
+use App\Models\Discussion;
+use App\Models\DiscussionPost;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -114,4 +118,27 @@ it('paginates appointments on the patient show page', function (): void {
             ->has('appointments.data', 10)
             ->where('appointments.total', 12)
         );
+});
+
+it('resolves the patient as the author of their own discussion posts on the show page', function (): void {
+    $patient = Patient::factory()->create(['first_name' => 'Marisol', 'last_name' => 'Vega']);
+
+    $discussion = Discussion::factory()->create([
+        'type' => DiscussionType::PortalMessage,
+        'discussionable_type' => Patient::class,
+        'discussionable_id' => $patient->id,
+    ]);
+
+    DiscussionPost::factory()->fromPatient($patient)->create(['discussion_id' => $discussion->id]);
+
+    $this->get(route('patients.show', $patient), [
+        'X-Inertia' => true,
+        'X-Inertia-Version' => app(HandleInertiaRequests::class)->version(request()),
+        'X-Inertia-Partial-Component' => 'Patients/Show',
+        'X-Inertia-Partial-Data' => 'discussions',
+    ])
+        ->assertSuccessful()
+        ->assertJsonPath('props.discussions.0.posts.0.user', null)
+        ->assertJsonPath('props.discussions.0.posts.0.patient.first_name', 'Marisol')
+        ->assertJsonPath('props.discussions.0.posts.0.patient.last_name', 'Vega');
 });

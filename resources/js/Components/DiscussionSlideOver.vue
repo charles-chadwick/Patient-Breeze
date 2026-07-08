@@ -24,6 +24,17 @@ const initiator = computed(() =>
 
 const isPortalMessage = computed(() => props.discussion?.type === 'Portal Message')
 
+function postAuthor(post) {
+    const author = post.user ?? post.patient ?? null
+
+    return {
+        name: author
+            ? `${author.first_name} ${author.last_name}`
+            : null,
+        avatar_url: author?.avatar_url ?? null,
+    }
+}
+
 const emit = defineEmits(['update:open', 'reply-posted'])
 
 const form = useForm({ content: '' })
@@ -153,15 +164,15 @@ function submitReply() {
                             class="flex gap-3"
                         >
                             <img
-                                v-if="post.user"
-                                :src="post.user.avatar_url"
-                                :alt="`${post.user.first_name} ${post.user.last_name}`"
+                                v-if="postAuthor(post).avatar_url"
+                                :src="postAuthor(post).avatar_url"
+                                :alt="postAuthor(post).name"
                                 class="size-8 shrink-0 rounded-full object-cover ring-1 ring-border"
                             />
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-baseline gap-2">
                                     <span class="text-sm font-bold text-foreground">
-                                        {{ post.user ? `${post.user.first_name} ${post.user.last_name}` : $t('discussions.slide_over.unknown_participant') }}
+                                        {{ postAuthor(post).name ?? $t('discussions.slide_over.unknown_participant') }}
                                     </span>
                                     <span class="text-xs text-muted-foreground">{{ formatDate(post.created_at, DATE_SHORT) }}</span>
                                 </div>
