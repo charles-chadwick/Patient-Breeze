@@ -18,6 +18,10 @@ pest()->extend(TestCase::class)
     ->use(LazilyRefreshDatabase::class)
     ->in('Feature');
 
+pest()->extend(TestCase::class)
+    ->use(LazilyRefreshDatabase::class)
+    ->in('Browser');
+
 /*
 |--------------------------------------------------------------------------
 | Expectations
