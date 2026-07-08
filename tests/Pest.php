@@ -20,6 +20,17 @@ pest()->extend(TestCase::class)
 
 pest()->extend(TestCase::class)
     ->use(LazilyRefreshDatabase::class)
+    ->beforeEach(function (): void {
+        $avatar_path = storage_path('app/public/default-avatar.png');
+
+        if (! file_exists($avatar_path)) {
+            if (! is_dir(dirname($avatar_path))) {
+                mkdir(dirname($avatar_path), 0755, true);
+            }
+
+            file_put_contents($avatar_path, base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='));
+        }
+    })
     ->in('Browser');
 
 /*

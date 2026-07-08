@@ -16,6 +16,8 @@ test('an unauthorized user sees the not-authorized modal when scheduling an appo
 
     $page = visit(route('patients.show', $patient));
 
+    // Use a CSS selector instead of the link text: Pest's locator guesser misparses
+    // the "+" in "+ New Appointment" as CSS combinator syntax and times out.
     $page->assertSee('+ New Appointment')
         ->click('a[href*="appointments/create"]')
         ->assertSee('Not Authorized')
