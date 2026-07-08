@@ -42,7 +42,7 @@ it('renders the create form for an appointment', function () {
             ->has('patient')
             ->has('status_options')
             ->has('role_options')
-            ->has('staff_options')
+            ->missing('staff_options')
         );
 });
 
@@ -91,7 +91,7 @@ it('renders the edit form for an appointment', function () {
             ->has('patient')
             ->has('status_options')
             ->has('role_options')
-            ->has('staff_options')
+            ->missing('staff_options')
         );
 });
 
@@ -142,7 +142,22 @@ it('renders the appointments index page', function (): void {
             ->has('view')
             ->has('search')
             ->has('staff')
-            ->has('staff_options')
+            ->has('selected_staff')
+            ->missing('staff_options')
+        );
+});
+
+it('resolves only the applied staff for the calendar filter badges', function (): void {
+    $applied = User::factory()->withRole(UserRole::Doctor)->create();
+    User::factory()->withRole(UserRole::Nurse)->create();
+
+    $this->get(route('appointments.index', ['staff' => [$applied->id]]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('Appointments/Index')
+            ->where('staff', [$applied->id])
+            ->has('selected_staff', 1)
+            ->where('selected_staff.0.id', $applied->id)
         );
 });
 
@@ -259,4 +274,31 @@ it('rejects update when a staff member conflicts with a different appointment', 
     );
 
     $response->assertSessionHasErrors('staff');
+});
+
+it('searches assignable staff by name', function () {
+    User::factory()->withRole(UserRole::Doctor)->create(['first_name' => 'Gregory', 'last_name' => 'House']);
+    User::factory()->withRole(UserRole::Nurse)->create(['first_name' => 'Meredith', 'last_name' => 'Grey']);
+
+    $this->getJson(route('appointments.staff.search', ['search' => 'House']))
+        ->assertOk()
+        ->assertJsonCount(1, 'staff')
+        ->assertJsonPath('staff.0.last_name', 'House')
+        ->assertJsonStructure(['staff' => [['id', 'first_name', 'last_name', 'avatar_url']]]);
+});
+
+it('excludes super admins from staff search', function () {
+    User::factory()->withRole(UserRole::SuperAdmin)->create(['first_name' => 'Super', 'last_name' => 'Admin']);
+
+    $this->getJson(route('appointments.staff.search', ['search' => 'Admin']))
+        ->assertOk()
+        ->assertJsonCount(0, 'staff');
+});
+
+it('caps the number of staff results returned', function () {
+    User::factory()->count(25)->withRole(UserRole::Staff)->create(['last_name' => 'Assignable']);
+
+    $this->getJson(route('appointments.staff.search', ['search' => 'Assignable']))
+        ->assertOk()
+        ->assertJsonCount(20, 'staff');
 });

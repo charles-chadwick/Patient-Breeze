@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -26,6 +27,29 @@ class AppointmentController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Appointments/Index', Appointment::calendar($request));
+    }
+
+    /**
+     * Search assignable staff for the appointment form's provider picker.
+     */
+    public function staffSearch(Request $request): JsonResponse
+    {
+        $search = $request->string('search')->trim()->toString();
+
+        $staff = User::staff()
+            ->when($search !== '', fn ($query) => $query->withSearch($search))
+            ->with(['media' => fn ($query) => $query->where('collection_name', 'avatar')])
+            ->orderBy('last_name')
+            ->limit(20)
+            ->get(['id', 'first_name', 'last_name'])
+            ->map(fn (User $user): array => [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'avatar_url' => $user->avatar_url,
+            ]);
+
+        return response()->json(['staff' => $staff]);
     }
 
     public function create(Patient $patient): Response
@@ -71,7 +95,6 @@ class AppointmentController extends Controller
         return [
             'status_options' => array_column(AppointmentStatus::cases(), 'value'),
             'role_options' => array_column(AppointmentRole::cases(), 'value'),
-            'staff_options' => User::staff()->with('media')->orderBy('last_name')->get(['id', 'first_name', 'last_name']),
         ];
     }
 }

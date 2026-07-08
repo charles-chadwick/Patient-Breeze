@@ -1,6 +1,5 @@
 <script setup>
-import { computed } from 'vue'
-import { useForm, usePage } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import {
     Dialog,
     DialogContent,
@@ -9,7 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/Components/ui/dialog'
-import MultiSelect from '@/Components/ui/MultiSelect.vue'
+import ParticipantSelect from '@/Components/ParticipantSelect.vue'
 
 const props = defineProps({
     open: {
@@ -24,10 +23,6 @@ const props = defineProps({
         type: Number,
         required: true,
     },
-    users: {
-        type: Array,
-        required: true,
-    },
     types: {
         type: Array,
         required: true,
@@ -35,19 +30,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:open', 'saved'])
-
-const page = usePage()
-const current_user_id = computed(() => page.props.auth.user.id)
-
-const user_options = computed(() =>
-    props.users
-        .filter((u) => u.id !== current_user_id.value)
-        .map((u) => ({
-            value: u.id,
-            label: `${u.first_name} ${u.last_name}`,
-            avatar: u.avatar_url,
-        }))
-)
 
 const form = useForm({
     title: '',
@@ -119,9 +101,8 @@ function submit() {
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
                         {{ $t('discussions.create.label_participants') }}
                     </label>
-                    <MultiSelect
+                    <ParticipantSelect
                         v-model="form.participant_ids"
-                        :options="user_options"
                         :placeholder="$t('discussions.create.placeholder_participants')"
                     />
                     <p v-if="form.errors.participant_ids" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.participant_ids }}</p>

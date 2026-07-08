@@ -25,10 +25,6 @@ const props = defineProps({
         type: Array,
         required: true,
     },
-    staff_options: {
-        type: Array,
-        required: true,
-    },
 })
 
 const isEditing = computed(() => props.appointment !== null)
@@ -63,7 +59,6 @@ const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
             :cancel-href="backHref"
             :status_options="status_options"
             :role_options="role_options"
-            :staff_options="staff_options"
         />
     </div>
 </template>

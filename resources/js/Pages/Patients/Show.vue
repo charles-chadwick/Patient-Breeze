@@ -10,6 +10,7 @@ import SearchInput from '@/Components/SearchInput.vue'
 import ContactsTab from '@/Components/ContactsTab.vue'
 import DiscussionList from '@/Components/DiscussionList.vue'
 import DocumentsBlock from '@/Components/DocumentsBlock.vue'
+import MedicationsBlock from '@/Components/MedicationsBlock.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -34,6 +35,14 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    medications: {
+        type: Array,
+        default: () => [],
+    },
+    dose_form_options: {
+        type: Array,
+        default: () => [],
+    },
     contact_types: {
         type: Array,
         default: () => [],
@@ -41,10 +50,6 @@ const props = defineProps({
     contactable_type: {
         type: String,
         required: true,
-    },
-    users: {
-        type: Array,
-        default: () => [],
     },
     discussions: {
         type: Array,
@@ -133,7 +138,6 @@ setLayoutProps({
                 :discussions="discussions"
                 :discussionable-type="contactable_type"
                 :discussionable-id="patient.id"
-                :users="users"
                 :types="discussion_types"
                 :patient="patient"
                 :initial-discussion-id="initial_discussion_id"
@@ -264,6 +268,12 @@ setLayoutProps({
                 </div>
             </div>
         </div>
+
+        <MedicationsBlock
+            :patient-id="patient.id"
+            :medications="medications"
+            :dose-form-options="dose_form_options"
+        />
 
         <DocumentsBlock
             :patient-id="patient.id"

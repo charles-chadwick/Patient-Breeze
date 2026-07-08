@@ -27,3 +27,4 @@ Thumbs.db
 
 # laravel-vue-i18n compiled PHP translations
 /lang/php_*.json
+/storage/media-library/*

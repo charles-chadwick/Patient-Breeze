@@ -1,8 +1,7 @@
 <script setup>
-import { computed } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import DatePicker from '@/Components/ui/DatePicker.vue'
-import MultiSelect from '@/Components/ui/MultiSelect.vue'
+import StaffSelect from '@/Components/StaffSelect.vue'
 
 const props = defineProps({
     action: {
@@ -29,10 +28,6 @@ const props = defineProps({
         type: Array,
         required: true,
     },
-    staff_options: {
-        type: Array,
-        required: true,
-    },
 })
 
 const form = useForm({
@@ -48,19 +43,14 @@ const form = useForm({
     })) ?? [],
 })
 
-const staffOptions = computed(() =>
-    props.staff_options.map((u) => ({ value: u.id, label: `${u.last_name}, ${u.first_name}`, avatar: u.avatar_url })),
-)
-
-const selectedStaffIds = computed({
-    get: () => form.staff.map((s) => s.user_id),
-    set: (newIds) => {
-        form.staff = newIds.map((id) => {
-            const existing = form.staff.find((s) => s.user_id === id)
-            return existing ?? { user_id: id, role: 'Assistant' }
-        })
-    },
-})
+// Seed the staff picker's display rows from the appointment's assigned providers.
+const initial_staff = props.appointment?.users?.map((u) => ({
+    id: u.id,
+    first_name: u.first_name,
+    last_name: u.last_name,
+    avatar_url: u.avatar_url,
+    role: u.pivot.role,
+})) ?? []
 
 function submit() {
     form[props.method](props.action)
@@ -178,30 +168,12 @@ function submit() {
                 <h2 class="font-bold text-foreground">{{ $t('appointments.form.section_staff') }}</h2>
             </div>
             <div class="grid gap-4 px-6 py-5">
-                <MultiSelect
-                    v-model="selectedStaffIds"
-                    :options="staffOptions"
+                <StaffSelect
+                    v-model="form.staff"
+                    :initial-staff="initial_staff"
+                    :role-options="role_options"
                     :placeholder="$t('appointments.form.placeholder_staff')"
-                    :class="{ 'ring-2 ring-vibrant-coral-400 rounded-lg': form.errors.staff }"
                 />
-
-                <div v-if="form.staff.length" class="grid gap-2">
-                    <div
-                        v-for="entry in form.staff"
-                        :key="entry.user_id"
-                        class="flex items-center gap-3"
-                    >
-                        <span class="flex-1 text-sm text-foreground">
-                            {{ staffOptions.find((o) => o.value === entry.user_id)?.label }}
-                        </span>
-                        <select
-                            v-model="entry.role"
-                            class="w-36 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        >
-                            <option v-for="role in role_options" :key="role" :value="role">{{ $t('enums.appointment_role.' + role) }}</option>
-                        </select>
-                    </div>
-                </div>
 
                 <div
                     v-if="form.errors.staff"

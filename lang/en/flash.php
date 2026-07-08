@@ -44,4 +44,9 @@ return [
         'uploaded' => 'Document uploaded successfully.',
         'deleted' => 'Document removed successfully.',
     ],
+
+    'medications' => [
+        'added' => 'Medication added successfully.',
+        'removed' => 'Medication removed successfully.',
+    ],
 ];

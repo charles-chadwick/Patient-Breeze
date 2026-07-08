@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use App\Enums\DoseForm;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Medication extends Model
+class PatientMedication extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'patient_id',
         'type',
         'name',
         'dosage',
@@ -28,12 +29,8 @@ class Medication extends Model
         ];
     }
 
-    public function scopeMatchingSearch(Builder $query, string $search): void
+    public function patient(): BelongsTo
     {
-        $query->where(fn (Builder $query) => $query
-            ->where('name', 'like', "%{$search}%")
-            ->orWhere('type', 'like', "%{$search}%")
-            ->orWhere('ndc', 'like', "%{$search}%")
-        );
+        return $this->belongsTo(Patient::class);
     }
 }

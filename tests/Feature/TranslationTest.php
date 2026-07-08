@@ -7,6 +7,7 @@ use App\Enums\ContactType;
 use App\Enums\DiscussionPostStatus;
 use App\Enums\DiscussionType;
 use App\Enums\DocumentType;
+use App\Enums\DoseForm;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Enums\UserRole;
@@ -44,6 +45,7 @@ it('resolves a translated, non-key label for every enum case', function (string 
     [DiscussionPostStatus::class, 'discussion_post_status'],
     [DiscussionType::class, 'discussion_type'],
     [DocumentType::class, 'document_type'],
+    [DoseForm::class, 'dose_form'],
     [GenderAtBirth::class, 'gender_at_birth'],
     [GenderIdentity::class, 'gender_identity'],
 ]);

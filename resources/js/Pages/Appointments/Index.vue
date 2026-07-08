@@ -11,7 +11,7 @@ import {
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import MiniCalendar from '@/Components/ui/MiniCalendar.vue'
 import SearchInput from '@/Components/SearchInput.vue'
-import SelectedBadges from '@/Components/ui/SelectedBadges.vue'
+import StaffFilter from '@/Components/StaffFilter.vue'
 import { cn, formatDate, DATE_SHORT } from '@/lib/utils'
 
 defineOptions ( { layout: DashboardLayout } )
@@ -43,19 +43,11 @@ const props = defineProps ( {
     type: Array,
     default: () => [],
   },
-  staff_options: {
+  selected_staff: {
     type: Array,
     default: () => [],
   },
 } )
-
-const staffSelectOptions = computed ( () =>
-    props.staff_options.map ( ( u ) => ( {
-      value: u.id,
-      label: `${ u.last_name }, ${ u.first_name }`,
-      avatar: u.avatar_url
-    } ) ),
-)
 
 const statusClasses = {
   Scheduled: 'bg-cerulean-100 text-cerulean-700',
@@ -106,19 +98,6 @@ function setView ( newView ) {
 
 function onStaffChange ( newStaff ) {
   navigate ( { staff: newStaff.length ? newStaff : undefined } )
-}
-
-const availableStaffOptions = computed ( () =>
-    staffSelectOptions.value.filter ( ( o ) => ! props.staff.includes ( o.value ) ),
-)
-
-function addStaff ( event ) {
-  const value = Number ( event.target.value )
-  event.target.value = ''
-  if ( ! value || props.staff.includes ( value ) ) {
-    return
-  }
-  onStaffChange ( [ ...props.staff, value ] )
 }
 
 const hasActiveFilters = computed ( () => Boolean ( props.search ) || props.staff.length > 0 )
@@ -196,24 +175,11 @@ function clearFilters () {
         </div>
 
         <div class="w-1/2">
-          <select
-              class="h-10 w-full rounded-lg border border-border bg-white pl-2 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              @change="addStaff"
-          >
-            <option value="">{{ $t('appointments.index.filter_staff') }}</option>
-            <option
-                v-for="option in availableStaffOptions"
-                :key="option.value"
-                :value="option.value"
-            >
-              {{ option.label }}
-            </option>
-          </select>
-          <SelectedBadges
+          <StaffFilter
               :model-value="staff"
-              :options="staffSelectOptions"
+              :selected="selected_staff"
+              :placeholder="$t('appointments.index.filter_staff')"
               @update:model-value="onStaffChange"
-              class="mt-2"
           />
         </div>
 

@@ -10,7 +10,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionPostController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PatientMedicationController;
 use App\Http\Controllers\Portal\DocumentController as PortalDocumentController;
 use App\Http\Controllers\Portal\MessageController;
 use App\Http\Controllers\PortalQueueController;
@@ -40,12 +42,20 @@ Route::middleware('auth')->group(function () {
         ->only(['create', 'store', 'edit', 'update'])
         ->scoped();
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('/appointments/staff/search', [AppointmentController::class, 'staffSearch'])->name('appointments.staff.search');
     Route::resource('patients.documents', DocumentController::class)
         ->only(['store', 'destroy'])
         ->scoped();
     Route::get('/patients/{patient}/documents/{document}/download', [DocumentController::class, 'download'])
         ->scopeBindings()
         ->name('patients.documents.download');
+    Route::get('/medications/search', [MedicationController::class, 'search'])->name('medications.search');
+    Route::post('/patients/{patient}/medications', [PatientMedicationController::class, 'store'])
+        ->name('patients.medications.store');
+    Route::delete('/patients/{patient}/medications/{patient_medication}', [PatientMedicationController::class, 'destroy'])
+        ->scopeBindings()
+        ->name('patients.medications.destroy');
+    Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
     Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('discussions', DiscussionController::class)->only(['store']);

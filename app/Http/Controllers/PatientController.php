@@ -7,13 +7,14 @@ use App\Enums\BloodType;
 use App\Enums\ContactType;
 use App\Enums\DiscussionType;
 use App\Enums\DocumentType;
+use App\Enums\DoseForm;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Document;
 use App\Models\Patient;
-use App\Models\User;
+use App\Models\PatientMedication;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -67,6 +68,7 @@ class PatientController extends Controller
             'media',
             'contacts' => fn ($query) => $query->orderBy('name'),
             'documents' => fn ($query) => $query->with(['media', 'uploader'])->latest(),
+            'patientMedications' => fn ($query) => $query->latest(),
         ]);
 
         $documents = $patient->documents->map(fn (Document $document) => [
@@ -81,6 +83,17 @@ class PatientController extends Controller
             'download_url' => route('patients.documents.download', [$patient->id, $document->id]),
         ]);
 
+        $medications = $patient->patientMedications->map(fn (PatientMedication $medication) => [
+            'id' => $medication->id,
+            'type' => $medication->type,
+            'name' => $medication->name,
+            'dosage' => $medication->dosage,
+            'dose_form' => $medication->dose_form->value,
+            'dose_form_label' => $medication->dose_form->label(),
+            'ndc' => $medication->ndc,
+            'created_at' => $medication->created_at->toDateString(),
+        ]);
+
         $appointments = $patient->appointments()
             ->with(['users.media'])
             ->when($search, fn ($query) => $query->matchingReasonOrNotes($search))
@@ -88,27 +101,17 @@ class PatientController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $users = User::select('id', 'first_name', 'last_name', 'email')
-            ->with(['media' => fn ($query) => $query->where('collection_name', 'avatar')])
-            ->orderBy('last_name')
-            ->get()
-            ->map(fn ($user) => [
-                'id' => $user->id,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'avatar_url' => $user->avatar_url,
-            ]);
-
         return Inertia::render('Patients/Show', [
             'patient' => $patient,
             'appointments' => $appointments,
             'appointment_search' => $search,
             'documents' => $documents,
             'document_type_options' => DocumentType::values(),
+            'medications' => $medications,
+            'dose_form_options' => DoseForm::values(),
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),
-            'users' => $users,
             'discussions' => Inertia::defer(fn () => $patient->discussions()
                 ->with([
                     'participants.participantable.media',

@@ -97,6 +97,11 @@ class Patient extends Authenticatable implements HasMedia
         return $this->morphMany(Document::class, 'documentable');
     }
 
+    public function patientMedications(): HasMany
+    {
+        return $this->hasMany(PatientMedication::class, 'patient_id');
+    }
+
     public function portalNotifications(): HasMany
     {
         return $this->hasMany(PortalNotification::class);

@@ -18,10 +18,6 @@ const props = defineProps({
         type: Number,
         required: true,
     },
-    users: {
-        type: Array,
-        required: true,
-    },
     types: {
         type: Array,
         required: true,
@@ -161,7 +157,6 @@ function lastActivity(discussion) {
         v-model:open="create_modal_open"
         :discussionable-type="discussionableType"
         :discussionable-id="discussionableId"
-        :users="users"
         :types="types"
         @saved="handleDiscussionCreated"
     />
