@@ -10,18 +10,12 @@ use Illuminate\Database\Seeder;
 
 class PatientSeeder extends Seeder
 {
-    use ReadsCsvData;
+    use PreparesSeedData;
 
     /**
      * The total number of patients to seed.
      */
     private const int PATIENT_COUNT = 519;
-
-    /**
-     * The next sequential patient avatar to attach. Patient avatars are
-     * numbered directly after the user avatars (56.jpeg .. 574.jpeg).
-     */
-    private int $avatar_number = 56;
 
     public function run(): void
     {
@@ -46,8 +40,7 @@ class PatientSeeder extends Seeder
 
                 RickAndMortyCharacters::markUsed($character['id']);
 
-                $this->attachAvatar($patient, 'patients', "{$this->avatar_number}.jpeg");
-                $this->avatar_number++;
+                $this->attachAvatar($patient, $character['id']);
 
                 $this->logCreation($user, $patient, $created_at);
             });

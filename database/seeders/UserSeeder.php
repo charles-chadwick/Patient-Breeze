@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
-    use ReadsCsvData;
+    use PreparesSeedData;
 
     /**
      * The total number of users to seed, including the Super Admins.
@@ -34,11 +34,6 @@ class UserSeeder extends Seeder
         ['id' => 128, 'first_name' => "Frankenstein's", 'last_name' => 'Monster'],
         ['id' => 280, 'first_name' => 'Reverse', 'last_name' => 'Giraffe'],
     ];
-
-    /**
-     * The next sequential user avatar (1.jpeg .. 55.jpeg) to attach.
-     */
-    private int $avatar_number = 1;
 
     public function run(): void
     {
@@ -68,7 +63,7 @@ class UserSeeder extends Seeder
             $user->assignRole(UserRole::SuperAdmin->value);
 
             RickAndMortyCharacters::markUsed($character['id']);
-            $this->attachSequentialAvatar($user);
+            $this->attachAvatar($user, $character['id']);
         }
     }
 
@@ -102,18 +97,8 @@ class UserSeeder extends Seeder
                 $user->assignRole($role->value);
 
                 RickAndMortyCharacters::markUsed($character['id']);
-                $this->attachSequentialAvatar($user);
+                $this->attachAvatar($user, $character['id']);
             });
-    }
-
-    /**
-     * Attach the next sequential avatar from database/data/avatars/users.
-     */
-    private function attachSequentialAvatar(User $user): void
-    {
-        $this->attachAvatar($user, 'users', "{$this->avatar_number}.jpeg");
-
-        $this->avatar_number++;
     }
 
     private function prefixForRole(UserRole $role): string

@@ -7,14 +7,15 @@ use Spatie\MediaLibrary\HasMedia;
 trait PreparesSeedData
 {
     /**
-     * Attach a seeded avatar image to the model's "avatar" collection, copying
-     * the file from database/data/avatars/{directory} so the source is kept.
+     * Attach a character's avatar to the model's "avatar" collection. Avatars
+     * live in database/data/avatars keyed by character id, and the original
+     * file is kept so it can be re-seeded.
      */
-    private function attachAvatar(HasMedia $model, string $directory, string $file): void
+    private function attachAvatar(HasMedia $model, int $character_id): void
     {
-        $path = database_path("data/avatars/{$directory}/{$file}");
+        $path = database_path("data/avatars/{$character_id}.jpeg");
 
-        if ($file === '' || ! file_exists($path)) {
+        if (! file_exists($path)) {
             return;
         }
 
