@@ -22,6 +22,7 @@ function logout() {
                     <nav class="flex items-center gap-4 text-sm font-medium text-slate-600">
                         <Link :href="route('portal.dashboard')" class="hover:text-cerulean-600">{{ $t('nav.portal.dashboard') }}</Link>
                         <Link :href="route('portal.messages.index')" class="hover:text-cerulean-600">{{ $t('nav.portal.messages') }}</Link>
+                        <Link :href="route('portal.settings.index')" class="hover:text-cerulean-600">{{ $t('nav.portal.settings') }}</Link>
                     </nav>
                 </div>
                 <div class="flex items-center gap-3">

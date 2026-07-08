@@ -14,8 +14,8 @@
 
 return [
     'brand' => [
-        'name' => 'PB Health',
-        'portal_name' => 'PB Health Portal',
+        'name' => 'Patient Breeze',
+        'portal_name' => 'Patient Breeze Portal',
         'portal_label' => 'Patient Portal',
         'portal_tagline' => 'Your health, at your fingertips.',
     ],

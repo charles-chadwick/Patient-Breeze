@@ -9,6 +9,7 @@ use App\Models\Concerns\Filterable;
 use App\Models\Concerns\HasListing;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
+use App\Models\Concerns\TwoFactorAuthenticatable;
 use Database\Factories\PatientFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,7 +29,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class Patient extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<PatientFactory> */
-    use Filterable, HasFactory, HasListing, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable;
+    use Filterable, HasFactory, HasListing, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable, TwoFactorAuthenticatable;
 
     protected $fillable = [
         'prefix',
@@ -46,7 +47,7 @@ class Patient extends Authenticatable implements HasMedia
     ];
 
     /** @var array<int, string> */
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes'];
 
     /** @var array<int, string> */
     protected $appends = ['avatar_url'];
@@ -195,6 +196,9 @@ class Patient extends Authenticatable implements HasMedia
             'date_of_birth' => 'date',
             'gender_at_birth' => GenderAtBirth::class,
             'gender_identity' => GenderIdentity::class,
+            'two_factor_secret' => 'encrypted',
+            'two_factor_recovery_codes' => 'encrypted:array',
+            'two_factor_confirmed_at' => 'datetime',
         ];
     }
 

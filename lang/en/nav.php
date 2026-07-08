@@ -19,5 +19,6 @@ return [
     'portal' => [
         'dashboard' => 'Dashboard',
         'messages' => 'Messages',
+        'settings' => 'Settings',
     ],
 ];

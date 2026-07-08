@@ -47,6 +47,8 @@ class HandleInertiaRequests extends Middleware
                 ]),
                 'roles' => fn () => $request->user('web')?->getRoleNames() ?? [],
                 'permissions' => fn () => $request->user('web')?->getAllPermissions()->pluck('name') ?? [],
+                'two_factor_enabled' => fn () => (bool) $request->user('web')?->hasEnabledTwoFactorAuthentication(),
+                'portal_two_factor_enabled' => fn () => (bool) $request->user('portal')?->hasEnabledTwoFactorAuthentication(),
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

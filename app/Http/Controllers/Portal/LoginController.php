@@ -31,10 +31,20 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-        if (! Auth::guard('portal')->attempt($credentials)) {
+        if (! Auth::guard('portal')->validate($credentials)) {
             return back()->withErrors(['email' => 'These credentials do not match our records.']);
         }
 
+        $patient = Auth::guard('portal')->getLastAttempted();
+
+        if ($patient->hasEnabledTwoFactorAuthentication()) {
+            $request->session()->put('portal.login.id', $patient->getKey());
+            $request->session()->put('portal.login.remember', false);
+
+            return redirect()->route('portal.two-factor.login');
+        }
+
+        Auth::guard('portal')->login($patient);
         $request->session()->regenerate();
 
         return redirect()->intended(route('portal.dashboard'));
