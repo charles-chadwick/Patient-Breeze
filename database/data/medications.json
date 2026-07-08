@@ -1,0 +1,2508 @@
+[
+    {
+        "type": "Antibiotic",
+        "name": "Amoxicillin",
+        "dosage": "500 mg",
+        "dose_form": "Capsule",
+        "ndc": "10041-0008-01"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Amoxicillin",
+        "dosage": "250 mg/5 mL",
+        "dose_form": "Suspension",
+        "ndc": "10178-0979-02"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Amoxicillin-Clavulanate",
+        "dosage": "875 mg",
+        "dose_form": "Tablet",
+        "ndc": "10315-1950-03"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Azithromycin",
+        "dosage": "250 mg",
+        "dose_form": "Tablet",
+        "ndc": "10452-2921-04"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Azithromycin",
+        "dosage": "200 mg/5 mL",
+        "dose_form": "Suspension",
+        "ndc": "10589-3892-05"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Cephalexin",
+        "dosage": "500 mg",
+        "dose_form": "Capsule",
+        "ndc": "10726-4863-06"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Ciprofloxacin",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "10863-5834-07"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Doxycycline",
+        "dosage": "100 mg",
+        "dose_form": "Capsule",
+        "ndc": "11000-6805-08"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Levofloxacin",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "11137-7776-09"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Metronidazole",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "11274-8747-10"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Clindamycin",
+        "dosage": "300 mg",
+        "dose_form": "Capsule",
+        "ndc": "11411-9718-11"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Sulfamethoxazole-Trimethoprim",
+        "dosage": "800/160 mg",
+        "dose_form": "Tablet",
+        "ndc": "11548-0691-12"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Nitrofurantoin",
+        "dosage": "100 mg",
+        "dose_form": "Capsule",
+        "ndc": "11685-1662-13"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Cefdinir",
+        "dosage": "300 mg",
+        "dose_form": "Capsule",
+        "ndc": "11822-2633-14"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Cefuroxime",
+        "dosage": "250 mg",
+        "dose_form": "Tablet",
+        "ndc": "11959-3604-15"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Penicillin V Potassium",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "12096-4575-16"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Erythromycin",
+        "dosage": "250 mg",
+        "dose_form": "Tablet",
+        "ndc": "12233-5546-17"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Clarithromycin",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "12370-6517-18"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Minocycline",
+        "dosage": "100 mg",
+        "dose_form": "Capsule",
+        "ndc": "12507-7488-19"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Tetracycline",
+        "dosage": "500 mg",
+        "dose_form": "Capsule",
+        "ndc": "12644-8459-20"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Moxifloxacin",
+        "dosage": "400 mg",
+        "dose_form": "Tablet",
+        "ndc": "12781-9430-21"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Ampicillin",
+        "dosage": "500 mg",
+        "dose_form": "Capsule",
+        "ndc": "12918-0403-22"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Ceftriaxone",
+        "dosage": "1 g",
+        "dose_form": "Injection",
+        "ndc": "13055-1374-23"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Vancomycin",
+        "dosage": "125 mg",
+        "dose_form": "Capsule",
+        "ndc": "13192-2345-24"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Linezolid",
+        "dosage": "600 mg",
+        "dose_form": "Tablet",
+        "ndc": "13329-3316-25"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Mupirocin",
+        "dosage": "2%",
+        "dose_form": "Ointment",
+        "ndc": "13466-4287-26"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Gentamicin",
+        "dosage": "0.3%",
+        "dose_form": "Drops",
+        "ndc": "13603-5258-27"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Tobramycin",
+        "dosage": "0.3%",
+        "dose_form": "Drops",
+        "ndc": "13740-6229-28"
+    },
+    {
+        "type": "Antifungal",
+        "name": "Fluconazole",
+        "dosage": "150 mg",
+        "dose_form": "Tablet",
+        "ndc": "13877-7200-29"
+    },
+    {
+        "type": "Antifungal",
+        "name": "Nystatin",
+        "dosage": "100000 units/mL",
+        "dose_form": "Suspension",
+        "ndc": "14014-8171-30"
+    },
+    {
+        "type": "Antifungal",
+        "name": "Terbinafine",
+        "dosage": "250 mg",
+        "dose_form": "Tablet",
+        "ndc": "14151-9142-31"
+    },
+    {
+        "type": "Antifungal",
+        "name": "Ketoconazole",
+        "dosage": "2%",
+        "dose_form": "Cream",
+        "ndc": "14288-0115-32"
+    },
+    {
+        "type": "Antifungal",
+        "name": "Clotrimazole",
+        "dosage": "1%",
+        "dose_form": "Cream",
+        "ndc": "14425-1086-33"
+    },
+    {
+        "type": "Antifungal",
+        "name": "Miconazole",
+        "dosage": "2%",
+        "dose_form": "Cream",
+        "ndc": "14562-2057-34"
+    },
+    {
+        "type": "Antiviral",
+        "name": "Acyclovir",
+        "dosage": "400 mg",
+        "dose_form": "Tablet",
+        "ndc": "14699-3028-35"
+    },
+    {
+        "type": "Antiviral",
+        "name": "Valacyclovir",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "14836-3999-36"
+    },
+    {
+        "type": "Antiviral",
+        "name": "Oseltamivir",
+        "dosage": "75 mg",
+        "dose_form": "Capsule",
+        "ndc": "14973-4970-37"
+    },
+    {
+        "type": "ACE Inhibitor",
+        "name": "Lisinopril",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "15110-5941-38"
+    },
+    {
+        "type": "ACE Inhibitor",
+        "name": "Lisinopril",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "15247-6912-39"
+    },
+    {
+        "type": "ACE Inhibitor",
+        "name": "Enalapril",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "15384-7883-40"
+    },
+    {
+        "type": "ACE Inhibitor",
+        "name": "Ramipril",
+        "dosage": "5 mg",
+        "dose_form": "Capsule",
+        "ndc": "15521-8854-41"
+    },
+    {
+        "type": "ACE Inhibitor",
+        "name": "Benazepril",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "15658-9825-42"
+    },
+    {
+        "type": "ACE Inhibitor",
+        "name": "Captopril",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "15795-0798-43"
+    },
+    {
+        "type": "ARB",
+        "name": "Losartan",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "15932-1769-44"
+    },
+    {
+        "type": "ARB",
+        "name": "Losartan",
+        "dosage": "100 mg",
+        "dose_form": "Tablet",
+        "ndc": "16069-2740-45"
+    },
+    {
+        "type": "ARB",
+        "name": "Valsartan",
+        "dosage": "160 mg",
+        "dose_form": "Tablet",
+        "ndc": "16206-3711-46"
+    },
+    {
+        "type": "ARB",
+        "name": "Olmesartan",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "16343-4682-47"
+    },
+    {
+        "type": "ARB",
+        "name": "Telmisartan",
+        "dosage": "40 mg",
+        "dose_form": "Tablet",
+        "ndc": "16480-5653-48"
+    },
+    {
+        "type": "ARB",
+        "name": "Irbesartan",
+        "dosage": "150 mg",
+        "dose_form": "Tablet",
+        "ndc": "16617-6624-49"
+    },
+    {
+        "type": "ARB",
+        "name": "Candesartan",
+        "dosage": "16 mg",
+        "dose_form": "Tablet",
+        "ndc": "16754-7595-50"
+    },
+    {
+        "type": "Beta Blocker",
+        "name": "Metoprolol Tartrate",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "16891-8566-51"
+    },
+    {
+        "type": "Beta Blocker",
+        "name": "Metoprolol Succinate",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "17028-9537-52"
+    },
+    {
+        "type": "Beta Blocker",
+        "name": "Atenolol",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "17165-0510-53"
+    },
+    {
+        "type": "Beta Blocker",
+        "name": "Carvedilol",
+        "dosage": "12.5 mg",
+        "dose_form": "Tablet",
+        "ndc": "17302-1481-54"
+    },
+    {
+        "type": "Beta Blocker",
+        "name": "Propranolol",
+        "dosage": "40 mg",
+        "dose_form": "Tablet",
+        "ndc": "17439-2452-55"
+    },
+    {
+        "type": "Beta Blocker",
+        "name": "Bisoprolol",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "17576-3423-56"
+    },
+    {
+        "type": "Beta Blocker",
+        "name": "Nebivolol",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "17713-4394-57"
+    },
+    {
+        "type": "Beta Blocker",
+        "name": "Labetalol",
+        "dosage": "200 mg",
+        "dose_form": "Tablet",
+        "ndc": "17850-5365-58"
+    },
+    {
+        "type": "Calcium Channel Blocker",
+        "name": "Amlodipine",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "17987-6336-59"
+    },
+    {
+        "type": "Calcium Channel Blocker",
+        "name": "Amlodipine",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "18124-7307-60"
+    },
+    {
+        "type": "Calcium Channel Blocker",
+        "name": "Diltiazem",
+        "dosage": "120 mg",
+        "dose_form": "Capsule",
+        "ndc": "18261-8278-61"
+    },
+    {
+        "type": "Calcium Channel Blocker",
+        "name": "Verapamil",
+        "dosage": "80 mg",
+        "dose_form": "Tablet",
+        "ndc": "18398-9249-62"
+    },
+    {
+        "type": "Calcium Channel Blocker",
+        "name": "Nifedipine",
+        "dosage": "30 mg",
+        "dose_form": "Tablet",
+        "ndc": "18535-0222-63"
+    },
+    {
+        "type": "Calcium Channel Blocker",
+        "name": "Felodipine",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "18672-1193-64"
+    },
+    {
+        "type": "Calcium Channel Blocker",
+        "name": "Nicardipine",
+        "dosage": "20 mg",
+        "dose_form": "Capsule",
+        "ndc": "18809-2164-65"
+    },
+    {
+        "type": "Diuretic",
+        "name": "Hydrochlorothiazide",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "18946-3135-66"
+    },
+    {
+        "type": "Diuretic",
+        "name": "Furosemide",
+        "dosage": "40 mg",
+        "dose_form": "Tablet",
+        "ndc": "19083-4106-67"
+    },
+    {
+        "type": "Diuretic",
+        "name": "Spironolactone",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "19220-5077-68"
+    },
+    {
+        "type": "Diuretic",
+        "name": "Chlorthalidone",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "19357-6048-69"
+    },
+    {
+        "type": "Diuretic",
+        "name": "Torsemide",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "19494-7019-70"
+    },
+    {
+        "type": "Diuretic",
+        "name": "Bumetanide",
+        "dosage": "1 mg",
+        "dose_form": "Tablet",
+        "ndc": "19631-7990-71"
+    },
+    {
+        "type": "Diuretic",
+        "name": "Triamterene-Hydrochlorothiazide",
+        "dosage": "37.5/25 mg",
+        "dose_form": "Capsule",
+        "ndc": "19768-8961-72"
+    },
+    {
+        "type": "Diuretic",
+        "name": "Indapamide",
+        "dosage": "2.5 mg",
+        "dose_form": "Tablet",
+        "ndc": "19905-9932-73"
+    },
+    {
+        "type": "Statin",
+        "name": "Atorvastatin",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "20042-0905-74"
+    },
+    {
+        "type": "Statin",
+        "name": "Atorvastatin",
+        "dosage": "40 mg",
+        "dose_form": "Tablet",
+        "ndc": "20179-1876-75"
+    },
+    {
+        "type": "Statin",
+        "name": "Simvastatin",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "20316-2847-76"
+    },
+    {
+        "type": "Statin",
+        "name": "Rosuvastatin",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "20453-3818-77"
+    },
+    {
+        "type": "Statin",
+        "name": "Pravastatin",
+        "dosage": "40 mg",
+        "dose_form": "Tablet",
+        "ndc": "20590-4789-78"
+    },
+    {
+        "type": "Statin",
+        "name": "Lovastatin",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "20727-5760-79"
+    },
+    {
+        "type": "Statin",
+        "name": "Pitavastatin",
+        "dosage": "2 mg",
+        "dose_form": "Tablet",
+        "ndc": "20864-6731-80"
+    },
+    {
+        "type": "Lipid Lowering Agent",
+        "name": "Ezetimibe",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "21001-7702-81"
+    },
+    {
+        "type": "Lipid Lowering Agent",
+        "name": "Fenofibrate",
+        "dosage": "145 mg",
+        "dose_form": "Tablet",
+        "ndc": "21138-8673-82"
+    },
+    {
+        "type": "Lipid Lowering Agent",
+        "name": "Gemfibrozil",
+        "dosage": "600 mg",
+        "dose_form": "Tablet",
+        "ndc": "21275-9644-83"
+    },
+    {
+        "type": "Lipid Lowering Agent",
+        "name": "Icosapent Ethyl",
+        "dosage": "1 g",
+        "dose_form": "Capsule",
+        "ndc": "21412-0617-84"
+    },
+    {
+        "type": "Lipid Lowering Agent",
+        "name": "Niacin",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "21549-1588-85"
+    },
+    {
+        "type": "Antiplatelet",
+        "name": "Clopidogrel",
+        "dosage": "75 mg",
+        "dose_form": "Tablet",
+        "ndc": "21686-2559-86"
+    },
+    {
+        "type": "Antiplatelet",
+        "name": "Aspirin",
+        "dosage": "81 mg",
+        "dose_form": "Tablet",
+        "ndc": "21823-3530-87"
+    },
+    {
+        "type": "Antiplatelet",
+        "name": "Ticagrelor",
+        "dosage": "90 mg",
+        "dose_form": "Tablet",
+        "ndc": "21960-4501-88"
+    },
+    {
+        "type": "Antiplatelet",
+        "name": "Prasugrel",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "22097-5472-89"
+    },
+    {
+        "type": "Anticoagulant",
+        "name": "Warfarin",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "22234-6443-90"
+    },
+    {
+        "type": "Anticoagulant",
+        "name": "Apixaban",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "22371-7414-91"
+    },
+    {
+        "type": "Anticoagulant",
+        "name": "Rivaroxaban",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "22508-8385-92"
+    },
+    {
+        "type": "Anticoagulant",
+        "name": "Dabigatran",
+        "dosage": "150 mg",
+        "dose_form": "Capsule",
+        "ndc": "22645-9356-93"
+    },
+    {
+        "type": "Anticoagulant",
+        "name": "Enoxaparin",
+        "dosage": "40 mg",
+        "dose_form": "Injection",
+        "ndc": "22782-0329-94"
+    },
+    {
+        "type": "Antiarrhythmic",
+        "name": "Digoxin",
+        "dosage": "0.25 mg",
+        "dose_form": "Tablet",
+        "ndc": "22919-1300-95"
+    },
+    {
+        "type": "Antiarrhythmic",
+        "name": "Amiodarone",
+        "dosage": "200 mg",
+        "dose_form": "Tablet",
+        "ndc": "23056-2271-96"
+    },
+    {
+        "type": "Antiarrhythmic",
+        "name": "Sotalol",
+        "dosage": "80 mg",
+        "dose_form": "Tablet",
+        "ndc": "23193-3242-97"
+    },
+    {
+        "type": "Antiarrhythmic",
+        "name": "Flecainide",
+        "dosage": "100 mg",
+        "dose_form": "Tablet",
+        "ndc": "23330-4213-98"
+    },
+    {
+        "type": "Nitrate",
+        "name": "Isosorbide Mononitrate",
+        "dosage": "30 mg",
+        "dose_form": "Tablet",
+        "ndc": "23467-5184-01"
+    },
+    {
+        "type": "Nitrate",
+        "name": "Nitroglycerin",
+        "dosage": "0.4 mg",
+        "dose_form": "Tablet",
+        "ndc": "23604-6155-02"
+    },
+    {
+        "type": "Antihypertensive",
+        "name": "Clonidine",
+        "dosage": "0.1 mg",
+        "dose_form": "Tablet",
+        "ndc": "23741-7126-03"
+    },
+    {
+        "type": "Antihypertensive",
+        "name": "Clonidine",
+        "dosage": "0.1 mg/24 hr",
+        "dose_form": "Patch",
+        "ndc": "23878-8097-04"
+    },
+    {
+        "type": "Antihypertensive",
+        "name": "Hydralazine",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "24015-9068-05"
+    },
+    {
+        "type": "Antihypertensive",
+        "name": "Doxazosin",
+        "dosage": "4 mg",
+        "dose_form": "Tablet",
+        "ndc": "24152-0041-06"
+    },
+    {
+        "type": "Antihypertensive",
+        "name": "Terazosin",
+        "dosage": "5 mg",
+        "dose_form": "Capsule",
+        "ndc": "24289-1012-07"
+    },
+    {
+        "type": "Antianginal",
+        "name": "Ivabradine",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "24426-1983-08"
+    },
+    {
+        "type": "Antianginal",
+        "name": "Ranolazine",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "24563-2954-09"
+    },
+    {
+        "type": "Heart Failure Agent",
+        "name": "Sacubitril-Valsartan",
+        "dosage": "49/51 mg",
+        "dose_form": "Tablet",
+        "ndc": "24700-3925-10"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Metformin",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "24837-4896-11"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Metformin",
+        "dosage": "1000 mg",
+        "dose_form": "Tablet",
+        "ndc": "24974-5867-12"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Glipizide",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "25111-6838-13"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Glimepiride",
+        "dosage": "2 mg",
+        "dose_form": "Tablet",
+        "ndc": "25248-7809-14"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Glyburide",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "25385-8780-15"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Sitagliptin",
+        "dosage": "100 mg",
+        "dose_form": "Tablet",
+        "ndc": "25522-9751-16"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Linagliptin",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "25659-0724-17"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Saxagliptin",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "25796-1695-18"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Pioglitazone",
+        "dosage": "30 mg",
+        "dose_form": "Tablet",
+        "ndc": "25933-2666-19"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Empagliflozin",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "26070-3637-20"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Dapagliflozin",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "26207-4608-21"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Canagliflozin",
+        "dosage": "100 mg",
+        "dose_form": "Tablet",
+        "ndc": "26344-5579-22"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Semaglutide",
+        "dosage": "1 mg/0.75 mL",
+        "dose_form": "Injection",
+        "ndc": "26481-6550-23"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Dulaglutide",
+        "dosage": "1.5 mg/0.5 mL",
+        "dose_form": "Injection",
+        "ndc": "26618-7521-24"
+    },
+    {
+        "type": "Antidiabetic",
+        "name": "Liraglutide",
+        "dosage": "18 mg/3 mL",
+        "dose_form": "Injection",
+        "ndc": "26755-8492-25"
+    },
+    {
+        "type": "Insulin",
+        "name": "Insulin Glargine",
+        "dosage": "100 units/mL",
+        "dose_form": "Injection",
+        "ndc": "26892-9463-26"
+    },
+    {
+        "type": "Insulin",
+        "name": "Insulin Lispro",
+        "dosage": "100 units/mL",
+        "dose_form": "Injection",
+        "ndc": "27029-0436-27"
+    },
+    {
+        "type": "Insulin",
+        "name": "Insulin Aspart",
+        "dosage": "100 units/mL",
+        "dose_form": "Injection",
+        "ndc": "27166-1407-28"
+    },
+    {
+        "type": "Insulin",
+        "name": "Insulin Detemir",
+        "dosage": "100 units/mL",
+        "dose_form": "Injection",
+        "ndc": "27303-2378-29"
+    },
+    {
+        "type": "Insulin",
+        "name": "Insulin NPH",
+        "dosage": "100 units/mL",
+        "dose_form": "Suspension",
+        "ndc": "27440-3349-30"
+    },
+    {
+        "type": "Thyroid Hormone",
+        "name": "Levothyroxine",
+        "dosage": "50 mcg",
+        "dose_form": "Tablet",
+        "ndc": "27577-4320-31"
+    },
+    {
+        "type": "Thyroid Hormone",
+        "name": "Levothyroxine",
+        "dosage": "100 mcg",
+        "dose_form": "Tablet",
+        "ndc": "27714-5291-32"
+    },
+    {
+        "type": "Thyroid Hormone",
+        "name": "Liothyronine",
+        "dosage": "5 mcg",
+        "dose_form": "Tablet",
+        "ndc": "27851-6262-33"
+    },
+    {
+        "type": "Antithyroid Agent",
+        "name": "Methimazole",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "27988-7233-34"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Prednisone",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "28125-8204-35"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Prednisolone",
+        "dosage": "15 mg/5 mL",
+        "dose_form": "Solution",
+        "ndc": "28262-9175-36"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Methylprednisolone",
+        "dosage": "4 mg",
+        "dose_form": "Tablet",
+        "ndc": "28399-0148-37"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Dexamethasone",
+        "dosage": "4 mg",
+        "dose_form": "Tablet",
+        "ndc": "28536-1119-38"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Hydrocortisone",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "28673-2090-39"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Fludrocortisone",
+        "dosage": "0.1 mg",
+        "dose_form": "Tablet",
+        "ndc": "28810-3061-40"
+    },
+    {
+        "type": "Hormone",
+        "name": "Estradiol",
+        "dosage": "1 mg",
+        "dose_form": "Tablet",
+        "ndc": "28947-4032-41"
+    },
+    {
+        "type": "Hormone",
+        "name": "Estradiol",
+        "dosage": "0.05 mg/24 hr",
+        "dose_form": "Patch",
+        "ndc": "29084-5003-42"
+    },
+    {
+        "type": "Hormone",
+        "name": "Conjugated Estrogens",
+        "dosage": "0.625 mg",
+        "dose_form": "Tablet",
+        "ndc": "29221-5974-43"
+    },
+    {
+        "type": "Hormone",
+        "name": "Medroxyprogesterone",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "29358-6945-44"
+    },
+    {
+        "type": "Hormone",
+        "name": "Progesterone",
+        "dosage": "100 mg",
+        "dose_form": "Capsule",
+        "ndc": "29495-7916-45"
+    },
+    {
+        "type": "Hormone",
+        "name": "Testosterone Cypionate",
+        "dosage": "200 mg/mL",
+        "dose_form": "Injection",
+        "ndc": "29632-8887-46"
+    },
+    {
+        "type": "Hormone",
+        "name": "Testosterone",
+        "dosage": "1%",
+        "dose_form": "Gel",
+        "ndc": "29769-9858-47"
+    },
+    {
+        "type": "Contraceptive",
+        "name": "Norethindrone",
+        "dosage": "0.35 mg",
+        "dose_form": "Tablet",
+        "ndc": "29906-0831-48"
+    },
+    {
+        "type": "Contraceptive",
+        "name": "Ethinyl Estradiol-Norgestimate",
+        "dosage": "0.035/0.25 mg",
+        "dose_form": "Tablet",
+        "ndc": "30043-1802-49"
+    },
+    {
+        "type": "Contraceptive",
+        "name": "Drospirenone-Ethinyl Estradiol",
+        "dosage": "3/0.03 mg",
+        "dose_form": "Tablet",
+        "ndc": "30180-2773-50"
+    },
+    {
+        "type": "Proton Pump Inhibitor",
+        "name": "Omeprazole",
+        "dosage": "20 mg",
+        "dose_form": "Capsule",
+        "ndc": "30317-3744-51"
+    },
+    {
+        "type": "Proton Pump Inhibitor",
+        "name": "Pantoprazole",
+        "dosage": "40 mg",
+        "dose_form": "Tablet",
+        "ndc": "30454-4715-52"
+    },
+    {
+        "type": "Proton Pump Inhibitor",
+        "name": "Esomeprazole",
+        "dosage": "40 mg",
+        "dose_form": "Capsule",
+        "ndc": "30591-5686-53"
+    },
+    {
+        "type": "Proton Pump Inhibitor",
+        "name": "Lansoprazole",
+        "dosage": "30 mg",
+        "dose_form": "Capsule",
+        "ndc": "30728-6657-54"
+    },
+    {
+        "type": "Proton Pump Inhibitor",
+        "name": "Rabeprazole",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "30865-7628-55"
+    },
+    {
+        "type": "H2 Antagonist",
+        "name": "Famotidine",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "31002-8599-56"
+    },
+    {
+        "type": "H2 Antagonist",
+        "name": "Ranitidine",
+        "dosage": "150 mg",
+        "dose_form": "Tablet",
+        "ndc": "31139-9570-57"
+    },
+    {
+        "type": "GI Protectant",
+        "name": "Sucralfate",
+        "dosage": "1 g",
+        "dose_form": "Tablet",
+        "ndc": "31276-0543-58"
+    },
+    {
+        "type": "Antiemetic",
+        "name": "Ondansetron",
+        "dosage": "4 mg",
+        "dose_form": "Tablet",
+        "ndc": "31413-1514-59"
+    },
+    {
+        "type": "Antiemetic",
+        "name": "Promethazine",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "31550-2485-60"
+    },
+    {
+        "type": "Prokinetic Agent",
+        "name": "Metoclopramide",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "31687-3456-61"
+    },
+    {
+        "type": "Antispasmodic",
+        "name": "Dicyclomine",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "31824-4427-62"
+    },
+    {
+        "type": "Antidiarrheal",
+        "name": "Loperamide",
+        "dosage": "2 mg",
+        "dose_form": "Capsule",
+        "ndc": "31961-5398-63"
+    },
+    {
+        "type": "Laxative",
+        "name": "Docusate Sodium",
+        "dosage": "100 mg",
+        "dose_form": "Capsule",
+        "ndc": "32098-6369-64"
+    },
+    {
+        "type": "Laxative",
+        "name": "Polyethylene Glycol 3350",
+        "dosage": "17 g",
+        "dose_form": "Powder",
+        "ndc": "32235-7340-65"
+    },
+    {
+        "type": "Laxative",
+        "name": "Bisacodyl",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "32372-8311-66"
+    },
+    {
+        "type": "Laxative",
+        "name": "Senna",
+        "dosage": "8.6 mg",
+        "dose_form": "Tablet",
+        "ndc": "32509-9282-67"
+    },
+    {
+        "type": "Laxative",
+        "name": "Lactulose",
+        "dosage": "10 g/15 mL",
+        "dose_form": "Solution",
+        "ndc": "32646-0255-68"
+    },
+    {
+        "type": "Anti-inflammatory",
+        "name": "Mesalamine",
+        "dosage": "400 mg",
+        "dose_form": "Tablet",
+        "ndc": "32783-1226-69"
+    },
+    {
+        "type": "Anti-inflammatory",
+        "name": "Sulfasalazine",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "32920-2197-70"
+    },
+    {
+        "type": "Gallstone Agent",
+        "name": "Ursodiol",
+        "dosage": "300 mg",
+        "dose_form": "Capsule",
+        "ndc": "33057-3168-71"
+    },
+    {
+        "type": "Bronchodilator",
+        "name": "Albuterol",
+        "dosage": "90 mcg/actuation",
+        "dose_form": "Inhaler",
+        "ndc": "33194-4139-72"
+    },
+    {
+        "type": "Bronchodilator",
+        "name": "Albuterol",
+        "dosage": "2.5 mg/3 mL",
+        "dose_form": "Solution",
+        "ndc": "33331-5110-73"
+    },
+    {
+        "type": "Bronchodilator",
+        "name": "Ipratropium",
+        "dosage": "0.03%",
+        "dose_form": "Spray",
+        "ndc": "33468-6081-74"
+    },
+    {
+        "type": "Bronchodilator",
+        "name": "Ipratropium-Albuterol",
+        "dosage": "0.5/2.5 mg",
+        "dose_form": "Solution",
+        "ndc": "33605-7052-75"
+    },
+    {
+        "type": "Bronchodilator",
+        "name": "Tiotropium",
+        "dosage": "18 mcg",
+        "dose_form": "Inhaler",
+        "ndc": "33742-8023-76"
+    },
+    {
+        "type": "Respiratory Combination",
+        "name": "Fluticasone-Salmeterol",
+        "dosage": "250/50 mcg",
+        "dose_form": "Inhaler",
+        "ndc": "33879-8994-77"
+    },
+    {
+        "type": "Respiratory Combination",
+        "name": "Budesonide-Formoterol",
+        "dosage": "160/4.5 mcg",
+        "dose_form": "Inhaler",
+        "ndc": "34016-9965-78"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Fluticasone",
+        "dosage": "50 mcg/actuation",
+        "dose_form": "Spray",
+        "ndc": "34153-0938-79"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Mometasone",
+        "dosage": "50 mcg/actuation",
+        "dose_form": "Spray",
+        "ndc": "34290-1909-80"
+    },
+    {
+        "type": "Leukotriene Modifier",
+        "name": "Montelukast",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "34427-2880-81"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Budesonide",
+        "dosage": "0.5 mg/2 mL",
+        "dose_form": "Suspension",
+        "ndc": "34564-3851-82"
+    },
+    {
+        "type": "Antihistamine",
+        "name": "Cetirizine",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "34701-4822-83"
+    },
+    {
+        "type": "Antihistamine",
+        "name": "Loratadine",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "34838-5793-84"
+    },
+    {
+        "type": "Antihistamine",
+        "name": "Fexofenadine",
+        "dosage": "180 mg",
+        "dose_form": "Tablet",
+        "ndc": "34975-6764-85"
+    },
+    {
+        "type": "Antihistamine",
+        "name": "Diphenhydramine",
+        "dosage": "25 mg",
+        "dose_form": "Capsule",
+        "ndc": "35112-7735-86"
+    },
+    {
+        "type": "Antihistamine",
+        "name": "Hydroxyzine",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "35249-8706-87"
+    },
+    {
+        "type": "Antihistamine",
+        "name": "Levocetirizine",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "35386-9677-88"
+    },
+    {
+        "type": "Antihistamine",
+        "name": "Azelastine",
+        "dosage": "137 mcg/actuation",
+        "dose_form": "Spray",
+        "ndc": "35523-0650-89"
+    },
+    {
+        "type": "Expectorant",
+        "name": "Guaifenesin",
+        "dosage": "600 mg",
+        "dose_form": "Tablet",
+        "ndc": "35660-1621-90"
+    },
+    {
+        "type": "Antitussive",
+        "name": "Benzonatate",
+        "dosage": "100 mg",
+        "dose_form": "Capsule",
+        "ndc": "35797-2592-91"
+    },
+    {
+        "type": "Decongestant",
+        "name": "Pseudoephedrine",
+        "dosage": "30 mg",
+        "dose_form": "Tablet",
+        "ndc": "35934-3563-92"
+    },
+    {
+        "type": "NSAID",
+        "name": "Ibuprofen",
+        "dosage": "600 mg",
+        "dose_form": "Tablet",
+        "ndc": "36071-4534-93"
+    },
+    {
+        "type": "NSAID",
+        "name": "Naproxen",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "36208-5505-94"
+    },
+    {
+        "type": "NSAID",
+        "name": "Meloxicam",
+        "dosage": "15 mg",
+        "dose_form": "Tablet",
+        "ndc": "36345-6476-95"
+    },
+    {
+        "type": "NSAID",
+        "name": "Celecoxib",
+        "dosage": "200 mg",
+        "dose_form": "Capsule",
+        "ndc": "36482-7447-96"
+    },
+    {
+        "type": "NSAID",
+        "name": "Diclofenac",
+        "dosage": "1%",
+        "dose_form": "Gel",
+        "ndc": "36619-8418-97"
+    },
+    {
+        "type": "NSAID",
+        "name": "Diclofenac",
+        "dosage": "75 mg",
+        "dose_form": "Tablet",
+        "ndc": "36756-9389-98"
+    },
+    {
+        "type": "NSAID",
+        "name": "Indomethacin",
+        "dosage": "25 mg",
+        "dose_form": "Capsule",
+        "ndc": "36893-0362-01"
+    },
+    {
+        "type": "NSAID",
+        "name": "Ketorolac",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "37030-1333-02"
+    },
+    {
+        "type": "Analgesic",
+        "name": "Acetaminophen",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "37167-2304-03"
+    },
+    {
+        "type": "Analgesic",
+        "name": "Acetaminophen",
+        "dosage": "160 mg/5 mL",
+        "dose_form": "Suspension",
+        "ndc": "37304-3275-04"
+    },
+    {
+        "type": "Opioid Analgesic",
+        "name": "Tramadol",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "37441-4246-05"
+    },
+    {
+        "type": "Opioid Analgesic",
+        "name": "Hydrocodone-Acetaminophen",
+        "dosage": "5/325 mg",
+        "dose_form": "Tablet",
+        "ndc": "37578-5217-06"
+    },
+    {
+        "type": "Opioid Analgesic",
+        "name": "Oxycodone-Acetaminophen",
+        "dosage": "5/325 mg",
+        "dose_form": "Tablet",
+        "ndc": "37715-6188-07"
+    },
+    {
+        "type": "Opioid Analgesic",
+        "name": "Oxycodone",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "37852-7159-08"
+    },
+    {
+        "type": "Opioid Analgesic",
+        "name": "Morphine",
+        "dosage": "15 mg",
+        "dose_form": "Tablet",
+        "ndc": "37989-8130-09"
+    },
+    {
+        "type": "Opioid Analgesic",
+        "name": "Codeine-Acetaminophen",
+        "dosage": "30/300 mg",
+        "dose_form": "Tablet",
+        "ndc": "38126-9101-10"
+    },
+    {
+        "type": "Opioid Analgesic",
+        "name": "Fentanyl",
+        "dosage": "25 mcg/hr",
+        "dose_form": "Patch",
+        "ndc": "38263-0074-11"
+    },
+    {
+        "type": "Local Anesthetic",
+        "name": "Lidocaine",
+        "dosage": "5%",
+        "dose_form": "Patch",
+        "ndc": "38400-1045-12"
+    },
+    {
+        "type": "Muscle Relaxant",
+        "name": "Cyclobenzaprine",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "38537-2016-13"
+    },
+    {
+        "type": "Muscle Relaxant",
+        "name": "Methocarbamol",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "38674-2987-14"
+    },
+    {
+        "type": "Muscle Relaxant",
+        "name": "Baclofen",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "38811-3958-15"
+    },
+    {
+        "type": "Muscle Relaxant",
+        "name": "Tizanidine",
+        "dosage": "4 mg",
+        "dose_form": "Tablet",
+        "ndc": "38948-4929-16"
+    },
+    {
+        "type": "Muscle Relaxant",
+        "name": "Carisoprodol",
+        "dosage": "350 mg",
+        "dose_form": "Tablet",
+        "ndc": "39085-5900-17"
+    },
+    {
+        "type": "Antigout Agent",
+        "name": "Allopurinol",
+        "dosage": "300 mg",
+        "dose_form": "Tablet",
+        "ndc": "39222-6871-18"
+    },
+    {
+        "type": "Antigout Agent",
+        "name": "Colchicine",
+        "dosage": "0.6 mg",
+        "dose_form": "Tablet",
+        "ndc": "39359-7842-19"
+    },
+    {
+        "type": "Antigout Agent",
+        "name": "Febuxostat",
+        "dosage": "40 mg",
+        "dose_form": "Tablet",
+        "ndc": "39496-8813-20"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Gabapentin",
+        "dosage": "300 mg",
+        "dose_form": "Capsule",
+        "ndc": "39633-9784-21"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Gabapentin",
+        "dosage": "600 mg",
+        "dose_form": "Tablet",
+        "ndc": "39770-0757-22"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Pregabalin",
+        "dosage": "75 mg",
+        "dose_form": "Capsule",
+        "ndc": "39907-1728-23"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Levetiracetam",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "40044-2699-24"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Lamotrigine",
+        "dosage": "100 mg",
+        "dose_form": "Tablet",
+        "ndc": "40181-3670-25"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Topiramate",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "40318-4641-26"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Valproic Acid",
+        "dosage": "250 mg",
+        "dose_form": "Capsule",
+        "ndc": "40455-5612-27"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Divalproex",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "40592-6583-28"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Carbamazepine",
+        "dosage": "200 mg",
+        "dose_form": "Tablet",
+        "ndc": "40729-7554-29"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Phenytoin",
+        "dosage": "100 mg",
+        "dose_form": "Capsule",
+        "ndc": "40866-8525-30"
+    },
+    {
+        "type": "Anticonvulsant",
+        "name": "Oxcarbazepine",
+        "dosage": "300 mg",
+        "dose_form": "Tablet",
+        "ndc": "41003-9496-31"
+    },
+    {
+        "type": "Antimigraine Agent",
+        "name": "Sumatriptan",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "41140-0469-32"
+    },
+    {
+        "type": "Antimigraine Agent",
+        "name": "Rizatriptan",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "41277-1440-33"
+    },
+    {
+        "type": "Antiparkinson Agent",
+        "name": "Ropinirole",
+        "dosage": "1 mg",
+        "dose_form": "Tablet",
+        "ndc": "41414-2411-34"
+    },
+    {
+        "type": "Antiparkinson Agent",
+        "name": "Pramipexole",
+        "dosage": "0.5 mg",
+        "dose_form": "Tablet",
+        "ndc": "41551-3382-35"
+    },
+    {
+        "type": "Antiparkinson Agent",
+        "name": "Carbidopa-Levodopa",
+        "dosage": "25/100 mg",
+        "dose_form": "Tablet",
+        "ndc": "41688-4353-36"
+    },
+    {
+        "type": "Cholinesterase Inhibitor",
+        "name": "Donepezil",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "41825-5324-37"
+    },
+    {
+        "type": "NMDA Antagonist",
+        "name": "Memantine",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "41962-6295-38"
+    },
+    {
+        "type": "Cholinesterase Inhibitor",
+        "name": "Rivastigmine",
+        "dosage": "9.5 mg/24 hr",
+        "dose_form": "Patch",
+        "ndc": "42099-7266-39"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Sertraline",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "42236-8237-40"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Sertraline",
+        "dosage": "100 mg",
+        "dose_form": "Tablet",
+        "ndc": "42373-9208-41"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Escitalopram",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "42510-0181-42"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Citalopram",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "42647-1152-43"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Fluoxetine",
+        "dosage": "20 mg",
+        "dose_form": "Capsule",
+        "ndc": "42784-2123-44"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Paroxetine",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "42921-3094-45"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Duloxetine",
+        "dosage": "30 mg",
+        "dose_form": "Capsule",
+        "ndc": "43058-4065-46"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Venlafaxine",
+        "dosage": "75 mg",
+        "dose_form": "Capsule",
+        "ndc": "43195-5036-47"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Desvenlafaxine",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "43332-6007-48"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Bupropion",
+        "dosage": "150 mg",
+        "dose_form": "Tablet",
+        "ndc": "43469-6978-49"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Mirtazapine",
+        "dosage": "15 mg",
+        "dose_form": "Tablet",
+        "ndc": "43606-7949-50"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Trazodone",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "43743-8920-51"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Amitriptyline",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "43880-9891-52"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Nortriptyline",
+        "dosage": "25 mg",
+        "dose_form": "Capsule",
+        "ndc": "44017-0864-53"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Vilazodone",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "44154-1835-54"
+    },
+    {
+        "type": "Antidepressant",
+        "name": "Vortioxetine",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "44291-2806-55"
+    },
+    {
+        "type": "Benzodiazepine",
+        "name": "Alprazolam",
+        "dosage": "0.5 mg",
+        "dose_form": "Tablet",
+        "ndc": "44428-3777-56"
+    },
+    {
+        "type": "Benzodiazepine",
+        "name": "Lorazepam",
+        "dosage": "1 mg",
+        "dose_form": "Tablet",
+        "ndc": "44565-4748-57"
+    },
+    {
+        "type": "Benzodiazepine",
+        "name": "Clonazepam",
+        "dosage": "0.5 mg",
+        "dose_form": "Tablet",
+        "ndc": "44702-5719-58"
+    },
+    {
+        "type": "Benzodiazepine",
+        "name": "Diazepam",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "44839-6690-59"
+    },
+    {
+        "type": "Benzodiazepine",
+        "name": "Temazepam",
+        "dosage": "15 mg",
+        "dose_form": "Capsule",
+        "ndc": "44976-7661-60"
+    },
+    {
+        "type": "Anxiolytic",
+        "name": "Buspirone",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "45113-8632-61"
+    },
+    {
+        "type": "Sedative Hypnotic",
+        "name": "Zolpidem",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "45250-9603-62"
+    },
+    {
+        "type": "Sedative Hypnotic",
+        "name": "Eszopiclone",
+        "dosage": "3 mg",
+        "dose_form": "Tablet",
+        "ndc": "45387-0576-63"
+    },
+    {
+        "type": "Antipsychotic",
+        "name": "Quetiapine",
+        "dosage": "100 mg",
+        "dose_form": "Tablet",
+        "ndc": "45524-1547-64"
+    },
+    {
+        "type": "Antipsychotic",
+        "name": "Risperidone",
+        "dosage": "2 mg",
+        "dose_form": "Tablet",
+        "ndc": "45661-2518-65"
+    },
+    {
+        "type": "Antipsychotic",
+        "name": "Aripiprazole",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "45798-3489-66"
+    },
+    {
+        "type": "Antipsychotic",
+        "name": "Olanzapine",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "45935-4460-67"
+    },
+    {
+        "type": "Antipsychotic",
+        "name": "Ziprasidone",
+        "dosage": "40 mg",
+        "dose_form": "Capsule",
+        "ndc": "46072-5431-68"
+    },
+    {
+        "type": "Antipsychotic",
+        "name": "Haloperidol",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "46209-6402-69"
+    },
+    {
+        "type": "Antipsychotic",
+        "name": "Lurasidone",
+        "dosage": "40 mg",
+        "dose_form": "Tablet",
+        "ndc": "46346-7373-70"
+    },
+    {
+        "type": "Mood Stabilizer",
+        "name": "Lithium Carbonate",
+        "dosage": "300 mg",
+        "dose_form": "Capsule",
+        "ndc": "46483-8344-71"
+    },
+    {
+        "type": "CNS Stimulant",
+        "name": "Methylphenidate",
+        "dosage": "10 mg",
+        "dose_form": "Tablet",
+        "ndc": "46620-9315-72"
+    },
+    {
+        "type": "CNS Stimulant",
+        "name": "Lisdexamfetamine",
+        "dosage": "30 mg",
+        "dose_form": "Capsule",
+        "ndc": "46757-0288-73"
+    },
+    {
+        "type": "CNS Stimulant",
+        "name": "Amphetamine-Dextroamphetamine",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "46894-1259-74"
+    },
+    {
+        "type": "ADHD Agent",
+        "name": "Atomoxetine",
+        "dosage": "40 mg",
+        "dose_form": "Capsule",
+        "ndc": "47031-2230-75"
+    },
+    {
+        "type": "CNS Stimulant",
+        "name": "Modafinil",
+        "dosage": "200 mg",
+        "dose_form": "Tablet",
+        "ndc": "47168-3201-76"
+    },
+    {
+        "type": "Alpha Blocker",
+        "name": "Tamsulosin",
+        "dosage": "0.4 mg",
+        "dose_form": "Capsule",
+        "ndc": "47305-4172-77"
+    },
+    {
+        "type": "5-Alpha Reductase Inhibitor",
+        "name": "Finasteride",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "47442-5143-78"
+    },
+    {
+        "type": "5-Alpha Reductase Inhibitor",
+        "name": "Dutasteride",
+        "dosage": "0.5 mg",
+        "dose_form": "Capsule",
+        "ndc": "47579-6114-79"
+    },
+    {
+        "type": "Urinary Antispasmodic",
+        "name": "Oxybutynin",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "47716-7085-80"
+    },
+    {
+        "type": "Urinary Antispasmodic",
+        "name": "Tolterodine",
+        "dosage": "2 mg",
+        "dose_form": "Capsule",
+        "ndc": "47853-8056-81"
+    },
+    {
+        "type": "Overactive Bladder Agent",
+        "name": "Mirabegron",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "47990-9027-82"
+    },
+    {
+        "type": "Urinary Antispasmodic",
+        "name": "Solifenacin",
+        "dosage": "5 mg",
+        "dose_form": "Tablet",
+        "ndc": "48127-9998-83"
+    },
+    {
+        "type": "Erectile Dysfunction Agent",
+        "name": "Sildenafil",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "48264-0971-84"
+    },
+    {
+        "type": "Erectile Dysfunction Agent",
+        "name": "Tadalafil",
+        "dosage": "20 mg",
+        "dose_form": "Tablet",
+        "ndc": "48401-1942-85"
+    },
+    {
+        "type": "Urinary Analgesic",
+        "name": "Phenazopyridine",
+        "dosage": "100 mg",
+        "dose_form": "Tablet",
+        "ndc": "48538-2913-86"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Triamcinolone",
+        "dosage": "0.1%",
+        "dose_form": "Cream",
+        "ndc": "48675-3884-87"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Betamethasone",
+        "dosage": "0.05%",
+        "dose_form": "Cream",
+        "ndc": "48812-4855-88"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Clobetasol",
+        "dosage": "0.05%",
+        "dose_form": "Cream",
+        "ndc": "48949-5826-89"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Hydrocortisone",
+        "dosage": "1%",
+        "dose_form": "Cream",
+        "ndc": "49086-6797-90"
+    },
+    {
+        "type": "Retinoid",
+        "name": "Tretinoin",
+        "dosage": "0.025%",
+        "dose_form": "Cream",
+        "ndc": "49223-7768-91"
+    },
+    {
+        "type": "Retinoid",
+        "name": "Adapalene",
+        "dosage": "0.1%",
+        "dose_form": "Gel",
+        "ndc": "49360-8739-92"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Metronidazole",
+        "dosage": "0.75%",
+        "dose_form": "Gel",
+        "ndc": "49497-9710-93"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Silver Sulfadiazine",
+        "dosage": "1%",
+        "dose_form": "Cream",
+        "ndc": "49634-0683-94"
+    },
+    {
+        "type": "Antiparasitic",
+        "name": "Permethrin",
+        "dosage": "5%",
+        "dose_form": "Cream",
+        "ndc": "49771-1654-95"
+    },
+    {
+        "type": "Antipsoriatic",
+        "name": "Calcipotriene",
+        "dosage": "0.005%",
+        "dose_form": "Ointment",
+        "ndc": "49908-2625-96"
+    },
+    {
+        "type": "Immunomodulator",
+        "name": "Tacrolimus",
+        "dosage": "0.1%",
+        "dose_form": "Ointment",
+        "ndc": "50045-3596-97"
+    },
+    {
+        "type": "Hair Growth Stimulant",
+        "name": "Minoxidil",
+        "dosage": "5%",
+        "dose_form": "Foam",
+        "ndc": "50182-4567-98"
+    },
+    {
+        "type": "Antifungal",
+        "name": "Ketoconazole",
+        "dosage": "2%",
+        "dose_form": "Foam",
+        "ndc": "50319-5538-01"
+    },
+    {
+        "type": "Antiparasitic",
+        "name": "Permethrin",
+        "dosage": "1%",
+        "dose_form": "Lotion",
+        "ndc": "50456-6509-02"
+    },
+    {
+        "type": "Skin Protectant",
+        "name": "Calamine",
+        "dosage": "8%",
+        "dose_form": "Lotion",
+        "ndc": "50593-7480-03"
+    },
+    {
+        "type": "Emollient",
+        "name": "Ammonium Lactate",
+        "dosage": "12%",
+        "dose_form": "Lotion",
+        "ndc": "50730-8451-04"
+    },
+    {
+        "type": "Antiglaucoma Agent",
+        "name": "Latanoprost",
+        "dosage": "0.005%",
+        "dose_form": "Drops",
+        "ndc": "50867-9422-05"
+    },
+    {
+        "type": "Antiglaucoma Agent",
+        "name": "Timolol",
+        "dosage": "0.5%",
+        "dose_form": "Drops",
+        "ndc": "51004-0395-06"
+    },
+    {
+        "type": "Antiglaucoma Agent",
+        "name": "Brimonidine",
+        "dosage": "0.2%",
+        "dose_form": "Drops",
+        "ndc": "51141-1366-07"
+    },
+    {
+        "type": "Antiglaucoma Agent",
+        "name": "Dorzolamide-Timolol",
+        "dosage": "2/0.5%",
+        "dose_form": "Drops",
+        "ndc": "51278-2337-08"
+    },
+    {
+        "type": "Ophthalmic Antihistamine",
+        "name": "Olopatadine",
+        "dosage": "0.2%",
+        "dose_form": "Drops",
+        "ndc": "51415-3308-09"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Prednisolone Acetate",
+        "dosage": "1%",
+        "dose_form": "Suspension",
+        "ndc": "51552-4279-10"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Ciprofloxacin",
+        "dosage": "0.3%",
+        "dose_form": "Drops",
+        "ndc": "51689-5250-11"
+    },
+    {
+        "type": "Ocular Lubricant",
+        "name": "Artificial Tears",
+        "dosage": "0.5%",
+        "dose_form": "Drops",
+        "ndc": "51826-6221-12"
+    },
+    {
+        "type": "Vitamin",
+        "name": "Cholecalciferol",
+        "dosage": "2000 units",
+        "dose_form": "Capsule",
+        "ndc": "51963-7192-13"
+    },
+    {
+        "type": "Vitamin",
+        "name": "Ergocalciferol",
+        "dosage": "50000 units",
+        "dose_form": "Capsule",
+        "ndc": "52100-8163-14"
+    },
+    {
+        "type": "Vitamin",
+        "name": "Cyanocobalamin",
+        "dosage": "1000 mcg",
+        "dose_form": "Tablet",
+        "ndc": "52237-9134-15"
+    },
+    {
+        "type": "Vitamin",
+        "name": "Folic Acid",
+        "dosage": "1 mg",
+        "dose_form": "Tablet",
+        "ndc": "52374-0107-16"
+    },
+    {
+        "type": "Iron Supplement",
+        "name": "Ferrous Sulfate",
+        "dosage": "325 mg",
+        "dose_form": "Tablet",
+        "ndc": "52511-1078-17"
+    },
+    {
+        "type": "Electrolyte",
+        "name": "Potassium Chloride",
+        "dosage": "20 mEq",
+        "dose_form": "Tablet",
+        "ndc": "52648-2049-18"
+    },
+    {
+        "type": "Electrolyte",
+        "name": "Magnesium Oxide",
+        "dosage": "400 mg",
+        "dose_form": "Tablet",
+        "ndc": "52785-3020-19"
+    },
+    {
+        "type": "Mineral Supplement",
+        "name": "Calcium Carbonate",
+        "dosage": "600 mg",
+        "dose_form": "Tablet",
+        "ndc": "52922-3991-20"
+    },
+    {
+        "type": "Vitamin",
+        "name": "Thiamine",
+        "dosage": "100 mg",
+        "dose_form": "Tablet",
+        "ndc": "53059-4962-21"
+    },
+    {
+        "type": "Vitamin",
+        "name": "Ascorbic Acid",
+        "dosage": "500 mg",
+        "dose_form": "Tablet",
+        "ndc": "53196-5933-22"
+    },
+    {
+        "type": "Supplement",
+        "name": "Fish Oil",
+        "dosage": "1000 mg",
+        "dose_form": "Capsule",
+        "ndc": "53333-6904-23"
+    },
+    {
+        "type": "Supplement",
+        "name": "Melatonin",
+        "dosage": "3 mg",
+        "dose_form": "Tablet",
+        "ndc": "53470-7875-24"
+    },
+    {
+        "type": "Bisphosphonate",
+        "name": "Alendronate",
+        "dosage": "70 mg",
+        "dose_form": "Tablet",
+        "ndc": "53607-8846-25"
+    },
+    {
+        "type": "Bisphosphonate",
+        "name": "Risedronate",
+        "dosage": "35 mg",
+        "dose_form": "Tablet",
+        "ndc": "53744-9817-26"
+    },
+    {
+        "type": "Bisphosphonate",
+        "name": "Ibandronate",
+        "dosage": "150 mg",
+        "dose_form": "Tablet",
+        "ndc": "53881-0790-27"
+    },
+    {
+        "type": "SERM",
+        "name": "Raloxifene",
+        "dosage": "60 mg",
+        "dose_form": "Tablet",
+        "ndc": "54018-1761-28"
+    },
+    {
+        "type": "Bone Resorption Inhibitor",
+        "name": "Denosumab",
+        "dosage": "60 mg/mL",
+        "dose_form": "Injection",
+        "ndc": "54155-2732-29"
+    },
+    {
+        "type": "Antivertigo Agent",
+        "name": "Meclizine",
+        "dosage": "25 mg",
+        "dose_form": "Tablet",
+        "ndc": "54292-3703-30"
+    },
+    {
+        "type": "Vitamin",
+        "name": "Ergocalciferol",
+        "dosage": "1.25 mg",
+        "dose_form": "Capsule",
+        "ndc": "54429-4674-31"
+    },
+    {
+        "type": "Smoking Cessation Aid",
+        "name": "Varenicline",
+        "dosage": "1 mg",
+        "dose_form": "Tablet",
+        "ndc": "54566-5645-32"
+    },
+    {
+        "type": "Smoking Cessation Aid",
+        "name": "Nicotine",
+        "dosage": "21 mg/24 hr",
+        "dose_form": "Patch",
+        "ndc": "54703-6616-33"
+    },
+    {
+        "type": "Opioid Antagonist",
+        "name": "Naloxone",
+        "dosage": "4 mg",
+        "dose_form": "Spray",
+        "ndc": "54840-7587-34"
+    },
+    {
+        "type": "Opioid Antagonist",
+        "name": "Naltrexone",
+        "dosage": "50 mg",
+        "dose_form": "Tablet",
+        "ndc": "54977-8558-35"
+    },
+    {
+        "type": "Opioid Dependence Agent",
+        "name": "Buprenorphine-Naloxone",
+        "dosage": "8/2 mg",
+        "dose_form": "Tablet",
+        "ndc": "55114-9529-36"
+    },
+    {
+        "type": "Sympathomimetic",
+        "name": "Epinephrine",
+        "dosage": "0.3 mg",
+        "dose_form": "Injection",
+        "ndc": "55251-0502-37"
+    },
+    {
+        "type": "Antihypoglycemic Agent",
+        "name": "Glucagon",
+        "dosage": "1 mg",
+        "dose_form": "Injection",
+        "ndc": "55388-1473-38"
+    },
+    {
+        "type": "Antimigraine Agent",
+        "name": "Sumatriptan",
+        "dosage": "6 mg/0.5 mL",
+        "dose_form": "Injection",
+        "ndc": "55525-2444-39"
+    },
+    {
+        "type": "Antiemetic",
+        "name": "Ondansetron",
+        "dosage": "4 mg/5 mL",
+        "dose_form": "Solution",
+        "ndc": "55662-3415-40"
+    },
+    {
+        "type": "Antiemetic",
+        "name": "Prochlorperazine",
+        "dosage": "25 mg",
+        "dose_form": "Suppository",
+        "ndc": "55799-4386-41"
+    },
+    {
+        "type": "Analgesic",
+        "name": "Acetaminophen",
+        "dosage": "650 mg",
+        "dose_form": "Suppository",
+        "ndc": "55936-5357-42"
+    },
+    {
+        "type": "Laxative",
+        "name": "Glycerin",
+        "dosage": "2 g",
+        "dose_form": "Suppository",
+        "ndc": "56073-6328-43"
+    },
+    {
+        "type": "Antifungal",
+        "name": "Nystatin",
+        "dosage": "100000 units",
+        "dose_form": "Lozenge",
+        "ndc": "56210-7299-44"
+    },
+    {
+        "type": "Antifungal",
+        "name": "Clotrimazole",
+        "dosage": "10 mg",
+        "dose_form": "Lozenge",
+        "ndc": "56347-8270-45"
+    },
+    {
+        "type": "Lipid Lowering Agent",
+        "name": "Cholestyramine",
+        "dosage": "4 g",
+        "dose_form": "Powder",
+        "ndc": "56484-9241-46"
+    },
+    {
+        "type": "Lipid Lowering Agent",
+        "name": "Colesevelam",
+        "dosage": "625 mg",
+        "dose_form": "Tablet",
+        "ndc": "56621-0214-47"
+    },
+    {
+        "type": "Phosphate Binder",
+        "name": "Sevelamer",
+        "dosage": "800 mg",
+        "dose_form": "Tablet",
+        "ndc": "56758-1185-48"
+    },
+    {
+        "type": "Alkalinizing Agent",
+        "name": "Potassium Citrate",
+        "dosage": "10 mEq",
+        "dose_form": "Tablet",
+        "ndc": "56895-2156-49"
+    },
+    {
+        "type": "Antiemetic",
+        "name": "Ondansetron",
+        "dosage": "4 mg",
+        "dose_form": "Solution",
+        "ndc": "57032-3127-50"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Dexamethasone",
+        "dosage": "0.1%",
+        "dose_form": "Drops",
+        "ndc": "57169-4098-51"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Mometasone",
+        "dosage": "0.1%",
+        "dose_form": "Cream",
+        "ndc": "57306-5069-52"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Fluocinonide",
+        "dosage": "0.05%",
+        "dose_form": "Gel",
+        "ndc": "57443-6040-53"
+    },
+    {
+        "type": "Local Anesthetic",
+        "name": "Lidocaine-Prilocaine",
+        "dosage": "2.5/2.5%",
+        "dose_form": "Cream",
+        "ndc": "57580-7011-54"
+    },
+    {
+        "type": "Topical Analgesic",
+        "name": "Capsaicin",
+        "dosage": "0.075%",
+        "dose_form": "Cream",
+        "ndc": "57717-7982-55"
+    },
+    {
+        "type": "Antihistamine",
+        "name": "Diphenhydramine",
+        "dosage": "12.5 mg/5 mL",
+        "dose_form": "Elixir",
+        "ndc": "57854-8953-56"
+    },
+    {
+        "type": "Corticosteroid",
+        "name": "Dexamethasone",
+        "dosage": "0.5 mg/5 mL",
+        "dose_form": "Elixir",
+        "ndc": "57991-9924-57"
+    },
+    {
+        "type": "Barbiturate",
+        "name": "Phenobarbital",
+        "dosage": "20 mg/5 mL",
+        "dose_form": "Elixir",
+        "ndc": "58128-0897-58"
+    },
+    {
+        "type": "Electrolyte",
+        "name": "Potassium Chloride",
+        "dosage": "10%",
+        "dose_form": "Syrup",
+        "ndc": "58265-1868-59"
+    },
+    {
+        "type": "Antitussive",
+        "name": "Guaifenesin-Codeine",
+        "dosage": "100/10 mg/5 mL",
+        "dose_form": "Syrup",
+        "ndc": "58402-2839-60"
+    },
+    {
+        "type": "Laxative",
+        "name": "Lactulose",
+        "dosage": "10 g/15 mL",
+        "dose_form": "Syrup",
+        "ndc": "58539-3810-61"
+    },
+    {
+        "type": "Antibiotic",
+        "name": "Cefuroxime",
+        "dosage": "125 mg/5 mL",
+        "dose_form": "Granules",
+        "ndc": "58676-4781-62"
+    },
+    {
+        "type": "Lipid Lowering Agent",
+        "name": "Cholestyramine",
+        "dosage": "4 g",
+        "dose_form": "Granules",
+        "ndc": "58813-5752-63"
+    },
+    {
+        "type": "Anti-inflammatory",
+        "name": "Mesalamine",
+        "dosage": "1 g",
+        "dose_form": "Granules",
+        "ndc": "58950-6723-64"
+    }
+]
