@@ -1,5 +1,7 @@
 <script setup>
+import { computed } from 'vue'
 import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import SortDropdown from '@/Components/SortDropdown.vue'
@@ -8,9 +10,9 @@ import { formatDate, DATE_SHORT } from '@/lib/utils'
 defineOptions({ layout: DashboardLayout })
 
 setLayoutProps({
-    breadcrumbs: [
-        { label: 'Patients' },
-    ],
+    breadcrumbs: computed(() => [
+        { label: trans('nav.patients') },
+    ]),
 })
 
 const props = defineProps({
@@ -32,12 +34,12 @@ const props = defineProps({
     },
 })
 
-const sort_options = [
-    { label: 'Last Name', value: 'last_name' },
-    { label: 'First Name', value: 'first_name' },
-    { label: 'Date of Birth', value: 'date_of_birth' },
-    { label: 'Blood Type', value: 'blood_type' },
-]
+const sort_options = computed(() => [
+    { label: trans('patients.sort.last_name'), value: 'last_name' },
+    { label: trans('patients.sort.first_name'), value: 'first_name' },
+    { label: trans('patients.sort.date_of_birth'), value: 'date_of_birth' },
+    { label: trans('patients.sort.blood_type'), value: 'blood_type' },
+])
 
 function patientInitials(patient) {
     return `${patient.first_name[0]}${patient.last_name[0]}`.toUpperCase()
@@ -75,7 +77,7 @@ function genderBadgeClass(gender) {
     <div class="rounded border border-border bg-white shadow-sm">
         <div class="flex flex-col gap-3 border-b border-border px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-3">
-                <h2 class="font-bold text-foreground">All Patients</h2>
+                <h2 class="font-bold text-foreground">{{ $t('patients.index.heading') }}</h2>
                 <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
                     {{ patients.total }}
                 </span>
@@ -85,7 +87,7 @@ function genderBadgeClass(gender) {
                     :href="route('patients.create')"
                     class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90"
                 >
-                    + New Patient
+                    {{ $t('patients.index.new_patient') }}
                 </Link>
                 <SortDropdown
                     :sort-by="props.sort_by"
@@ -97,7 +99,7 @@ function genderBadgeClass(gender) {
                 <SearchInput
                     :model-value="props.search"
                     :params="{ sort_by: props.sort_by, direction: props.direction }"
-                    placeholder="Search by name, MRN, DOB, or email…"
+                    :placeholder="$t('patients.index.search_placeholder')"
                     route-name="patients.index"
                     class="w-full sm:w-72"
                 />
@@ -108,18 +110,18 @@ function genderBadgeClass(gender) {
             <table class="w-full text-sm">
                 <thead class="sticky top-0 z-10 bg-white shadow-[0_1px_0_0_var(--color-border)]">
                     <tr class="text-left">
-                        <th class="px-6 py-3 font-bold text-muted-foreground">Name</th>
-                        <th class="hidden px-6 py-3 font-bold text-muted-foreground sm:table-cell">MRN</th>
-                        <th class="hidden px-6 py-3 font-bold text-muted-foreground md:table-cell">Date of Birth</th>
-                        <th class="hidden px-6 py-3 font-bold text-muted-foreground md:table-cell">Gender</th>
-                        <th class="hidden px-6 py-3 font-bold text-muted-foreground lg:table-cell">Blood Type</th>
-                        <th class="hidden px-6 py-3 font-bold text-muted-foreground lg:table-cell">Email</th>
+                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.index.column_name') }}</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground sm:table-cell">{{ $t('patients.index.column_mrn') }}</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground md:table-cell">{{ $t('patients.index.column_date_of_birth') }}</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground md:table-cell">{{ $t('patients.index.column_gender') }}</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground lg:table-cell">{{ $t('patients.index.column_blood_type') }}</th>
+                        <th class="hidden px-6 py-3 font-bold text-muted-foreground lg:table-cell">{{ $t('patients.index.column_email') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-if="patients.data.length === 0">
                         <td colspan="6" class="px-6 py-10 text-center text-sm text-muted-foreground">
-                            No patients found.
+                            {{ $t('patients.index.empty') }}
                         </td>
                     </tr>
                     <tr
@@ -156,7 +158,7 @@ function genderBadgeClass(gender) {
                                 class="rounded-full px-2.5 py-0.5 text-xs font-medium"
                                 :class="genderBadgeClass(patient.gender_at_birth)"
                             >
-                                {{ patient.gender_at_birth }}
+                                {{ $t('enums.gender_at_birth.' + patient.gender_at_birth) }}
                             </span>
                         </td>
                         <td class="hidden px-6 py-4 lg:table-cell">
@@ -165,9 +167,9 @@ function genderBadgeClass(gender) {
                                 class="rounded-full px-2.5 py-0.5 text-xs font-bold"
                                 :class="bloodTypeBadgeClass(patient.blood_type)"
                             >
-                                {{ patient.blood_type }}
+                                {{ $t('enums.blood_type.' + patient.blood_type) }}
                             </span>
-                            <span v-else class="text-muted-foreground">—</span>
+                            <span v-else class="text-muted-foreground">{{ $t('common.placeholders.em_dash') }}</span>
                         </td>
                         <td class="hidden px-6 py-4 text-muted-foreground lg:table-cell">{{ patient.email }}</td>
                     </tr>
@@ -177,7 +179,7 @@ function genderBadgeClass(gender) {
 
         <div class="flex items-center justify-between border-t border-border px-6 py-4">
             <p class="text-sm text-muted-foreground">
-                Showing {{ patients.from }}–{{ patients.to }} of {{ patients.total }} patients
+                {{ $t('common.pagination.summary', { from: patients.from, to: patients.to, total: patients.total, label: $t('patients.index.record_label') }) }}
             </p>
             <div class="flex items-center gap-1">
                 <Link

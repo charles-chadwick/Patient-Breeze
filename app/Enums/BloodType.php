@@ -12,4 +12,9 @@ enum BloodType: string
     case ABNegative = 'AB-';
     case OPositive = 'O+';
     case ONegative = 'O-';
+
+    public function label(): string
+    {
+        return __('enums.blood_type.'.$this->value);
+    }
 }

@@ -14,7 +14,7 @@ defineProps({
     <div class="flex min-h-screen items-center justify-center bg-background px-4">
         <div class="w-full max-w-sm">
             <div class="mb-8 text-center">
-                <span class="text-2xl font-bold text-primary">PB Health</span>
+                <span class="text-2xl font-bold text-primary">{{ $t('common.brand.name') }}</span>
             </div>
             <slot />
         </div>

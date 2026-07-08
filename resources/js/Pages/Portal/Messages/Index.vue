@@ -38,15 +38,15 @@ function submitReply(discussion_id) {
 </script>
 
 <template>
-    <Head title="Messages" />
+    <Head :title="$t('portal.messages.title')" />
     <div class="grid gap-6">
         <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-bold text-slate-800">Messages</h1>
+            <h1 class="text-2xl font-bold text-slate-800">{{ $t('portal.messages.heading') }}</h1>
             <button
                 class="rounded-lg bg-cerulean-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cerulean-700"
                 @click="composer_open = !composer_open"
             >
-                {{ composer_open ? 'Cancel' : 'New Message' }}
+                {{ composer_open ? $t('common.actions.cancel') : $t('portal.messages.new_message') }}
             </button>
         </div>
 
@@ -55,14 +55,14 @@ function submitReply(discussion_id) {
             class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm"
             @submit.prevent="submitNew"
         >
-            <label class="block text-xs font-semibold uppercase tracking-wide text-slate-400">Subject</label>
+            <label class="block text-xs font-semibold uppercase tracking-wide text-slate-400">{{ $t('portal.messages.label_subject') }}</label>
             <input
                 v-model="new_message_form.title"
                 type="text"
                 class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                placeholder="What's this about?"
+                :placeholder="$t('portal.messages.placeholder_subject')"
             />
-            <label class="mt-4 block text-xs font-semibold uppercase tracking-wide text-slate-400">Message</label>
+            <label class="mt-4 block text-xs font-semibold uppercase tracking-wide text-slate-400">{{ $t('portal.messages.label_message') }}</label>
             <textarea
                 v-model="new_message_form.content"
                 rows="4"
@@ -75,12 +75,12 @@ function submitReply(discussion_id) {
                 :disabled="new_message_form.processing"
                 class="mt-4 rounded-lg bg-cerulean-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cerulean-700 disabled:opacity-50"
             >
-                Send
+                {{ $t('portal.messages.send') }}
             </button>
         </form>
 
         <div v-if="threads.length === 0" class="rounded-2xl border border-slate-100 bg-white p-10 text-center text-sm text-slate-400">
-            No messages yet.
+            {{ $t('portal.messages.empty') }}
         </div>
 
         <div
@@ -89,7 +89,7 @@ function submitReply(discussion_id) {
             class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm"
         >
             <div class="flex items-center justify-between">
-                <h2 class="text-base font-semibold text-slate-800">{{ thread.title ?? '(No subject)' }}</h2>
+                <h2 class="text-base font-semibold text-slate-800">{{ thread.title ?? $t('portal.messages.no_subject') }}</h2>
                 <span class="text-xs text-slate-400">{{ formatDate(thread.created_at, DATE_SHORT) }}</span>
             </div>
 
@@ -113,7 +113,7 @@ function submitReply(discussion_id) {
                     class="text-sm font-semibold text-cerulean-600 hover:text-cerulean-700"
                     @click="reply_target_id = thread.id; reply_form.content = ''"
                 >
-                    Reply
+                    {{ $t('portal.messages.reply') }}
                 </button>
                 <form v-else @submit.prevent="submitReply(thread.id)">
                     <textarea
@@ -121,7 +121,7 @@ function submitReply(discussion_id) {
                         rows="3"
                         required
                         class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                        placeholder="Write a reply..."
+                        :placeholder="$t('portal.messages.placeholder_reply')"
                     />
                     <div class="mt-2 flex gap-2">
                         <button
@@ -129,14 +129,14 @@ function submitReply(discussion_id) {
                             :disabled="reply_form.processing"
                             class="rounded-lg bg-cerulean-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cerulean-700 disabled:opacity-50"
                         >
-                            Send Reply
+                            {{ $t('portal.messages.send_reply') }}
                         </button>
                         <button
                             type="button"
                             class="rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100"
                             @click="reply_target_id = null"
                         >
-                            Cancel
+                            {{ $t('common.actions.cancel') }}
                         </button>
                     </div>
                 </form>

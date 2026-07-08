@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { Link, router, setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import {
   PopoverContent,
   PopoverPortal,
@@ -16,9 +17,9 @@ import { cn, formatDate, DATE_SHORT } from '@/lib/utils'
 defineOptions ( { layout: DashboardLayout } )
 
 setLayoutProps({
-    breadcrumbs: [
-        { label: 'Appointments' },
-    ],
+    breadcrumbs: computed(() => [
+        { label: trans('nav.appointments') },
+    ]),
 })
 
 const props = defineProps ( {
@@ -148,7 +149,7 @@ function clearFilters () {
                         )"
               @click="setView('day')"
           >
-            Day
+            {{ $t('appointments.index.view_day') }}
           </button>
           <button
               type="button"
@@ -158,7 +159,7 @@ function clearFilters () {
                         )"
               @click="setView('week')"
           >
-            Week
+            {{ $t('appointments.index.view_week') }}
           </button>
         </div>
       </div>
@@ -175,7 +176,7 @@ function clearFilters () {
             class="text-sm font-bold text-primary hover:underline disabled:cursor-not-allowed disabled:text-muted-foreground disabled:no-underline"
             @click="clearFilters"
         >
-          Clear filters
+          {{ $t('appointments.index.clear_filters') }}
         </button>
       </div>
       <div class="mb-4 flex flex-col gap-4 sm:flex-row">
@@ -184,7 +185,7 @@ function clearFilters () {
         >
           <SearchInput
               :model-value="search"
-              placeholder="Search by patient name…"
+              :placeholder="$t('appointments.index.search_placeholder')"
               route-name="appointments.index"
               :params="{
                         date,
@@ -199,7 +200,7 @@ function clearFilters () {
               class="h-10 w-full rounded-lg border border-border bg-white pl-2 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               @change="addStaff"
           >
-            <option value="">Filter by staff…</option>
+            <option value="">{{ $t('appointments.index.filter_staff') }}</option>
             <option
                 v-for="option in availableStaffOptions"
                 :key="option.value"
@@ -223,7 +224,7 @@ function clearFilters () {
           v-if="appointmentsByDate.length === 0"
           class="rounded-xl border border-border bg-white px-6 py-14 text-center shadow-sm"
       >
-        <p class="text-sm text-muted-foreground">No appointments found for this period.</p>
+        <p class="text-sm text-muted-foreground">{{ $t('appointments.index.empty') }}</p>
       </div>
 
       <!-- Grouped appointment list -->
@@ -275,7 +276,7 @@ function clearFilters () {
                         class="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-bold"
                         :class="statusClasses[appointment.status] ?? 'bg-gray-100 text-gray-600'"
                     >
-                                            {{ appointment.status }}
+                                            {{ $t('enums.appointment_status.' + appointment.status) }}
                                         </span>
                   </div>
                 </button>
@@ -305,23 +306,23 @@ function clearFilters () {
 
                   <dl class="space-y-2 text-sm">
                     <div class="flex items-center justify-between gap-2">
-                      <dt class="font-bold text-muted-foreground">Date</dt>
+                      <dt class="font-bold text-muted-foreground">{{ $t('appointments.index.detail_date') }}</dt>
                       <dd class="text-foreground">{{ formatDate ( appointment.date, DATE_SHORT ) }}</dd>
                     </div>
                     <div class="flex items-center justify-between gap-2">
-                      <dt class="font-bold text-muted-foreground">Time</dt>
+                      <dt class="font-bold text-muted-foreground">{{ $t('appointments.index.detail_time') }}</dt>
                       <dd class="text-foreground">
                         {{ formatTime ( appointment.start_time ) }}–{{ formatTime ( appointment.end_time ) }}
                       </dd>
                     </div>
                     <div class="flex items-center justify-between gap-2">
-                      <dt class="font-bold text-muted-foreground">Status</dt>
+                      <dt class="font-bold text-muted-foreground">{{ $t('appointments.index.detail_status') }}</dt>
                       <dd>
                                                 <span
                                                     class="rounded-full px-2.5 py-0.5 text-xs font-bold"
                                                     :class="statusClasses[appointment.status] ?? 'bg-gray-100 text-gray-600'"
                                                 >
-                                                    {{ appointment.status }}
+                                                    {{ $t('enums.appointment_status.' + appointment.status) }}
                                                 </span>
                       </dd>
                     </div>
@@ -329,7 +330,7 @@ function clearFilters () {
                         v-if="appointment.reason"
                         class="flex items-start justify-between gap-2"
                     >
-                      <dt class="font-bold text-muted-foreground">Reason</dt>
+                      <dt class="font-bold text-muted-foreground">{{ $t('appointments.index.detail_reason') }}</dt>
                       <dd class="text-right text-foreground">{{ appointment.reason }}</dd>
                     </div>
                   </dl>
@@ -338,7 +339,7 @@ function clearFilters () {
                       v-if="appointment.users?.length"
                       class="mt-4 border-t border-border pt-4"
                   >
-                    <p class="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Staff</p>
+                    <p class="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">{{ $t('appointments.index.detail_staff') }}</p>
                     <ul class="space-y-1.5">
                       <li
                           v-for="user in appointment.users"
@@ -354,7 +355,7 @@ function clearFilters () {
                                                     {{ user.first_name }} {{ user.last_name }}
                                                 </span>
                         <span class="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                                                    {{ user.pivot.role }}
+                                                    {{ $t('enums.appointment_role.' + user.pivot.role) }}
                                                 </span>
                       </li>
                     </ul>
@@ -365,7 +366,7 @@ function clearFilters () {
                         :href="route('patients.appointments.edit', [appointment.patient.id, appointment.id])"
                         class="text-sm font-bold text-primary hover:underline"
                     >
-                      Edit Appointment →
+                      {{ $t('appointments.index.edit_appointment') }}
                     </Link>
                   </div>
                 </PopoverContent>

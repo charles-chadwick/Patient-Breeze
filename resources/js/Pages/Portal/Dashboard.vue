@@ -16,26 +16,26 @@ const props = defineProps({
     <div class="grid gap-6">
         <!-- Health summary -->
         <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-            <p class="mb-1 text-sm text-slate-400">Welcome back</p>
+            <p class="mb-1 text-sm text-slate-400">{{ $t('portal.dashboard.welcome_back') }}</p>
             <h1 class="mb-5 text-2xl font-bold text-slate-800">
                 {{ patient.first_name }} {{ patient.last_name }}
             </h1>
             <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">MRN</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">{{ $t('portal.dashboard.mrn') }}</p>
                     <p class="mt-0.5 text-sm font-medium text-slate-700">{{ patient.mrn }}</p>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Date of Birth</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">{{ $t('portal.dashboard.date_of_birth') }}</p>
                     <p class="mt-0.5 text-sm font-medium text-slate-700">{{ formatDate(patient.date_of_birth, DATE_SHORT) }}</p>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Blood Type</p>
-                    <p class="mt-0.5 text-sm font-medium text-slate-700">{{ patient.blood_type ?? '—' }}</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">{{ $t('portal.dashboard.blood_type') }}</p>
+                    <p class="mt-0.5 text-sm font-medium text-slate-700">{{ patient.blood_type ?? $t('common.placeholders.em_dash') }}</p>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Gender Identity</p>
-                    <p class="mt-0.5 text-sm font-medium text-slate-700">{{ patient.gender_identity ?? '—' }}</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">{{ $t('portal.dashboard.gender_identity') }}</p>
+                    <p class="mt-0.5 text-sm font-medium text-slate-700">{{ patient.gender_identity ?? $t('common.placeholders.em_dash') }}</p>
                 </div>
             </div>
         </div>
@@ -44,9 +44,9 @@ const props = defineProps({
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <!-- Upcoming appointments -->
             <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-                <h2 class="mb-4 text-base font-semibold text-slate-800">Upcoming Appointments</h2>
+                <h2 class="mb-4 text-base font-semibold text-slate-800">{{ $t('portal.dashboard.appointments_heading') }}</h2>
                 <p v-if="appointments.length === 0" class="text-sm text-slate-400">
-                    No upcoming appointments.
+                    {{ $t('portal.dashboard.appointments_empty') }}
                 </p>
                 <ul v-else class="divide-y divide-slate-100">
                     <li
@@ -63,8 +63,8 @@ const props = defineProps({
 
             <!-- Recent messages -->
             <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-                <h2 class="mb-4 text-base font-semibold text-slate-800">Messages</h2>
-                <p v-if="discussions.length === 0" class="text-sm text-slate-400">No messages.</p>
+                <h2 class="mb-4 text-base font-semibold text-slate-800">{{ $t('portal.dashboard.messages_heading') }}</h2>
+                <p v-if="discussions.length === 0" class="text-sm text-slate-400">{{ $t('portal.dashboard.messages_empty') }}</p>
                 <ul v-else class="divide-y divide-slate-100">
                     <li
                         v-for="discussion in discussions"
@@ -80,8 +80,8 @@ const props = defineProps({
 
         <!-- Documents -->
         <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-            <h2 class="mb-4 text-base font-semibold text-slate-800">Documents</h2>
-            <p v-if="documents.length === 0" class="text-sm text-slate-400">No documents on file.</p>
+            <h2 class="mb-4 text-base font-semibold text-slate-800">{{ $t('portal.dashboard.documents_heading') }}</h2>
+            <p v-if="documents.length === 0" class="text-sm text-slate-400">{{ $t('portal.dashboard.documents_empty') }}</p>
             <ul v-else class="divide-y divide-slate-100">
                 <li
                     v-for="doc in documents"

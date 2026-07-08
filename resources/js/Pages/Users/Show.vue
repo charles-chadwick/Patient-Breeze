@@ -20,7 +20,7 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    appointmentSearch: {
+    appointment_search: {
         type: String,
         default: '',
     },
@@ -95,7 +95,7 @@ setLayoutProps({
             <div class="flex items-center justify-between border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('users.show.appointments_heading') }}</h2>
                 <SearchInput
-                    :model-value="appointmentSearch"
+                    :model-value="appointment_search"
                     :route-params="user.id"
                     route-name="users.show"
                     :placeholder="$t('users.show.appointments_search_placeholder')"
@@ -104,7 +104,7 @@ setLayoutProps({
             </div>
 
             <div v-if="appointments.data.length === 0" class="px-6 py-8 text-center text-sm text-muted-foreground">
-                {{ appointmentSearch ? $t('users.show.appointments_empty_search') : $t('users.show.appointments_empty') }}
+                {{ appointment_search ? $t('users.show.appointments_empty_search') : $t('users.show.appointments_empty') }}
             </div>
 
             <table v-else class="w-full text-sm">
@@ -146,7 +146,7 @@ setLayoutProps({
                             </div>
                         </td>
                         <td class="px-6 py-3 text-foreground">{{ appointment.reason }}</td>
-                        <td class="px-6 py-3 text-foreground">{{ appointment.pivot.role }}</td>
+                        <td class="px-6 py-3 text-foreground">{{ $t('enums.appointment_role.' + appointment.pivot.role) }}</td>
                         <td class="px-6 py-3">
                             <AppointmentStatusBadge :status="appointment.status" />
                         </td>

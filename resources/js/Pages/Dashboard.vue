@@ -1,25 +1,27 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { Inbox } from 'lucide-vue-next'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 
 defineOptions({ layout: DashboardLayout })
 
-setLayoutProps({ title: 'Dashboard' })
+setLayoutProps({ title: computed(() => trans('nav.dashboard')) })
 
 const props = defineProps({
     stats: { type: Object, required: true },
     portal_queue: { type: Array, required: true },
 })
 
-const stat_cards = [
-    { label: 'Total Patients', key: 'total_patients' },
-    { label: 'Appointments Today', key: 'appointments_today' },
-    { label: 'Pending Appointments', key: 'pending_reviews' },
-    { label: 'Portal Queue Unread', key: 'portal_queue_unread' },
-]
+// Computed so labels re-evaluate once the async language file has loaded.
+const stat_cards = computed(() => [
+    { label: trans('dashboard.stats.total_patients'), key: 'total_patients' },
+    { label: trans('dashboard.stats.appointments_today'), key: 'appointments_today' },
+    { label: trans('dashboard.stats.pending_appointments'), key: 'pending_reviews' },
+    { label: trans('dashboard.stats.portal_queue_unread'), key: 'portal_queue_unread' },
+])
 
 const live_queue = ref([...props.portal_queue])
 const live_unread = ref(props.stats.portal_queue_unread)
@@ -78,20 +80,20 @@ onBeforeUnmount(() => {
             <div class="flex items-center justify-between border-b border-border px-6 py-4">
                 <div class="flex items-center gap-2">
                     <Inbox class="size-5 text-primary" />
-                    <h2 class="text-base font-bold text-foreground">Portal Queue</h2>
+                    <h2 class="text-base font-bold text-foreground">{{ $t('dashboard.portal_queue.heading') }}</h2>
                     <span
                         v-if="live_unread > 0"
                         class="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary"
                     >
-                        {{ live_unread }} unread
+                        {{ $t('dashboard.portal_queue.unread_badge', { count: live_unread }) }}
                     </span>
                 </div>
                 <Link :href="route('portal-queue.index')" class="text-sm font-semibold text-primary hover:underline">
-                    View all
+                    {{ $t('dashboard.portal_queue.view_all') }}
                 </Link>
             </div>
             <p v-if="!has_items" class="px-6 py-8 text-sm text-muted-foreground">
-                No portal activity yet. Notifications appear here in real time.
+                {{ $t('dashboard.portal_queue.empty') }}
             </p>
             <ul v-else class="divide-y divide-border">
                 <li

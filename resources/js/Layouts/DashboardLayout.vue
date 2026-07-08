@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox } from 'lucide-vue-next'
 
 const props = defineProps({
@@ -20,14 +21,15 @@ const effective_title = computed(() =>
         : props.title
 )
 
-const nav_items = [
-    { label: 'Dashboard', route: 'dashboard', icon: LayoutDashboard },
-    { label: 'Patients', route: 'patients.index', icon: HeartPulse },
-    { label: 'Appointments', route: 'appointments.index', icon: CalendarDays },
-    { label: 'Portal Queue', route: 'portal-queue.index', icon: Inbox },
-    { label: 'Users', route: 'users.index', icon: Users },
-    { label: 'Settings', route: 'settings.index', icon: Settings },
-]
+// Computed so labels re-evaluate once the async language file has loaded.
+const nav_items = computed(() => [
+    { label: trans('nav.dashboard'), route: 'dashboard', icon: LayoutDashboard },
+    { label: trans('nav.patients'), route: 'patients.index', icon: HeartPulse },
+    { label: trans('nav.appointments'), route: 'appointments.index', icon: CalendarDays },
+    { label: trans('nav.portal_queue'), route: 'portal-queue.index', icon: Inbox },
+    { label: trans('nav.users'), route: 'users.index', icon: Users },
+    { label: trans('nav.settings'), route: 'settings.index', icon: Settings },
+])
 
 const page = usePage()
 const sidebar_open = ref(false)
@@ -50,7 +52,7 @@ const sidebar_open = ref(false)
         >
             <!-- Logo -->
             <div class="flex h-16 items-center justify-between px-6">
-                <span class="text-xl font-bold text-white">PB Health</span>
+                <span class="text-xl font-bold text-white">{{ $t('common.brand.name') }}</span>
                 <button
                     class="rounded p-1 text-white/70 hover:text-white lg:hidden"
                     @click="sidebar_open = false"
@@ -90,7 +92,7 @@ const sidebar_open = ref(false)
                     </div>
                     <button
                         class="rounded p-1 text-white/60 hover:text-white"
-                        title="Sign out"
+                        :title="$t('common.labels.sign_out')"
                         @click="router.post(route('logout'))"
                     >
                         <LogOut class="size-4" />
@@ -109,7 +111,7 @@ const sidebar_open = ref(false)
                 >
                     <Menu class="size-5" />
                 </button>
-                <nav v-if="breadcrumbs.length" aria-label="Breadcrumb" class="flex items-center">
+                <nav v-if="breadcrumbs.length" :aria-label="$t('common.a11y.breadcrumb')" class="flex items-center">
                     <template v-for="(crumb, index) in breadcrumbs" :key="index">
                         <span v-if="index > 0" aria-hidden="true" class="mx-1.5 text-lg text-muted-foreground">/</span>
                         <Link

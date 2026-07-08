@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { router, setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import ContactModal from '@/Components/ContactModal.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
@@ -8,7 +9,7 @@ import RoiBadge from '@/Components/RoiBadge.vue'
 
 defineOptions({ layout: DashboardLayout })
 
-setLayoutProps({ title: 'Contacts' })
+setLayoutProps({ title: computed(() => trans('contacts.index.title')) })
 
 const props = defineProps({
     contacts: {
@@ -56,7 +57,7 @@ function confirmDelete() {
 }
 
 function contactableLabel(contact) {
-    if (!contact.contactable_type) return '—'
+    if (!contact.contactable_type) return trans('common.placeholders.em_dash')
     const short = contact.contactable_type.split('\\').pop()
     return `${short} #${contact.contactable_id}`
 }
@@ -66,7 +67,7 @@ function contactableLabel(contact) {
     <div class="rounded border border-border bg-white shadow-sm">
         <div class="flex items-center justify-between border-b border-border px-6 py-4">
             <div class="flex items-center gap-3">
-                <h2 class="font-bold text-foreground">All Contacts</h2>
+                <h2 class="font-bold text-foreground">{{ $t('contacts.index.heading') }}</h2>
                 <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
                     {{ contacts.total }}
                 </span>
@@ -74,18 +75,18 @@ function contactableLabel(contact) {
         </div>
 
         <div v-if="contacts.data.length === 0" class="px-6 py-8 text-center text-sm text-muted-foreground">
-            No contacts on record.
+            {{ $t('contacts.index.empty') }}
         </div>
 
         <table v-else class="w-full text-sm">
             <thead>
                 <tr class="border-b border-border text-left">
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Name</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Type</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Phone</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Linked To</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">ROI</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground text-right">Actions</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('contacts.index.column_name') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('contacts.index.column_type') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('contacts.index.column_phone') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('contacts.index.column_linked_to') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('contacts.index.column_roi') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground text-right">{{ $t('contacts.index.column_actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,10 +98,10 @@ function contactableLabel(contact) {
                     <td class="px-6 py-3 font-bold text-foreground">{{ contact.name }}</td>
                     <td class="px-6 py-3">
                         <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
-                            {{ contact.type }}
+                            {{ $t('enums.contact_type.' + contact.type) }}
                         </span>
                     </td>
-                    <td class="px-6 py-3 text-muted-foreground">{{ contact.phone || '—' }}</td>
+                    <td class="px-6 py-3 text-muted-foreground">{{ contact.phone || $t('common.placeholders.em_dash') }}</td>
                     <td class="px-6 py-3 text-muted-foreground">{{ contactableLabel(contact) }}</td>
                     <td class="px-6 py-3">
                         <RoiBadge :value="contact.roi" />
@@ -111,14 +112,14 @@ function contactableLabel(contact) {
                             @click="openEdit(contact)"
                             class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
                         >
-                            Edit
+                            {{ $t('common.actions.edit') }}
                         </button>
                         <button
                             type="button"
                             @click="askDelete(contact)"
                             class="ml-2 rounded-lg border border-vibrant-coral-200 px-3 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
                         >
-                            Delete
+                            {{ $t('common.actions.delete') }}
                         </button>
                     </td>
                 </tr>
@@ -134,9 +135,9 @@ function contactableLabel(contact) {
 
         <ConfirmDialog
             v-model:open="confirm_open"
-            title="Delete contact?"
-            :description="deleting_contact ? `This will permanently remove ${deleting_contact.name}.` : ''"
-            confirm-label="Delete"
+            :title="$t('contacts.confirm.delete_title')"
+            :description="deleting_contact ? $t('contacts.confirm.delete_description', { name: deleting_contact.name }) : ''"
+            :confirm-label="$t('common.actions.delete')"
             :processing="deleting"
             @confirm="confirmDelete"
         />

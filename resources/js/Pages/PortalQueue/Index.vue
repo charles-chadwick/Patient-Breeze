@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Link, router, setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { Inbox, Check } from 'lucide-vue-next'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
@@ -8,7 +9,7 @@ import { formatDate, DATE_SHORT } from '@/lib/utils'
 defineOptions({ layout: DashboardLayout })
 
 setLayoutProps({
-    breadcrumbs: [{ label: 'Portal Queue' }],
+    breadcrumbs: computed(() => [{ label: trans('nav.portal_queue') }]),
 })
 
 const props = defineProps({
@@ -63,19 +64,19 @@ onBeforeUnmount(() => {
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <Inbox class="size-6 text-primary" />
-                <h1 class="text-2xl font-bold text-foreground">Portal Queue</h1>
+                <h1 class="text-2xl font-bold text-foreground">{{ $t('nav.portal_queue') }}</h1>
                 <span
                     v-if="unread_total > 0"
                     class="rounded-full bg-primary/10 px-3 py-0.5 text-sm font-semibold text-primary"
                 >
-                    {{ unread_total }} unread
+                    {{ $t('portal_queue.unread_badge', { count: unread_total }) }}
                 </span>
             </div>
         </div>
 
         <div class="rounded-2xl border border-border bg-white shadow-sm">
             <div v-if="live_notifications.length === 0" class="p-10 text-center text-sm text-muted-foreground">
-                No portal activity yet. Notifications will appear here in real time.
+                {{ $t('portal_queue.empty') }}
             </div>
             <ul v-else class="divide-y divide-border">
                 <li
@@ -119,7 +120,7 @@ onBeforeUnmount(() => {
                         class="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10"
                         @click="markRead(notification)"
                     >
-                        <Check class="size-4" /> Mark read
+                        <Check class="size-4" /> {{ $t('portal_queue.mark_read') }}
                     </button>
                 </li>
             </ul>

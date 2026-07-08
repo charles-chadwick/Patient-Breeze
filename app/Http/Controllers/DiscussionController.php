@@ -12,6 +12,6 @@ class DiscussionController extends Controller
     {
         $createDiscussion->execute($request->validated(), auth()->id());
 
-        return redirect()->back();
+        return redirect()->back()->with('success', __('flash.discussions.created'));
     }
 }

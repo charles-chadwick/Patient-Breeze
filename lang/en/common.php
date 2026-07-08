@@ -13,11 +13,46 @@
 */
 
 return [
+    'brand' => [
+        'name' => 'PB Health',
+        'portal_name' => 'PB Health Portal',
+        'portal_label' => 'Patient Portal',
+        'portal_tagline' => 'Your health, at your fingertips.',
+    ],
+
     'actions' => [
         'save' => 'Save',
         'cancel' => 'Cancel',
         'edit' => 'Edit',
+        'delete' => 'Delete',
+        'close' => 'Close',
+        'confirm' => 'Confirm',
+        'sign_out' => 'Sign Out',
+        'sort' => 'Sort',
         'select_placeholder' => 'Select…',
+    ],
+
+    'labels' => [
+        'sign_out' => 'Sign out',
+        'yes' => 'Yes',
+        'no' => 'No',
+    ],
+
+    'confirm' => [
+        'default_title' => 'Are you sure?',
+    ],
+
+    'a11y' => [
+        'breadcrumb' => 'Breadcrumb',
+    ],
+
+    'avatar' => [
+        'alt' => 'Avatar',
+        'upload_title' => 'Click to upload avatar',
+        'change_photo' => 'Change Photo',
+        'upload_photo' => 'Upload Photo',
+        'remove' => 'Remove',
+        'hint' => 'JPG, PNG or GIF · Max 2 MB',
     ],
 
     'pagination' => [
@@ -27,5 +62,6 @@ return [
 
     'placeholders' => [
         'em_dash' => '—',
+        'search' => 'Search…',
     ],
 ];

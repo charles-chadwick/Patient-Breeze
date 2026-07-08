@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { setLayoutProps } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import PatientForm from '@/Pages/Patients/Partials/Form.vue'
 
@@ -31,14 +32,14 @@ setLayoutProps({
     breadcrumbs: computed(() => {
         if (isEditing.value) {
             return [
-                { label: 'Patients', href: route('patients.index') },
+                { label: trans('nav.patients'), href: route('patients.index') },
                 { label: `${props.patient.first_name} ${props.patient.last_name}`, href: route('patients.show', props.patient.id) },
-                { label: `Edit ${props.patient.first_name} ${props.patient.last_name}` },
+                { label: trans('patients.form.edit_title', { name: `${props.patient.first_name} ${props.patient.last_name}` }) },
             ]
         }
         return [
-            { label: 'Patients', href: route('patients.index') },
-            { label: 'New Patient' },
+            { label: trans('nav.patients'), href: route('patients.index') },
+            { label: trans('patients.form.new_title') },
         ]
     }),
 })

@@ -65,12 +65,12 @@ function trigger() {
             class="shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-full"
             :class="{ 'ring-2 ring-vibrant-coral-400': error }"
             @click="trigger"
-            title="Click to upload avatar"
+            :title="$t('common.avatar.upload_title')"
         >
             <img
                 v-if="displayUrl"
                 :src="displayUrl"
-                alt="Avatar"
+                :alt="$t('common.avatar.alt')"
                 class="size-20 rounded-full object-cover ring-2 ring-border"
             />
             <div
@@ -91,7 +91,7 @@ function trigger() {
                     class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
                     @click="trigger"
                 >
-                    {{ displayUrl ? 'Change Photo' : 'Upload Photo' }}
+                    {{ displayUrl ? $t('common.avatar.change_photo') : $t('common.avatar.upload_photo') }}
                 </button>
                 <button
                     v-if="displayUrl"
@@ -99,10 +99,10 @@ function trigger() {
                     class="rounded-lg border border-vibrant-coral-200 px-3 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
                     @click="remove"
                 >
-                    Remove
+                    {{ $t('common.avatar.remove') }}
                 </button>
             </div>
-            <p class="text-xs text-muted-foreground">JPG, PNG or GIF · Max 2 MB</p>
+            <p class="text-xs text-muted-foreground">{{ $t('common.avatar.hint') }}</p>
             <p v-if="error" class="text-xs text-vibrant-coral-600">{{ error }}</p>
         </div>
 

@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { trans } from 'laravel-vue-i18n'
 import {
     Dialog,
     DialogContent,
@@ -45,7 +46,23 @@ const action = computed(() =>
 
 const method = computed(() => (is_edit.value ? 'patch' : 'post'))
 
-const title = computed(() => (is_edit.value ? 'Edit Contact' : 'New Contact'))
+const title = computed(() =>
+    is_edit.value
+        ? trans('contacts.modal.edit_title')
+        : trans('contacts.modal.new_title'),
+)
+
+const description = computed(() =>
+    is_edit.value
+        ? trans('contacts.modal.edit_description')
+        : trans('contacts.modal.new_description'),
+)
+
+const submit_label = computed(() =>
+    is_edit.value
+        ? trans('contacts.modal.submit_update')
+        : trans('contacts.modal.submit_create'),
+)
 
 function handleSuccess() {
     emit('saved')
@@ -63,7 +80,7 @@ function handleOpenUpdate(value) {
             <DialogHeader>
                 <DialogTitle>{{ title }}</DialogTitle>
                 <DialogDescription>
-                    {{ is_edit ? 'Update this contact’s details.' : 'Add a new contact.' }}
+                    {{ description }}
                 </DialogDescription>
             </DialogHeader>
 
@@ -84,14 +101,14 @@ function handleOpenUpdate(value) {
                     @click="handleOpenUpdate(false)"
                     class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
                 >
-                    Cancel
+                    {{ $t('common.actions.cancel') }}
                 </button>
                 <button
                     type="submit"
                     form="contact-form"
                     class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90"
                 >
-                    {{ is_edit ? 'Save Changes' : 'Create Contact' }}
+                    {{ submit_label }}
                 </button>
             </DialogFooter>
         </DialogContent>

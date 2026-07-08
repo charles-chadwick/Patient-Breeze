@@ -40,7 +40,8 @@ class AppointmentController extends Controller
     {
         $this->bookAction->execute($patient, $request->validated());
 
-        return redirect()->route('patients.show', $patient);
+        return redirect()->route('patients.show', $patient)
+            ->with('success', __('flash.appointments.created'));
     }
 
     public function edit(Patient $patient, Appointment $appointment): Response
@@ -58,7 +59,8 @@ class AppointmentController extends Controller
     {
         $this->updateAction->execute($appointment, $request->validated());
 
-        return redirect()->route('patients.show', $patient);
+        return redirect()->route('patients.show', $patient)
+            ->with('success', __('flash.appointments.updated'));
     }
 
     /**

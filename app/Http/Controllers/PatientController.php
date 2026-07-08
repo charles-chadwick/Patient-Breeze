@@ -53,7 +53,8 @@ class PatientController extends Controller
 
         $avatarAction->execute($patient, $request->file('avatar'), false);
 
-        return redirect()->route('patients.show', $patient);
+        return redirect()->route('patients.show', $patient)
+            ->with('success', __('flash.patients.created'));
     }
 
     public function show(Patient $patient, Request $request): Response
@@ -134,6 +135,7 @@ class PatientController extends Controller
 
         $avatarAction->execute($patient, $request->file('avatar'), (bool) ($validated['remove_avatar'] ?? false));
 
-        return redirect()->route('patients.show', $patient);
+        return redirect()->route('patients.show', $patient)
+            ->with('success', __('flash.patients.updated'));
     }
 }

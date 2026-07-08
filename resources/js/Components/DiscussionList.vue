@@ -87,13 +87,13 @@ function lastActivity(discussion) {
 <template>
     <div>
         <div class="flex items-center justify-between border-b border-border px-6 py-4">
-            <h2 class="font-bold text-foreground">Discussions</h2>
+            <h2 class="font-bold text-foreground">{{ $t('discussions.list.heading') }}</h2>
             <button
                 type="button"
                 @click="create_modal_open = true"
                 class="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white hover:bg-primary/90"
             >
-                + New Discussion
+                {{ $t('discussions.list.new_discussion') }}
             </button>
         </div>
 
@@ -105,17 +105,17 @@ function lastActivity(discussion) {
         </div>
 
         <div v-else-if="discussions.length === 0" class="px-6 py-8 text-center text-sm text-muted-foreground">
-            No discussions on record.
+            {{ $t('discussions.list.empty') }}
         </div>
 
         <table v-else class="w-full text-sm">
             <thead>
                 <tr class="border-b border-border text-left">
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Title</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Type</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Participants</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Posts</th>
-                    <th class="px-6 py-3 font-bold text-muted-foreground">Last Activity</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('discussions.list.column_title') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('discussions.list.column_type') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('discussions.list.column_participants') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('discussions.list.column_posts') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('discussions.list.column_last_activity') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-border">
@@ -128,7 +128,7 @@ function lastActivity(discussion) {
                     <td class="px-6 py-3 font-bold text-foreground">{{ discussion.title }}</td>
                     <td class="px-6 py-3">
                         <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
-                            {{ discussion.type }}
+                            {{ $t('enums.discussion_type.' + discussion.type) }}
                         </span>
                     </td>
                     <td class="px-6 py-3">
@@ -138,7 +138,7 @@ function lastActivity(discussion) {
                                     v-if="participant.participantable"
                                     :src="participant.participantable.avatar_url"
                                     :alt="`${participant.participantable.first_name} ${participant.participantable.last_name}`"
-                                    :title="`${participant.participantable.first_name} ${participant.participantable.last_name}` + `${participant.is_initiator ? '(Initiator)' : ''}`"
+                                    :title="`${participant.participantable.first_name} ${participant.participantable.last_name}` + `${participant.is_initiator ? $t('discussions.list.initiator_suffix') : ''}`"
                                     class="size-7 rounded-full object-cover ring-2 ring-white"
                                 />
                             </template>

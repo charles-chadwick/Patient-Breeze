@@ -1,5 +1,14 @@
 <?php
 
+use App\Enums\AppointmentRole;
+use App\Enums\AppointmentStatus;
+use App\Enums\BloodType;
+use App\Enums\ContactType;
+use App\Enums\DiscussionPostStatus;
+use App\Enums\DiscussionType;
+use App\Enums\DocumentType;
+use App\Enums\GenderAtBirth;
+use App\Enums\GenderIdentity;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Lang;
@@ -19,14 +28,25 @@ it('shares the active locale with the frontend', function (): void {
         ->assertInertia(fn ($page) => $page->where('locale', app()->getLocale()));
 });
 
-it('resolves a translated, non-key label for every user role', function (): void {
-    foreach (UserRole::cases() as $role) {
-        $key = 'enums.user_role.'.$role->value;
+it('resolves a translated, non-key label for every enum case', function (string $enum, string $group): void {
+    foreach ($enum::cases() as $case) {
+        $key = "enums.{$group}.{$case->value}";
 
         expect(Lang::has($key))->toBeTrue("Missing translation key: {$key}");
-        expect($role->label())->toBe(__($key))->not->toBe($key);
+        expect($case->label())->toBe(__($key))->not->toBe($key);
     }
-});
+})->with([
+    [UserRole::class, 'user_role'],
+    [AppointmentRole::class, 'appointment_role'],
+    [AppointmentStatus::class, 'appointment_status'],
+    [BloodType::class, 'blood_type'],
+    [ContactType::class, 'contact_type'],
+    [DiscussionPostStatus::class, 'discussion_post_status'],
+    [DiscussionType::class, 'discussion_type'],
+    [DocumentType::class, 'document_type'],
+    [GenderAtBirth::class, 'gender_at_birth'],
+    [GenderIdentity::class, 'gender_identity'],
+]);
 
 it('flashes a translated success message when a user is created', function (): void {
     $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
@@ -42,29 +62,26 @@ it('flashes a translated success message when a user is created', function (): v
 });
 
 /**
- * Guard: every statically-referenced translation key in the migrated Users
- * Vue files must exist in lang/en so nothing silently renders as a raw key.
+ * Guard: every statically-referenced translation key across all Vue files
+ * must exist in lang/en so nothing silently renders as a raw key.
  *
  * @return array<int, string>
  */
-function usersSliceTranslationKeys(): array
+function referencedTranslationKeys(): array
 {
-    $files = [
-        resource_path('js/Pages/Users/Index.vue'),
-        resource_path('js/Pages/Users/Show.vue'),
-        resource_path('js/Pages/Users/Form.vue'),
-        resource_path('js/Pages/Users/Partials/Form.vue'),
-        resource_path('js/Components/UserCard.vue'),
-    ];
+    $files = array_merge(
+        glob(resource_path('js/**/*.vue'), GLOB_BRACE) ?: [],
+        rglob(resource_path('js'), 'vue'),
+    );
 
     $keys = [];
 
-    foreach ($files as $file) {
+    foreach (array_unique($files) as $file) {
         $contents = file_get_contents($file);
 
         // Match $t('key') and trans('key') with a plain single-quoted literal.
         // Concatenated/dynamic keys (e.g. 'enums.user_role.' + name) are skipped
-        // here and covered by the per-role test above.
+        // here and covered by the per-enum test above.
         preg_match_all("/(?:\\\$t|trans)\('([a-z0-9_.]+)'\s*[),]/i", $contents, $matches);
 
         foreach ($matches[1] as $key) {
@@ -75,12 +92,32 @@ function usersSliceTranslationKeys(): array
     return array_values($keys);
 }
 
-it('defines every translation key referenced in the Users slice', function (): void {
-    $keys = usersSliceTranslationKeys();
+/**
+ * @return array<int, string>
+ */
+function rglob(string $directory, string $extension): array
+{
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS)
+    );
+
+    $matches = [];
+
+    foreach ($iterator as $file) {
+        if ($file->isFile() && $file->getExtension() === $extension) {
+            $matches[] = $file->getPathname();
+        }
+    }
+
+    return $matches;
+}
+
+it('defines every translation key referenced in the Vue components', function (): void {
+    $keys = referencedTranslationKeys();
 
     expect($keys)->not->toBeEmpty();
 
-    foreach ($keys as $key) {
-        expect(Lang::has($key))->toBeTrue("Missing translation key: {$key}");
-    }
+    $missing = array_filter($keys, fn (string $key): bool => ! Lang::has($key));
+
+    expect($missing)->toBe([], 'Missing translation keys: '.implode(', ', $missing));
 });
