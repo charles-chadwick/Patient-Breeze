@@ -32,6 +32,7 @@ return [
         'edit_patient' => 'Edit Patient',
         'tab_demographics' => 'Demographics',
         'tab_contacts' => 'Contacts',
+        'tab_notes' => 'Notes',
         'tab_discussions' => 'Discussions',
         'appointments_heading' => 'Appointments',
         'appointments_search_placeholder' => 'Search reason or notes…',

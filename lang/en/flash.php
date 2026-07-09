@@ -28,6 +28,12 @@ return [
         'deleted' => 'Contact removed successfully.',
     ],
 
+    'notes' => [
+        'created' => 'Note added successfully.',
+        'updated' => 'Note updated successfully.',
+        'deleted' => 'Note removed successfully.',
+    ],
+
     'discussions' => [
         'created' => 'Discussion started successfully.',
     ],

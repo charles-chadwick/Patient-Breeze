@@ -11,6 +11,7 @@ use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionPostController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\MedicationController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientMedicationController;
 use App\Http\Controllers\Portal\DocumentController as PortalDocumentController;
@@ -58,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
     Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('notes', NoteController::class)->only(['store', 'update', 'destroy']);
     Route::resource('discussions', DiscussionController::class)->only(['store']);
     Route::resource('discussions.posts', DiscussionPostController::class)->only(['store']);
 

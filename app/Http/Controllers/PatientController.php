@@ -11,6 +11,7 @@ use App\Enums\DocumentType;
 use App\Enums\DoseForm;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
+use App\Enums\NoteType;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Document;
@@ -99,6 +100,8 @@ class PatientController extends Controller
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),
             'discussions' => Inertia::defer(fn () => $patient->discussionThread()),
+            'note_types' => NoteType::values(),
+            'notes' => Inertia::defer(fn () => $patient->notes()->latest()->get()),
         ]);
     }
 

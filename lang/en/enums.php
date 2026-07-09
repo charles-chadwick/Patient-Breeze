@@ -55,6 +55,13 @@ return [
         'Other' => 'Other',
     ],
 
+    'note_type' => [
+        'General' => 'General',
+        'Clinical' => 'Clinical',
+        'Administrative' => 'Administrative',
+        'CarePlan' => 'Care Plan',
+    ],
+
     'discussion_post_status' => [
         'Draft' => 'Draft',
         'Published' => 'Published',
