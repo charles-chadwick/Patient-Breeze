@@ -125,3 +125,14 @@ it('rejects a duplicate email on update', function (): void {
         'gender_at_birth' => GenderAtBirth::Male->value,
     ])->assertSessionHasErrors(['email']);
 });
+
+it('exposes note types on the patient chart', function (): void {
+    $patient = Patient::factory()->create();
+
+    $this->get(route('patients.show', $patient))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Patients/Show')
+            ->has('note_types')
+        );
+});
