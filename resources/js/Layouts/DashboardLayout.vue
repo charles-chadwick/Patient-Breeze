@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp } from 'lucide-vue-next'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck } from 'lucide-vue-next'
 import AuthorizationModal from '@/Components/AuthorizationModal.vue'
 
 const props = defineProps({
@@ -28,13 +28,42 @@ const nav_items = computed(() => [
     { label: trans('nav.patients'), route: 'patients.index', icon: HeartPulse },
     { label: trans('nav.appointments'), route: 'appointments.index', icon: CalendarDays },
     { label: trans('nav.portal_queue'), route: 'portal-queue.index', icon: Inbox },
-    { label: trans('nav.users'), route: 'users.index', icon: Users },
+])
+
+// Collapsible section groups. Each child is a regular nav link.
+const nav_sections = computed(() => [
+    {
+        label: trans('nav.administration'),
+        icon: ShieldCheck,
+        children: [
+            { label: trans('nav.users'), route: 'users.index', icon: Users },
+        ],
+    },
 ])
 
 const page = usePage()
 const sidebar_open = ref(false)
 const user_menu_open = ref(false)
 const user_menu_container = ref(null)
+
+// Track which collapsible sections are expanded, keyed by label.
+const open_sections = ref({})
+
+function isSectionActive(section) {
+    return section.children.some((child) => route().current(child.route))
+}
+
+function isSectionOpen(section) {
+    // Auto-expand a section when one of its children is the current route.
+    return open_sections.value[section.label] ?? isSectionActive(section)
+}
+
+function toggleSection(section) {
+    open_sections.value = {
+        ...open_sections.value,
+        [section.label]: !isSectionOpen(section),
+    }
+}
 
 const auth_user = computed(() => page.props.auth?.user ?? null)
 
@@ -94,6 +123,36 @@ onUnmounted(() => document.removeEventListener('click', handleUserMenuClickOutsi
                     <component :is="item.icon" class="size-4 shrink-0 text-white" />
                     <span>{{ item.label }}</span>
                 </Link>
+
+                <!-- Collapsible sections -->
+                <div v-for="section in nav_sections" :key="section.label">
+                    <button
+                        type="button"
+                        class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 font-bold text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                        :class="{ 'text-white': isSectionActive(section) }"
+                        @click="toggleSection(section)"
+                    >
+                        <component :is="section.icon" class="size-4 shrink-0 text-white" />
+                        <span class="flex-1 text-left">{{ section.label }}</span>
+                        <component
+                            :is="isSectionOpen(section) ? ChevronDown : ChevronUp"
+                            class="size-4 shrink-0 text-white/60"
+                        />
+                    </button>
+                    <div v-if="isSectionOpen(section)" class="mt-1 flex flex-col gap-1 pl-5">
+                        <Link
+                            v-for="child in section.children"
+                            :key="child.route"
+                            :href="route().has(child.route) ? route(child.route) : '#'"
+                            class="flex items-center gap-3 rounded-lg px-3 py-2.5 font-bold text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                            :class="{ 'bg-white/15 text-white': route().current(child.route) }"
+                            @click="sidebar_open = false"
+                        >
+                            <component :is="child.icon" class="size-4 shrink-0 text-white" />
+                            <span>{{ child.label }}</span>
+                        </Link>
+                    </div>
+                </div>
             </nav>
 
             <!-- User menu -->

@@ -56,8 +56,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/patients/{patient}/medications/{patient_medication}', [PatientMedicationController::class, 'destroy'])
         ->scopeBindings()
         ->name('patients.medications.destroy');
-    Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
-    Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+    Route::prefix('admin')->group(function () {
+        Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+        Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+    });
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('notes', NoteController::class)->only(['store', 'update', 'destroy']);
     Route::resource('discussions', DiscussionController::class)->only(['store']);

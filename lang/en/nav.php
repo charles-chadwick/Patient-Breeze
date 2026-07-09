@@ -12,6 +12,7 @@ return [
     'patients' => 'Patients',
     'appointments' => 'Appointments',
     'portal_queue' => 'Portal Queue',
+    'administration' => 'Administration',
     'users' => 'Users',
     'settings' => 'Settings',
 
