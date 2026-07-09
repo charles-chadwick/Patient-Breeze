@@ -65,3 +65,9 @@ onBeforeUnmount(() => {
         <div ref="editor_element"></div>
     </div>
 </template>
+
+<style scoped>
+:deep(.ql-editor) {
+    min-height: 12rem;
+}
+</style>
