@@ -47,6 +47,7 @@ function snippet(html) {
         <h2 class="font-bold text-foreground">{{ $t('notes.tab.heading') }}</h2>
         <button
             type="button"
+            data-testid="new-note-button"
             @click="openCreateNote"
             class="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white hover:bg-primary/90"
         >

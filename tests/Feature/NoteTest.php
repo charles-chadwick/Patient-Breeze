@@ -103,6 +103,18 @@ it('rejects an invalid note type', function (): void {
     ])->assertSessionHasErrors('type');
 });
 
+it('rejects a notable_type that is not allow-listed', function (): void {
+    $patient = Patient::factory()->create();
+
+    $this->post(route('notes.store'), [
+        'type' => NoteType::General->value,
+        'title' => 'X',
+        'content' => '<p>Y</p>',
+        'notable_type' => User::class,
+        'notable_id' => $patient->id,
+    ])->assertSessionHasErrors('notable_type');
+});
+
 it('updates a note via the controller', function (): void {
     $patient = Patient::factory()->create();
     $note = Note::factory()->for($patient, 'notable')->create(['title' => 'Old']);
