@@ -78,6 +78,8 @@ const initial_discussion_id = url_params.get('discussion')
 
 const active_tab = ref(['demographics', 'contacts', 'notes', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
 
+const records_tab = ref('appointments')
+
 setLayoutProps({
     breadcrumbs: computed(() => [
         { label: trans('nav.patients'), href: route('patients.index') },
@@ -172,7 +174,44 @@ setLayoutProps({
             />
         </div>
 
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+            <div class="flex bg-muted/40 p-1">
+                <button
+                    type="button"
+                    data-testid="records-tab-appointments"
+                    @click="records_tab = 'appointments'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="records_tab === 'appointments'
+                        ? 'bg-white text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    {{ $t('patients.show.tab_appointments') }}
+                </button>
+                <button
+                    type="button"
+                    data-testid="records-tab-medications"
+                    @click="records_tab = 'medications'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="records_tab === 'medications'
+                        ? 'bg-white text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    {{ $t('patients.show.tab_medications') }}
+                </button>
+                <button
+                    type="button"
+                    data-testid="records-tab-documents"
+                    @click="records_tab = 'documents'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="records_tab === 'documents'
+                        ? 'bg-white text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    {{ $t('patients.show.tab_documents') }}
+                </button>
+            </div>
+
+            <div v-if="records_tab === 'appointments'">
             <div class="flex items-center justify-between border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('patients.show.appointments_heading') }}</h2>
                 <div class="flex items-center gap-3">
@@ -295,19 +334,24 @@ setLayoutProps({
                     </Link>
                 </div>
             </div>
+            </div>
+
+            <MedicationsBlock
+                v-if="records_tab === 'medications'"
+                :patient-id="patient.id"
+                :medications="medications"
+                :dose-form-options="dose_form_options"
+                flat
+            />
+
+            <DocumentsBlock
+                v-if="records_tab === 'documents'"
+                :patient-id="patient.id"
+                :documents="documents"
+                :types="document_type_options"
+                flat
+            />
         </div>
-
-        <MedicationsBlock
-            :patient-id="patient.id"
-            :medications="medications"
-            :dose-form-options="dose_form_options"
-        />
-
-        <DocumentsBlock
-            :patient-id="patient.id"
-            :documents="documents"
-            :types="document_type_options"
-        />
 
     </div>
 </template>

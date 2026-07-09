@@ -18,6 +18,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    flat: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 const add_open = ref(false)
@@ -49,11 +53,12 @@ function confirmDelete() {
 </script>
 
 <template>
-    <div class="rounded-xl border border-border bg-white shadow-sm">
+    <div :class="flat ? '' : 'rounded-xl border border-border bg-white shadow-sm'">
         <div class="flex items-center justify-between border-b border-border px-6 py-4">
             <h2 class="font-bold text-foreground">{{ $t('medications.heading') }}</h2>
             <button
                 type="button"
+                data-testid="medication-add-button"
                 @click="add_open = true"
                 class="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white hover:bg-primary/90"
             >
