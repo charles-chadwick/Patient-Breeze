@@ -26,6 +26,8 @@ use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Permission\Guard;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(['first_name', 'middle_name', 'last_name', 'prefix', 'suffix', 'email', 'password'])]
@@ -72,6 +74,24 @@ class User extends Authenticatable implements HasMedia
     public function scopeStaff($query)
     {
         return $query->whereDoesntHave('roles', fn ($query) => $query->where('name', UserRole::SuperAdmin->value));
+    }
+
+    /**
+     * Resolve the names of every permission granted to this user, directly or
+     * via roles, without hydrating the permission models. Mirrors Spatie's
+     * `getAllPermissions()->pluck('name')` for the frontend gate share.
+     *
+     * @return Collection<int, string>
+     */
+    public function permissionNames(): Collection
+    {
+        return Permission::query()
+            ->whereIn('guard_name', Guard::getNames($this)->all())
+            ->where(function (Builder $query): void {
+                $query->whereHas('roles', fn (Builder $query) => $query->whereIn('roles.id', $this->roles()->pluck('roles.id')))
+                    ->orWhereHas('users', fn (Builder $query) => $query->whereKey($this->getKey()));
+            })
+            ->pluck('name');
     }
 
     /**

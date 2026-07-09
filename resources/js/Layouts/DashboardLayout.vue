@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox } from 'lucide-vue-next'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp } from 'lucide-vue-next'
 import AuthorizationModal from '@/Components/AuthorizationModal.vue'
 
 const props = defineProps({
@@ -29,11 +29,30 @@ const nav_items = computed(() => [
     { label: trans('nav.appointments'), route: 'appointments.index', icon: CalendarDays },
     { label: trans('nav.portal_queue'), route: 'portal-queue.index', icon: Inbox },
     { label: trans('nav.users'), route: 'users.index', icon: Users },
-    { label: trans('nav.settings'), route: 'settings.index', icon: Settings },
 ])
 
 const page = usePage()
 const sidebar_open = ref(false)
+const user_menu_open = ref(false)
+const user_menu_container = ref(null)
+
+const auth_user = computed(() => page.props.auth?.user ?? null)
+
+const user_initials = computed(() => {
+    const first = auth_user.value?.first_name?.[0] ?? ''
+    const last = auth_user.value?.last_name?.[0] ?? ''
+
+    return `${first}${last}`.toUpperCase() || 'U'
+})
+
+function handleUserMenuClickOutside(event) {
+    if (!user_menu_container.value?.contains(event.target)) {
+        user_menu_open.value = false
+    }
+}
+
+onMounted(() => document.addEventListener('click', handleUserMenuClickOutside))
+onUnmounted(() => document.removeEventListener('click', handleUserMenuClickOutside))
 </script>
 
 <template>
@@ -77,28 +96,57 @@ const sidebar_open = ref(false)
                 </Link>
             </nav>
 
-            <!-- User footer -->
-            <div class="border-t border-white/20 px-4 py-4">
-                <div class="flex items-center gap-3">
-                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-sm font-bold text-white">
-                        {{ page.props.auth?.user?.first_name?.[0] ?? 'U' }}
-                    </div>
-                    <div class="flex-1 overflow-hidden">
-                        <p class="truncate text-sm font-bold text-white">
-                            {{ page.props.auth?.user?.first_name }} {{ page.props.auth?.user?.last_name }}
-                        </p>
-                        <p class="truncate text-xs text-white/60">
-                            {{ page.props.auth?.user?.email }}
-                        </p>
-                    </div>
+            <!-- User menu -->
+            <div ref="user_menu_container" class="relative border-t border-white/20 px-4 py-4">
+                <!-- Menu -->
+                <div
+                    v-if="user_menu_open"
+                    class="absolute inset-x-4 bottom-full mb-2 overflow-hidden rounded-lg border border-border bg-white py-1 shadow-lg"
+                >
+                    <Link
+                        v-if="route().has('settings.index')"
+                        :href="route('settings.index')"
+                        class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-muted/40"
+                        :class="{ 'text-primary': route().current('settings.index') }"
+                        @click="user_menu_open = false; sidebar_open = false"
+                    >
+                        <Settings class="size-4 shrink-0" />
+                        <span>{{ $t('nav.settings') }}</span>
+                    </Link>
                     <button
-                        class="rounded p-1 text-white/60 hover:text-white"
-                        :title="$t('common.labels.sign_out')"
+                        type="button"
+                        class="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-muted/40"
                         @click="router.post(route('logout'))"
                     >
-                        <LogOut class="size-4" />
+                        <LogOut class="size-4 shrink-0" />
+                        <span>{{ $t('common.labels.sign_out') }}</span>
                     </button>
                 </div>
+
+                <!-- Trigger -->
+                <button
+                    type="button"
+                    class="flex w-full items-center gap-3 rounded-lg px-1 py-1 text-left transition-colors hover:bg-white/10"
+                    @click="user_menu_open = !user_menu_open"
+                >
+                    <img
+                        :src="auth_user?.avatar_url"
+                        :alt="user_initials"
+                        class="size-8 shrink-0 rounded-full bg-white/20 object-cover"
+                    />
+                    <div class="flex-1 overflow-hidden">
+                        <p class="truncate text-sm font-bold text-white">
+                            {{ auth_user?.first_name }} {{ auth_user?.last_name }}
+                        </p>
+                        <p class="truncate text-xs text-white/60">
+                            {{ auth_user?.email }}
+                        </p>
+                    </div>
+                    <ChevronUp
+                        class="size-4 shrink-0 text-white/60 transition-transform"
+                        :class="{ 'rotate-180': user_menu_open }"
+                    />
+                </button>
             </div>
         </aside>
 

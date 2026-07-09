@@ -39,14 +39,14 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'locale' => fn () => app()->getLocale(),
             'auth' => [
-                'user' => fn () => $request->user('web')?->only([
-                    'id', 'first_name', 'last_name', 'email', 'prefix', 'suffix',
+                'user' => fn () => $request->user('web')?->loadMissing('media')->only([
+                    'id', 'first_name', 'last_name', 'email', 'prefix', 'suffix', 'avatar_url',
                 ]),
                 'portal_patient' => fn () => $request->user('portal')?->only([
                     'id', 'first_name', 'last_name',
                 ]),
                 'roles' => fn () => $request->user('web')?->getRoleNames() ?? [],
-                'permissions' => fn () => $request->user('web')?->getAllPermissions()->pluck('name') ?? [],
+                'permissions' => fn () => $request->user('web')?->permissionNames() ?? [],
                 'two_factor_enabled' => fn () => (bool) $request->user('web')?->hasEnabledTwoFactorAuthentication(),
                 'portal_two_factor_enabled' => fn () => (bool) $request->user('portal')?->hasEnabledTwoFactorAuthentication(),
             ],

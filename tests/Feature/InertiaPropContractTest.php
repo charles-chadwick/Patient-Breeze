@@ -22,6 +22,19 @@ it('consumes the snake_case appointment_search prop on show pages', function (st
     'js/Pages/Patients/Show.vue',
 ]);
 
+it('shares the authenticated user avatar_url so the user menu can render it', function (): void {
+    foreach (UserRole::cases() as $role) {
+        Role::findOrCreate($role->value);
+    }
+
+    $user = User::factory()->withRole(UserRole::SuperAdmin)->create();
+    $this->actingAs($user);
+
+    $this->get(route('dashboard'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page->has('auth.user.avatar_url'));
+});
+
 it('passes appointment_search to the users show page reflecting the query', function (): void {
     foreach (UserRole::cases() as $role) {
         Role::findOrCreate($role->value);
