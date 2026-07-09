@@ -121,6 +121,7 @@ setLayoutProps({
                 </button>
                 <button
                     type="button"
+                    data-testid="patient-tab-notes"
                     @click="active_tab = 'notes'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'notes'
