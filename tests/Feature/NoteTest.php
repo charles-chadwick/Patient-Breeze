@@ -66,3 +66,72 @@ it('note factory produces valid notes', function (): void {
         ->and($note->title)->not->toBeEmpty()
         ->and($note->content)->not->toBeEmpty();
 });
+
+it('stores a note via the controller', function (): void {
+    $patient = Patient::factory()->create();
+
+    $this->post(route('notes.store'), [
+        'type' => NoteType::Clinical->value,
+        'title' => 'Intake summary',
+        'content' => '<p>Body text</p>',
+        'notable_type' => Patient::class,
+        'notable_id' => $patient->id,
+    ])->assertRedirect();
+
+    expect($patient->notes()->where('title', 'Intake summary')->exists())->toBeTrue();
+});
+
+it('requires title and content when storing a note', function (): void {
+    $patient = Patient::factory()->create();
+
+    $this->post(route('notes.store'), [
+        'type' => NoteType::General->value,
+        'notable_type' => Patient::class,
+        'notable_id' => $patient->id,
+    ])->assertSessionHasErrors(['title', 'content']);
+});
+
+it('rejects an invalid note type', function (): void {
+    $patient = Patient::factory()->create();
+
+    $this->post(route('notes.store'), [
+        'type' => 'NotARealType',
+        'title' => 'X',
+        'content' => '<p>Y</p>',
+        'notable_type' => Patient::class,
+        'notable_id' => $patient->id,
+    ])->assertSessionHasErrors('type');
+});
+
+it('updates a note via the controller', function (): void {
+    $patient = Patient::factory()->create();
+    $note = Note::factory()->for($patient, 'notable')->create(['title' => 'Old']);
+
+    $this->patch(route('notes.update', $note), [
+        'type' => $note->type->value,
+        'title' => 'New',
+        'content' => '<p>Updated</p>',
+    ])->assertRedirect();
+
+    expect($note->fresh()->title)->toBe('New');
+});
+
+it('deletes a note via the controller as a doctor', function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+
+    $patient = Patient::factory()->create();
+    $note = Note::factory()->for($patient, 'notable')->create();
+
+    $this->delete(route('notes.destroy', $note))->assertRedirect();
+
+    expect(Note::find($note->id))->toBeNull();
+});
+
+it('forbids staff from deleting a note', function (): void {
+    $patient = Patient::factory()->create();
+    $note = Note::factory()->for($patient, 'notable')->create();
+
+    $this->delete(route('notes.destroy', $note))->assertForbidden();
+
+    expect(Note::find($note->id))->not->toBeNull();
+});
