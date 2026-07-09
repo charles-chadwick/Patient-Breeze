@@ -21,6 +21,11 @@ const props = defineProps({
         type: String,
         default: 'Assistant',
     },
+    // Role assigned to the first staff member added.
+    primaryRole: {
+        type: String,
+        default: 'Primary',
+    },
     placeholder: {
         type: String,
         default: '',
@@ -79,7 +84,8 @@ function addStaff(staff) {
         return
     }
 
-    selected.value = [...selected.value, { ...staff, role: props.defaultRole }]
+    const assigned_role = selected.value.length === 0 ? props.primaryRole : props.defaultRole
+    selected.value = [...selected.value, { ...staff, role: assigned_role }]
     emitModel()
 
     search_value.value = ''
@@ -101,7 +107,7 @@ function updateRole(user_id, role) {
 }
 
 function fullName(staff) {
-    return `${staff.last_name}, ${staff.first_name}`
+    return `${staff.first_name} ${staff.last_name}`
 }
 
 onUnmounted(() => clearTimeout(debounce_timer))

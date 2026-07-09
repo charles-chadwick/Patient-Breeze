@@ -1,6 +1,7 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3'
 import DatePicker from '@/Components/ui/DatePicker.vue'
+import TimePicker from '@/Components/ui/TimePicker.vue'
 import StaffSelect from '@/Components/StaffSelect.vue'
 
 const props = defineProps({
@@ -83,11 +84,10 @@ function submit() {
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
                         {{ $t('appointments.form.label_start_time') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
-                    <input
+                    <TimePicker
                         v-model="form.start_time"
-                        type="time"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-vibrant-coral-400': form.errors.start_time }"
+                        :placeholder="$t('appointments.form.placeholder_start_time')"
+                        :class="{ 'ring-2 ring-vibrant-coral-400 rounded-lg': form.errors.start_time }"
                     />
                     <p v-if="form.errors.start_time" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.start_time }}</p>
                 </div>
@@ -97,11 +97,10 @@ function submit() {
                     <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
                         {{ $t('appointments.form.label_end_time') }} <span class="text-vibrant-coral-500">*</span>
                     </label>
-                    <input
+                    <TimePicker
                         v-model="form.end_time"
-                        type="time"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        :class="{ 'border-vibrant-coral-400': form.errors.end_time }"
+                        :placeholder="$t('appointments.form.placeholder_end_time')"
+                        :class="{ 'ring-2 ring-vibrant-coral-400 rounded-lg': form.errors.end_time }"
                     />
                     <p v-if="form.errors.end_time" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.end_time }}</p>
                 </div>

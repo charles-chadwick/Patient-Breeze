@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+import DatePicker from '@/Components/ui/DatePicker.vue'
 
 const props = defineProps({
     action: {
@@ -99,11 +100,10 @@ function submit() {
             <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
                 {{ $t('documents.form.label_date') }}
             </label>
-            <input
+            <DatePicker
                 v-model="form.document_date"
-                type="date"
-                class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                :class="{ 'border-vibrant-coral-400': form.errors.document_date }"
+                :placeholder="$t('common.actions.select_placeholder')"
+                :class="{ 'ring-2 ring-vibrant-coral-400 rounded-lg': form.errors.document_date }"
             />
             <p v-if="form.errors.document_date" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.document_date }}</p>
         </div>

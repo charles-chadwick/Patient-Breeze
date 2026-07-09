@@ -37,6 +37,8 @@ return [
         'label_reason' => 'Reason',
         'label_notes' => 'Notes',
         'placeholder_date' => 'Select date',
+        'placeholder_start_time' => 'Select start time',
+        'placeholder_end_time' => 'Select end time',
         'placeholder_reason' => 'Reason for visit',
         'placeholder_notes' => 'Optional notes…',
         'placeholder_staff' => 'Search staff to assign…',
