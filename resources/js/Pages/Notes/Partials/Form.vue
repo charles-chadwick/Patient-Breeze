@@ -56,7 +56,7 @@ function submit() {
             </label>
             <select
                 v-model="form.type"
-                class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 :class="{ 'border-vibrant-coral-400': form.errors.type }"
             >
                 <option value="">{{ $t('common.actions.select_placeholder') }}</option>
@@ -72,7 +72,7 @@ function submit() {
             <input
                 v-model="form.title"
                 type="text"
-                class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 :class="{ 'border-vibrant-coral-400': form.errors.title }"
                 :placeholder="$t('notes.form.placeholder_title')"
             />

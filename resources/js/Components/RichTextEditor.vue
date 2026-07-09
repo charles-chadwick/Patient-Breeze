@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="rounded-lg border border-border bg-white">
+    <div class="rounded-lg border border-border bg-background">
         <div ref="editor_element"></div>
     </div>
 </template>

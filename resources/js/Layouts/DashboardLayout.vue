@@ -1,9 +1,11 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck } from 'lucide-vue-next'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon } from 'lucide-vue-next'
 import AuthorizationModal from '@/Components/AuthorizationModal.vue'
+import NotificationBell from '@/Components/NotificationBell.vue'
+import { applyTheme } from '@/theme'
 
 const props = defineProps({
     title: {
@@ -63,6 +65,32 @@ function toggleSection(section) {
         ...open_sections.value,
         [section.label]: !isSectionOpen(section),
     }
+}
+
+// Theme preference (persisted per-user via the settings endpoint). Keep the
+// applied `.dark` class in sync whenever the shared prop changes — e.g. after
+// saving on the Settings page.
+const current_theme = computed(() => page.props.theme ?? 'System')
+
+const theme_options = computed(() => [
+    { value: 'System', label: trans('settings.theme.system'), icon: Monitor },
+    { value: 'Light', label: trans('settings.theme.light'), icon: Sun },
+    { value: 'Dark', label: trans('settings.theme.dark'), icon: Moon },
+])
+
+watch(current_theme, (theme) => applyTheme(theme))
+
+function setTheme(theme) {
+    if (theme === current_theme.value) {
+        return
+    }
+
+    // Apply immediately for instant feedback, then persist in the background.
+    applyTheme(theme)
+    router.put(route('settings.update'), { settings: { Theme: theme } }, {
+        preserveScroll: true,
+        preserveState: true,
+    })
 }
 
 const auth_user = computed(() => page.props.auth?.user ?? null)
@@ -154,65 +182,12 @@ onUnmounted(() => document.removeEventListener('click', handleUserMenuClickOutsi
                     </div>
                 </div>
             </nav>
-
-            <!-- User menu -->
-            <div ref="user_menu_container" class="relative border-t border-white/20 px-4 py-4">
-                <!-- Menu -->
-                <div
-                    v-if="user_menu_open"
-                    class="absolute inset-x-4 bottom-full mb-2 overflow-hidden rounded-lg border border-border bg-white py-1 shadow-lg"
-                >
-                    <Link
-                        v-if="route().has('settings.index')"
-                        :href="route('settings.index')"
-                        class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-muted/40"
-                        :class="{ 'text-primary': route().current('settings.index') }"
-                        @click="user_menu_open = false; sidebar_open = false"
-                    >
-                        <Settings class="size-4 shrink-0" />
-                        <span>{{ $t('nav.settings') }}</span>
-                    </Link>
-                    <button
-                        type="button"
-                        class="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-muted/40"
-                        @click="router.post(route('logout'))"
-                    >
-                        <LogOut class="size-4 shrink-0" />
-                        <span>{{ $t('common.labels.sign_out') }}</span>
-                    </button>
-                </div>
-
-                <!-- Trigger -->
-                <button
-                    type="button"
-                    class="flex w-full items-center gap-3 rounded-lg px-1 py-1 text-left transition-colors hover:bg-white/10"
-                    @click="user_menu_open = !user_menu_open"
-                >
-                    <img
-                        :src="auth_user?.avatar_url"
-                        :alt="user_initials"
-                        class="size-8 shrink-0 rounded-full bg-white/20 object-cover"
-                    />
-                    <div class="flex-1 overflow-hidden">
-                        <p class="truncate text-sm font-bold text-white">
-                            {{ auth_user?.first_name }} {{ auth_user?.last_name }}
-                        </p>
-                        <p class="truncate text-xs text-white/60">
-                            {{ auth_user?.email }}
-                        </p>
-                    </div>
-                    <ChevronUp
-                        class="size-4 shrink-0 text-white/60 transition-transform"
-                        :class="{ 'rotate-180': user_menu_open }"
-                    />
-                </button>
-            </div>
         </aside>
 
         <!-- Main content -->
         <div class="flex flex-1 flex-col overflow-hidden">
             <!-- Top bar -->
-            <header class="flex h-16 items-center gap-4 border-b border-border bg-white px-6">
+            <header class="flex h-16 items-center gap-4 border-b border-border bg-card px-6">
                 <button
                     class="rounded p-1 text-foreground hover:text-primary lg:hidden"
                     @click="sidebar_open = true"
@@ -235,6 +210,92 @@ onUnmounted(() => document.removeEventListener('click', handleUserMenuClickOutsi
                     </template>
                 </nav>
                 <h1 v-else class="text-lg font-bold text-foreground">{{ title }}</h1>
+
+                <div class="ml-auto flex items-center gap-1">
+                    <NotificationBell />
+
+                    <!-- User menu -->
+                    <div ref="user_menu_container" class="relative">
+                        <!-- Trigger -->
+                        <button
+                            type="button"
+                            class="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 text-left transition-colors hover:bg-muted/40"
+                            @click="user_menu_open = !user_menu_open"
+                        >
+                            <img
+                                :src="auth_user?.avatar_url"
+                                :alt="user_initials"
+                                class="size-8 shrink-0 rounded-full bg-muted object-cover"
+                            />
+                            <span class="hidden max-w-40 truncate text-sm font-bold text-foreground sm:block">
+                                {{ auth_user?.first_name }} {{ auth_user?.last_name }}
+                            </span>
+                            <ChevronDown
+                                class="size-4 shrink-0 text-muted-foreground transition-transform"
+                                :class="{ 'rotate-180': user_menu_open }"
+                            />
+                        </button>
+
+                        <!-- Menu -->
+                        <div
+                            v-if="user_menu_open"
+                            class="absolute right-0 top-full z-30 mt-2 w-64 overflow-hidden rounded-lg border border-border bg-popover py-1 shadow-lg"
+                        >
+                            <div class="border-b border-border px-3 py-2">
+                                <p class="truncate text-sm font-bold text-foreground">
+                                    {{ auth_user?.first_name }} {{ auth_user?.last_name }}
+                                </p>
+                                <p class="truncate text-xs text-muted-foreground">
+                                    {{ auth_user?.email }}
+                                </p>
+                            </div>
+
+                            <!-- Theme selector -->
+                            <div class="px-3 py-2">
+                                <p class="mb-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                                    {{ $t('settings.theme.label') }}
+                                </p>
+                                <div class="grid grid-cols-3 gap-1">
+                                    <button
+                                        v-for="option in theme_options"
+                                        :key="option.value"
+                                        type="button"
+                                        class="flex flex-col items-center gap-1 rounded-md border px-2 py-1.5 text-xs font-bold transition-colors"
+                                        :class="current_theme === option.value
+                                            ? 'border-primary bg-primary/10 text-primary'
+                                            : 'border-border text-muted-foreground hover:bg-muted/40'"
+                                        :aria-pressed="current_theme === option.value"
+                                        @click="setTheme(option.value)"
+                                    >
+                                        <component :is="option.icon" class="size-4 shrink-0" />
+                                        <span>{{ option.label }}</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="my-1 border-t border-border" />
+
+                            <Link
+                                v-if="route().has('settings.index')"
+                                :href="route('settings.index')"
+                                class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-muted/40"
+                                :class="{ 'text-primary': route().current('settings.index') }"
+                                @click="user_menu_open = false"
+                            >
+                                <Settings class="size-4 shrink-0" />
+                                <span>{{ $t('nav.settings') }}</span>
+                            </Link>
+                            <button
+                                type="button"
+                                class="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-muted/40"
+                                @click="router.post(route('logout'))"
+                            >
+                                <LogOut class="size-4 shrink-0" />
+                                <span>{{ $t('common.labels.sign_out') }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </header>
 
             <!-- Page content -->

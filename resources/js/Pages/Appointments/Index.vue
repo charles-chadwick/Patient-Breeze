@@ -52,7 +52,7 @@ const props = defineProps ( {
 const statusClasses = {
   Scheduled: 'bg-cerulean-100 text-cerulean-700',
   Confirmed: 'bg-tropical-teal-100 text-tropical-teal-700',
-  Completed: 'bg-gray-100 text-gray-600',
+  Completed: 'bg-muted text-muted-foreground',
   Cancelled: 'bg-vibrant-coral-100 text-vibrant-coral-700',
   Rescheduled: 'bg-light-yellow-100 text-light-yellow-700',
   NoShow: 'bg-soft-apricot-100 text-soft-apricot-700',
@@ -112,7 +112,7 @@ function clearFilters () {
   <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
     <!-- Left: mini calendar + view toggle -->
     <aside class="w-full shrink-0 lg:w-1/3">
-      <div class="rounded-xl border border-border bg-white p-4 shadow-sm">
+      <div class="rounded-xl border border-border bg-card p-4 shadow-sm">
         <MiniCalendar
             :model-value="date"
             :view="view"
@@ -188,7 +188,7 @@ function clearFilters () {
       <!-- Empty state -->
       <div
           v-if="appointmentsByDate.length === 0"
-          class="rounded-xl border border-border bg-white px-6 py-14 text-center shadow-sm"
+          class="rounded-xl border border-border bg-card px-6 py-14 text-center shadow-sm"
       >
         <p class="text-sm text-muted-foreground">{{ $t('appointments.index.empty') }}</p>
       </div>
@@ -214,7 +214,7 @@ function clearFilters () {
               <PopoverTrigger as-child>
                 <button
                     type="button"
-                    class="w-full rounded-xl border border-border bg-white px-5 py-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    class="w-full rounded-xl border border-border bg-card px-5 py-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <div class="flex items-center justify-between gap-4">
                     <div class="flex min-w-0 flex-1 items-center gap-3">
@@ -240,7 +240,7 @@ function clearFilters () {
                     </div>
                     <span
                         class="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-bold"
-                        :class="statusClasses[appointment.status] ?? 'bg-gray-100 text-gray-600'"
+                        :class="statusClasses[appointment.status] ?? 'bg-muted text-muted-foreground'"
                     >
                                             {{ $t('enums.appointment_status.' + appointment.status) }}
                                         </span>
@@ -254,7 +254,7 @@ function clearFilters () {
                     align="start"
                     :side-offset="8"
                     :collision-padding="16"
-                    class="z-50 w-80 rounded-xl border border-border bg-white p-5 shadow-xl focus:outline-none"
+                    class="z-50 w-80 rounded-xl border border-border bg-popover p-5 shadow-xl focus:outline-none"
                 >
                   <div class="mb-4 flex items-center gap-3 border-b border-border pb-4">
                     <img
@@ -286,7 +286,7 @@ function clearFilters () {
                       <dd>
                                                 <span
                                                     class="rounded-full px-2.5 py-0.5 text-xs font-bold"
-                                                    :class="statusClasses[appointment.status] ?? 'bg-gray-100 text-gray-600'"
+                                                    :class="statusClasses[appointment.status] ?? 'bg-muted text-muted-foreground'"
                                                 >
                                                     {{ $t('enums.appointment_status.' + appointment.status) }}
                                                 </span>
@@ -329,6 +329,8 @@ function clearFilters () {
 
                   <div class="mt-4 border-t border-border pt-4">
                     <Link
+                        as="button"
+                        type="button"
                         :href="route('patients.appointments.edit', [appointment.patient.id, appointment.id])"
                         class="text-sm font-bold text-primary hover:underline"
                     >

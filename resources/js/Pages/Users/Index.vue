@@ -59,13 +59,13 @@ const role_badge_classes = {
     'Doctor': 'bg-cerulean-100 text-cerulean-700',
     'Nurse': 'bg-cerulean-100 text-cerulean-700',
     'Medical Assistant': 'bg-tropical-teal-100 text-tropical-teal-700',
-    'Staff': 'bg-gray-100 text-gray-600',
+    'Staff': 'bg-muted text-muted-foreground',
     'Patient': 'bg-tropical-teal-100 text-tropical-teal-700',
 }
 </script>
 
 <template>
-    <div class="rounded border border-border bg-white shadow-sm">
+    <div class="rounded border border-border bg-card shadow-sm">
         <div class="flex flex-col gap-3 border-b border-border px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-3">
                 <h2 class="font-bold text-foreground">{{ $t('users.index.heading') }}</h2>
@@ -107,7 +107,7 @@ const role_badge_classes = {
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="sticky top-0 z-10 bg-white shadow-[0_1px_0_0_var(--color-border)]">
+                <thead class="sticky top-0 z-10 bg-card shadow-[0_1px_0_0_var(--color-border)]">
                     <tr class="text-left">
                         <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('users.index.column_name') }}</th>
                         <th class="hidden px-6 py-3 font-bold text-muted-foreground sm:table-cell">{{ $t('users.index.column_email') }}</th>
@@ -125,7 +125,7 @@ const role_badge_classes = {
                         v-for="(user, index) in users.data"
                         :key="user.id"
                         class="border-l-2 border-transparent transition-colors hover:border-primary hover:bg-primary/5"
-                        :class="index % 2 !== 0 ? 'bg-muted/20' : 'bg-white'"
+                        :class="index % 2 !== 0 ? 'bg-muted/20' : 'bg-card'"
                     >
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
@@ -150,7 +150,7 @@ const role_badge_classes = {
                             <span
                                 v-if="user.roles[0]"
                                 class="rounded-full px-2.5 py-0.5 text-xs font-bold"
-                                :class="role_badge_classes[user.roles[0].name] ?? 'bg-gray-100 text-gray-600'"
+                                :class="role_badge_classes[user.roles[0].name] ?? 'bg-muted text-muted-foreground'"
                             >
                                 {{ $t('enums.user_role.' + user.roles[0].name) }}
                             </span>
@@ -158,6 +158,8 @@ const role_badge_classes = {
                         </td>
                         <td class="px-6 py-4 text-right">
                             <Link
+                                as="button"
+                                type="button"
                                 :href="route('users.edit', user.id)"
                                 class="text-sm font-bold text-primary hover:underline"
                             >

@@ -57,7 +57,7 @@ function submit() {
 <template>
     <form @submit.prevent="submit" class="grid gap-6">
         <!-- Avatar -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('patients.form.section_avatar') }}</h2>
             </div>
@@ -72,7 +72,7 @@ function submit() {
         </div>
 
         <!-- Identity -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('patients.form.section_identity') }}</h2>
             </div>
@@ -85,7 +85,7 @@ function submit() {
                     <input
                         v-model="form.prefix"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :placeholder="$t('patients.form.placeholder_prefix')"
                     />
                     <p v-if="form.errors.prefix" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.prefix }}</p>
@@ -99,7 +99,7 @@ function submit() {
                     <input
                         v-model="form.first_name"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.first_name }"
                         :placeholder="$t('patients.form.placeholder_first_name')"
                     />
@@ -114,7 +114,7 @@ function submit() {
                     <input
                         v-model="form.middle_name"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :placeholder="$t('patients.form.placeholder_middle_name')"
                     />
                 </div>
@@ -127,7 +127,7 @@ function submit() {
                     <input
                         v-model="form.last_name"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.last_name }"
                         :placeholder="$t('patients.form.placeholder_last_name')"
                     />
@@ -142,7 +142,7 @@ function submit() {
                     <input
                         v-model="form.suffix"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :placeholder="$t('patients.form.placeholder_suffix')"
                     />
                 </div>
@@ -155,7 +155,7 @@ function submit() {
                     <input
                         v-model="form.email"
                         type="email"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.email }"
                         :placeholder="$t('patients.form.placeholder_email')"
                     />
@@ -165,7 +165,7 @@ function submit() {
         </div>
 
         <!-- Medical -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('patients.form.section_medical') }}</h2>
             </div>
@@ -190,7 +190,7 @@ function submit() {
                     </label>
                     <select
                         v-model="form.gender_at_birth"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.gender_at_birth }"
                     >
                         <option value="">{{ $t('common.actions.select_placeholder') }}</option>
@@ -208,7 +208,7 @@ function submit() {
                     </label>
                     <select
                         v-model="form.gender_identity"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     >
                         <option value="">{{ $t('common.actions.select_placeholder') }}</option>
                         <option v-for="opt in gender_identity_options" :key="opt" :value="opt">
@@ -224,7 +224,7 @@ function submit() {
                     </label>
                     <select
                         v-model="form.blood_type"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     >
                         <option value="">{{ $t('common.placeholders.em_dash') }}</option>
                         <option v-for="opt in blood_type_options" :key="opt" :value="opt">

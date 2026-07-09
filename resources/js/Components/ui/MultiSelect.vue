@@ -54,7 +54,7 @@ function optionFor(value) {
     >
         <ComboboxAnchor
             :class="cn(
-                'flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-lg border border-border bg-white px-2.5 py-1.5 text-sm focus-within:ring-2 focus-within:ring-primary/50',
+                'flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-sm focus-within:ring-2 focus-within:ring-primary/50',
             )"
         >
             <span
@@ -87,7 +87,7 @@ function optionFor(value) {
         </ComboboxAnchor>
 
         <ComboboxContent
-            class="z-50 mt-1 w-full rounded-xl border border-border bg-white shadow-lg"
+            class="z-50 mt-1 w-full rounded-xl border border-border bg-popover shadow-lg"
         >
             <ComboboxViewport class="max-h-60 overflow-y-auto p-1">
                 <ComboboxEmpty class="px-3 py-2 text-sm text-muted-foreground">

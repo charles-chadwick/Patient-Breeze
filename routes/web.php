@@ -12,11 +12,13 @@ use App\Http\Controllers\DiscussionPostController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientMedicationController;
 use App\Http\Controllers\Portal\DocumentController as PortalDocumentController;
 use App\Http\Controllers\Portal\MessageController;
 use App\Http\Controllers\PortalQueueController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -68,10 +70,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/portal-queue', [PortalQueueController::class, 'index'])->name('portal-queue.index');
     Route::post('/portal-queue/{notification}/read', [PortalQueueController::class, 'markRead'])->name('portal-queue.read');
 
+    Route::get('/notifications/{notification}', [NotificationController::class, 'open'])->name('notifications.open');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+
     Route::get('/confirm-password', [ConfirmPasswordController::class, 'show'])->name('password.confirm');
     Route::post('/confirm-password', [ConfirmPasswordController::class, 'store'])->name('password.confirm.store');
 
     Route::get('/settings', [TwoFactorAuthenticationController::class, 'show'])->name('settings.index');
+    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('/settings/two-factor-authentication', [TwoFactorAuthenticationController::class, 'store'])->name('two-factor.enable');
     Route::post('/settings/two-factor-authentication/confirm', [TwoFactorAuthenticationController::class, 'confirm'])->name('two-factor.confirm');
     Route::post('/settings/two-factor-authentication/recovery-codes', [TwoFactorAuthenticationController::class, 'recoveryCodes'])->name('two-factor.recovery-codes');
@@ -100,6 +106,7 @@ Route::prefix('portal')->name('portal.')->group(function () {
 
         Route::get('/', App\Http\Controllers\Portal\DashboardController::class)->name('dashboard');
         Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+        Route::get('/messages/recipients/search', [MessageController::class, 'recipientSearch'])->name('messages.recipients.search');
         Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
         Route::post('/messages/{discussion}/replies', [MessageController::class, 'reply'])->name('messages.reply');
 

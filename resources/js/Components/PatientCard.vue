@@ -26,7 +26,7 @@ const show_avatar_modal = ref(false)
 </script>
 
 <template>
-    <div :class="flat ? '' : 'rounded-xl border border-border bg-white shadow-sm'">
+    <div :class="flat ? '' : 'rounded-xl border border-border bg-card shadow-sm'">
         <div :class="['flex items-center gap-5 px-6 py-5', !flat && 'border-b border-border']">
             <button
                 type="button"
@@ -81,7 +81,7 @@ const show_avatar_modal = ref(false)
             <div class="relative max-w-sm w-full">
                 <button
                     type="button"
-                    class="absolute -right-3 -top-3 flex size-8 items-center justify-center rounded-full bg-white shadow-md text-muted-foreground hover:text-foreground focus:outline-none"
+                    class="absolute -right-3 -top-3 flex size-8 items-center justify-center rounded-full bg-card shadow-md text-muted-foreground hover:text-foreground focus:outline-none"
                     @click="show_avatar_modal = false"
                 >
                     ✕

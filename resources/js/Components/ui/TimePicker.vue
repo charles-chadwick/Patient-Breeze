@@ -76,7 +76,7 @@ watch(is_open, (open) => {
         <PopoverTrigger
             :disabled="disabled"
             :class="cn(
-                'flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50',
+                'flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50',
                 !displayValue && 'text-muted-foreground',
                 disabled && 'cursor-not-allowed opacity-50'
             )"
@@ -89,7 +89,7 @@ watch(is_open, (open) => {
             <PopoverContent
                 align="start"
                 :side-offset="4"
-                class="z-50 w-[var(--reka-popover-trigger-width)] rounded-xl border border-border bg-white p-1 shadow-lg"
+                class="z-50 w-[var(--reka-popover-trigger-width)] rounded-xl border border-border bg-popover p-1 shadow-lg"
             >
                 <div ref="list_ref" class="max-h-60 overflow-y-auto">
                     <button

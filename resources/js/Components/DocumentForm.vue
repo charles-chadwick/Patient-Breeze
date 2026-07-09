@@ -73,7 +73,7 @@ function submit() {
             </label>
             <select
                 v-model="form.type"
-                class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 :class="{ 'border-vibrant-coral-400': form.errors.type }"
             >
                 <option value="">{{ $t('common.actions.select_placeholder') }}</option>
@@ -89,7 +89,7 @@ function submit() {
             <input
                 v-model="form.name"
                 type="text"
-                class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 :class="{ 'border-vibrant-coral-400': form.errors.name }"
                 :placeholder="$t('documents.form.placeholder_name')"
             />
@@ -115,7 +115,7 @@ function submit() {
             <textarea
                 v-model="form.notes"
                 rows="3"
-                class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 :class="{ 'border-vibrant-coral-400': form.errors.notes }"
                 :placeholder="$t('documents.form.placeholder_notes')"
             ></textarea>

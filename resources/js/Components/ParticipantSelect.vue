@@ -11,6 +11,11 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    // Named route the debounced search hits. Must return { users: [...] }.
+    searchRoute: {
+        type: String,
+        default: 'users.search',
+    },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -49,7 +54,7 @@ watch(search_value, (value) => {
 
 async function runSearch(query) {
     try {
-        const response = await fetch(route('users.search', { search: query }), {
+        const response = await fetch(route(props.searchRoute, { search: query }), {
             headers: { Accept: 'application/json' },
         })
         const payload = await response.json()
@@ -121,14 +126,14 @@ onUnmounted(() => clearTimeout(debounce_timer))
                 v-model="search_value"
                 type="search"
                 :placeholder="placeholder"
-                class="h-10 w-full rounded-lg border border-border bg-white pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                class="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 @focus="search_value.trim() && (open = true)"
             />
         </div>
 
         <div
             v-if="open"
-            class="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-border bg-white shadow-lg"
+            class="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-border bg-popover shadow-lg"
         >
             <p v-if="searching" class="px-3 py-2 text-sm text-muted-foreground">
                 {{ $t('discussions.create.participants_searching') }}

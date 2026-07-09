@@ -55,4 +55,8 @@ return [
         'added' => 'Medication added successfully.',
         'removed' => 'Medication removed successfully.',
     ],
+
+    'settings' => [
+        'updated' => 'Preferences saved successfully.',
+    ],
 ];

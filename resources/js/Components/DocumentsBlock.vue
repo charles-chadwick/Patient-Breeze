@@ -54,7 +54,7 @@ function confirmDelete() {
 </script>
 
 <template>
-    <div :class="flat ? '' : 'rounded-xl border border-border bg-white shadow-sm'">
+    <div :class="flat ? '' : 'rounded-xl border border-border bg-card shadow-sm'">
         <div class="flex items-center justify-between border-b border-border px-6 py-4">
             <h2 class="font-bold text-foreground">{{ $t('documents.heading') }}</h2>
             <button

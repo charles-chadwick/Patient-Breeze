@@ -4,6 +4,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from 'ziggy-js';
 import { i18nVue } from 'laravel-vue-i18n';
+import { applyTheme } from './theme';
 
 createInertiaApp({
     title: (title) => `${title} - ${import.meta.env.VITE_APP_NAME}`,
@@ -13,6 +14,8 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
+        applyTheme(props.initialPage.props.theme ?? 'System');
+
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)

@@ -66,7 +66,7 @@ onBeforeUnmount(() => {
             <div
                 v-for="card in stat_cards"
                 :key="card.key"
-                class="rounded-xl border border-border bg-white p-5 shadow-sm"
+                class="rounded-xl border border-border bg-card p-5 shadow-sm"
             >
                 <p class="text-sm font-bold text-muted-foreground">{{ card.label }}</p>
                 <p class="mt-1 text-3xl font-bold text-foreground">
@@ -76,7 +76,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- Portal Queue -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="flex items-center justify-between border-b border-border px-6 py-4">
                 <div class="flex items-center gap-2">
                     <Inbox class="size-5 text-primary" />

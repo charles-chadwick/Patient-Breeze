@@ -61,7 +61,7 @@ function submit() {
 <template>
     <form @submit.prevent="submit" class="grid gap-6">
         <!-- Scheduling -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('appointments.form.section_scheduling') }}</h2>
             </div>
@@ -112,7 +112,7 @@ function submit() {
                     </label>
                     <select
                         v-model="form.status"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.status }"
                     >
                         <option value="">{{ $t('common.actions.select_placeholder') }}</option>
@@ -124,7 +124,7 @@ function submit() {
         </div>
 
         <!-- Details -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('appointments.form.section_details') }}</h2>
             </div>
@@ -137,7 +137,7 @@ function submit() {
                     <input
                         v-model="form.reason"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.reason }"
                         :placeholder="$t('appointments.form.placeholder_reason')"
                     />
@@ -152,7 +152,7 @@ function submit() {
                     <textarea
                         v-model="form.notes"
                         rows="3"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.notes }"
                         :placeholder="$t('appointments.form.placeholder_notes')"
                     />
@@ -162,7 +162,7 @@ function submit() {
         </div>
 
         <!-- Staff -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('appointments.form.section_staff') }}</h2>
             </div>

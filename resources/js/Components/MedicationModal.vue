@@ -123,7 +123,7 @@ onUnmounted(() => clearTimeout(debounce_timer))
                         v-model="search_value"
                         type="search"
                         :placeholder="$t('medications.search.placeholder')"
-                        class="h-10 w-full rounded-lg border border-border bg-white pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        class="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                     />
                 </div>
 

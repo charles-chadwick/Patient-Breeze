@@ -56,7 +56,7 @@ function submit() {
             <input
                 v-model="form.name"
                 type="text"
-                class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 :class="{ 'border-vibrant-coral-400': form.errors.name }"
             />
             <p v-if="form.errors.name" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.name }}</p>
@@ -70,7 +70,7 @@ function submit() {
                 <input
                     v-model="form.dosage"
                     type="text"
-                    class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     :class="{ 'border-vibrant-coral-400': form.errors.dosage }"
                 />
                 <p v-if="form.errors.dosage" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.dosage }}</p>
@@ -82,7 +82,7 @@ function submit() {
                 </label>
                 <select
                     v-model="form.dose_form"
-                    class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     :class="{ 'border-vibrant-coral-400': form.errors.dose_form }"
                 >
                     <option value="">{{ $t('common.actions.select_placeholder') }}</option>
@@ -101,7 +101,7 @@ function submit() {
                 </label>
                 <select
                     v-model="form.frequency"
-                    class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     :class="{ 'border-vibrant-coral-400': form.errors.frequency }"
                 >
                     <option value="">{{ $t('common.actions.select_placeholder') }}</option>
@@ -119,7 +119,7 @@ function submit() {
                 <input
                     v-model="form.amount"
                     type="text"
-                    class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     :class="{ 'border-vibrant-coral-400': form.errors.amount }"
                 />
                 <p v-if="form.errors.amount" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.amount }}</p>
@@ -133,7 +133,7 @@ function submit() {
             <input
                 v-model="form.type"
                 type="text"
-                class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 :class="{ 'border-vibrant-coral-400': form.errors.type }"
             />
             <p v-if="form.errors.type" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.type }}</p>
@@ -146,7 +146,7 @@ function submit() {
             <input
                 v-model="form.ndc"
                 type="text"
-                class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 :class="{ 'border-vibrant-coral-400': form.errors.ndc }"
             />
             <p v-if="form.errors.ndc" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.ndc }}</p>

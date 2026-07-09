@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import PortalLayout from '@/Layouts/PortalLayout.vue'
+import ParticipantSelect from '@/Components/ParticipantSelect.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 
 defineOptions({ layout: PortalLayout })
@@ -13,7 +14,7 @@ const props = defineProps({
 const composer_open = ref(false)
 const reply_target_id = ref(null)
 
-const new_message_form = useForm({ title: '', content: '' })
+const new_message_form = useForm({ title: '', content: '', recipient_ids: [] })
 const reply_form = useForm({ content: '' })
 
 function submitNew() {
@@ -62,6 +63,16 @@ function submitReply(discussion_id) {
                 class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
                 :placeholder="$t('portal.messages.placeholder_subject')"
             />
+            <label class="mt-4 block text-xs font-semibold uppercase tracking-wide text-slate-400">{{ $t('portal.messages.label_recipients') }}</label>
+            <div class="mt-1">
+                <ParticipantSelect
+                    v-model="new_message_form.recipient_ids"
+                    search-route="portal.messages.recipients.search"
+                    :placeholder="$t('portal.messages.placeholder_recipients')"
+                />
+            </div>
+            <p class="mt-1 text-xs text-slate-400">{{ $t('portal.messages.recipients_hint') }}</p>
+
             <label class="mt-4 block text-xs font-semibold uppercase tracking-wide text-slate-400">{{ $t('portal.messages.label_message') }}</label>
             <textarea
                 v-model="new_message_form.content"

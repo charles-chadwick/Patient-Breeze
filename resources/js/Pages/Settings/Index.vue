@@ -26,9 +26,23 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    preferences: {
+        type: Object,
+        default: () => ({}),
+    },
+    preference_options: {
+        type: Object,
+        default: () => ({}),
+    },
 })
 
 const confirm_form = useForm({ code: '' })
+
+const preferences_form = useForm({ settings: { ...props.preferences } })
+
+function save_preferences() {
+    preferences_form.put(route('settings.update'), { preserveScroll: true })
+}
 
 const show_setup = computed(() => props.two_factor_pending)
 const show_recovery_codes = computed(() => props.two_factor_pending || props.two_factor_enabled)
@@ -54,8 +68,8 @@ function regenerate_recovery_codes() {
 </script>
 
 <template>
-    <div class="mx-auto max-w-2xl">
-        <div class="rounded-xl border border-border bg-white p-8 shadow-sm">
+    <div class="mx-auto max-w-2xl space-y-6">
+        <div class="rounded-xl border border-border bg-card p-8 shadow-sm">
             <h1 class="text-xl font-bold text-foreground">{{ $t('two_factor.settings_heading') }}</h1>
             <p class="mt-2 text-sm text-muted-foreground">{{ $t('two_factor.settings_description') }}</p>
 
@@ -99,7 +113,7 @@ function regenerate_recovery_codes() {
                             inputmode="numeric"
                             autocomplete="one-time-code"
                             autofocus
-                            class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                             :class="{ 'border-vibrant-coral-400': confirm_form.errors.code }"
                             :placeholder="$t('two_factor.confirm_placeholder')"
                         />
@@ -154,6 +168,37 @@ function regenerate_recovery_codes() {
                     {{ $t('two_factor.disable') }}
                 </button>
             </div>
+        </div>
+
+        <!-- Preferences -->
+        <div class="rounded-xl border border-border bg-card p-8 shadow-sm">
+            <h2 class="text-xl font-bold text-foreground">{{ $t('settings.preferences_heading') }}</h2>
+            <p class="mt-2 text-sm text-muted-foreground">{{ $t('settings.preferences_description') }}</p>
+
+            <form class="mt-6 space-y-5" @submit.prevent="save_preferences">
+                <div v-for="(options, setting_key) in preference_options" :key="setting_key">
+                    <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                        {{ $t('enums.setting_key.' + setting_key) }}
+                    </label>
+                    <select
+                        v-model="preferences_form.settings[setting_key]"
+                        class="w-full max-w-xs rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    >
+                        <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
+                    </select>
+                    <p v-if="preferences_form.errors['settings.' + setting_key]" class="mt-1 text-xs text-vibrant-coral-600">
+                        {{ preferences_form.errors['settings.' + setting_key] }}
+                    </p>
+                </div>
+
+                <button
+                    type="submit"
+                    :disabled="preferences_form.processing"
+                    class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90 disabled:opacity-50"
+                >
+                    {{ $t('settings.save') }}
+                </button>
+            </form>
         </div>
     </div>
 </template>

@@ -122,14 +122,14 @@ onUnmounted(() => clearTimeout(debounce_timer))
                     v-model="search_value"
                     type="search"
                     :placeholder="placeholder"
-                    class="h-10 w-full rounded-lg border border-border bg-white pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    class="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                     @focus="search_value.trim() && (open = true)"
                 />
             </div>
 
             <div
                 v-if="open"
-                class="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-border bg-white shadow-lg"
+                class="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-border bg-popover shadow-lg"
             >
                 <p v-if="searching" class="px-3 py-2 text-sm text-muted-foreground">
                     {{ $t('appointments.form.staff_searching') }}
@@ -173,7 +173,7 @@ onUnmounted(() => clearTimeout(debounce_timer))
                 <select
                     :value="staff.role"
                     @change="updateRole(staff.id, $event.target.value)"
-                    class="w-36 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    class="w-36 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                     <option v-for="role in roleOptions" :key="role" :value="role">{{ $t('enums.appointment_role.' + role) }}</option>
                 </select>

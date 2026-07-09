@@ -35,7 +35,7 @@ function submit() {
 </script>
 
 <template>
-    <div class="rounded-xl border border-border bg-white p-8 shadow-sm">
+    <div class="rounded-xl border border-border bg-card p-8 shadow-sm">
         <h1 class="mb-2 text-xl font-bold text-foreground">{{ $t('two_factor.challenge_heading') }}</h1>
         <p class="mb-6 text-sm text-muted-foreground">
             {{ using_recovery_code ? $t('two_factor.challenge_recovery_instructions') : $t('two_factor.challenge_code_instructions') }}
@@ -53,7 +53,7 @@ function submit() {
                     inputmode="numeric"
                     autocomplete="one-time-code"
                     autofocus
-                    class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     :class="{ 'border-vibrant-coral-400': form.errors.code }"
                     :placeholder="$t('two_factor.code_placeholder')"
                 />
@@ -70,7 +70,7 @@ function submit() {
                     type="text"
                     autocomplete="one-time-code"
                     autofocus
-                    class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     :class="{ 'border-vibrant-coral-400': form.errors.recovery_code }"
                     :placeholder="$t('two_factor.recovery_code_placeholder')"
                 />

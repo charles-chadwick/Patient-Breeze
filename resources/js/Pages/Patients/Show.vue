@@ -96,6 +96,8 @@ setLayoutProps({
     <div class="grid gap-6">
         <div class="flex justify-end">
             <Link
+                as="button"
+                type="button"
                 :href="route('patients.edit', patient.id)"
                 class="inline-flex h-10 items-center rounded-lg border border-border px-4 text-sm font-bold text-foreground hover:bg-muted/40"
             >
@@ -103,14 +105,14 @@ setLayoutProps({
             </Link>
         </div>
 
-        <div class="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+        <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
             <div class="flex bg-muted/40 p-1">
                 <button
                     type="button"
                     @click="active_tab = 'demographics'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'demographics'
-                        ? 'bg-white text-foreground'
+                        ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     {{ $t('patients.show.tab_demographics') }}
@@ -120,7 +122,7 @@ setLayoutProps({
                     @click="active_tab = 'contacts'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'contacts'
-                        ? 'bg-white text-foreground'
+                        ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     {{ $t('patients.show.tab_contacts') }}
@@ -131,7 +133,7 @@ setLayoutProps({
                     @click="active_tab = 'notes'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'notes'
-                        ? 'bg-white text-foreground'
+                        ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     {{ $t('patients.show.tab_notes') }}
@@ -141,7 +143,7 @@ setLayoutProps({
                     @click="active_tab = 'discussions'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'discussions'
-                        ? 'bg-white text-foreground'
+                        ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     {{ $t('patients.show.tab_discussions') }}
@@ -178,7 +180,7 @@ setLayoutProps({
             />
         </div>
 
-        <div class="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+        <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
             <div class="flex bg-muted/40 p-1">
                 <button
                     type="button"
@@ -186,7 +188,7 @@ setLayoutProps({
                     @click="records_tab = 'appointments'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="records_tab === 'appointments'
-                        ? 'bg-white text-foreground'
+                        ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     {{ $t('patients.show.tab_appointments') }}
@@ -197,7 +199,7 @@ setLayoutProps({
                     @click="records_tab = 'medications'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="records_tab === 'medications'
-                        ? 'bg-white text-foreground'
+                        ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     {{ $t('patients.show.tab_medications') }}
@@ -208,7 +210,7 @@ setLayoutProps({
                     @click="records_tab = 'documents'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="records_tab === 'documents'
-                        ? 'bg-white text-foreground'
+                        ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     {{ $t('patients.show.tab_documents') }}
@@ -286,6 +288,8 @@ setLayoutProps({
                         <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? $t('common.placeholders.em_dash') }}</td>
                         <td class="px-6 py-3">
                             <Link
+                                as="button"
+                                type="button"
                                 :href="route('patients.appointments.edit', [patient.id, appointment.id])"
                                 class="text-xs font-bold text-primary hover:underline"
                             >

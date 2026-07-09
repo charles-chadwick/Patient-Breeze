@@ -74,7 +74,7 @@ function genderBadgeClass(gender) {
 </script>
 
 <template>
-    <div class="rounded border border-border bg-white shadow-sm">
+    <div class="rounded border border-border bg-card shadow-sm">
         <div class="flex flex-col gap-3 border-b border-border px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-3">
                 <h2 class="font-bold text-foreground">{{ $t('patients.index.heading') }}</h2>
@@ -108,7 +108,7 @@ function genderBadgeClass(gender) {
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="sticky top-0 z-10 bg-white shadow-[0_1px_0_0_var(--color-border)]">
+                <thead class="sticky top-0 z-10 bg-card shadow-[0_1px_0_0_var(--color-border)]">
                     <tr class="text-left">
                         <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.index.column_name') }}</th>
                         <th class="hidden px-6 py-3 font-bold text-muted-foreground sm:table-cell">{{ $t('patients.index.column_mrn') }}</th>
@@ -128,7 +128,7 @@ function genderBadgeClass(gender) {
                         v-for="(patient, index) in patients.data"
                         :key="patient.id"
                         class="border-l-2 border-transparent transition-colors hover:border-primary hover:bg-primary/5"
-                        :class="index % 2 !== 0 ? 'bg-muted/20' : 'bg-white'"
+                        :class="index % 2 !== 0 ? 'bg-muted/20' : 'bg-card'"
                     >
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">

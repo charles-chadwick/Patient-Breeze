@@ -48,6 +48,8 @@ setLayoutProps({
     <div class="grid gap-6">
         <div class="flex justify-end">
             <Link
+                as="button"
+                type="button"
                 :href="route('users.edit', user.id)"
                 class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
             >
@@ -55,14 +57,14 @@ setLayoutProps({
             </Link>
         </div>
 
-        <div class="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+        <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
             <div class="flex bg-muted/40 p-1">
                 <button
                     type="button"
                     @click="active_tab = 'details'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'details'
-                        ? 'bg-white text-foreground'
+                        ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     {{ $t('users.show.tab_details') }}
@@ -72,7 +74,7 @@ setLayoutProps({
                     @click="active_tab = 'contacts'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'contacts'
-                        ? 'bg-white text-foreground'
+                        ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
                     {{ $t('users.show.tab_contacts') }}
@@ -91,7 +93,7 @@ setLayoutProps({
             />
         </div>
 
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="flex items-center justify-between border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('users.show.appointments_heading') }}</h2>
                 <SearchInput
@@ -153,6 +155,8 @@ setLayoutProps({
                         <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? $t('common.placeholders.em_dash') }}</td>
                         <td class="px-6 py-3">
                             <Link
+                                as="button"
+                                type="button"
                                 :href="route('patients.appointments.edit', [appointment.patient_id, appointment.id])"
                                 class="text-xs font-bold text-primary hover:underline"
                             >

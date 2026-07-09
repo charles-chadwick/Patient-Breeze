@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\SettingKey;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -38,6 +40,10 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'locale' => fn () => app()->getLocale(),
+            // Dark mode is a staff (web) feature; the patient portal always renders light.
+            'theme' => fn () => $request->routeIs('portal.*')
+                ? 'Light'
+                : ($request->user('web')?->getSetting(SettingKey::Theme) ?? SettingKey::Theme->default()),
             'auth' => [
                 'user' => fn () => $request->user('web')?->loadMissing('media')->only([
                     'id', 'first_name', 'last_name', 'email', 'prefix', 'suffix', 'avatar_url',
@@ -54,6 +60,36 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
+            'notifications' => fn () => $this->notificationsFor($request->user('web')),
+        ];
+    }
+
+    /**
+     * The authenticated staff user's recent notifications and unread count for
+     * the top-bar bell. Empty for guests and portal patients.
+     *
+     * @return array{items: array<int, array<string, mixed>>, unread_count: int}
+     */
+    protected function notificationsFor(?User $user): array
+    {
+        if ($user === null) {
+            return ['items' => [], 'unread_count' => 0];
+        }
+
+        $items = $user->notifications()->latest()->limit(10)->get()
+            ->map(fn ($notification) => [
+                'id' => $notification->id,
+                'title' => $notification->data['title'] ?? '',
+                'body' => $notification->data['body'] ?? '',
+                'url' => route('notifications.open', $notification->id),
+                'read_at' => $notification->read_at?->toIso8601String(),
+                'created_at' => $notification->created_at->toIso8601String(),
+            ])
+            ->all();
+
+        return [
+            'items' => $items,
+            'unread_count' => $user->unreadNotifications()->count(),
         ];
     }
 }

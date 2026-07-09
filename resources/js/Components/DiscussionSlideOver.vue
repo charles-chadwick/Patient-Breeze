@@ -88,7 +88,7 @@ function submitReply() {
         <div v-if="open && discussion" class="fixed inset-0 z-50 flex justify-end">
             <div class="absolute inset-0 bg-black/40" @click="close"></div>
 
-            <div class="relative z-10 flex h-full w-full max-w-lg flex-col bg-white shadow-xl">
+            <div class="relative z-10 flex h-full w-full max-w-lg flex-col bg-card shadow-xl">
                 <div class="flex items-start justify-between border-b border-border px-6 py-4">
                     <div>
                         <h2 class="text-base font-bold text-foreground">{{ discussion.title }}</h2>
@@ -188,7 +188,7 @@ function submitReply() {
                             v-model="form.content"
                             rows="2"
                             :placeholder="$t('discussions.slide_over.placeholder_reply')"
-                            class="flex-1 resize-none rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            class="flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                             :class="{ 'border-vibrant-coral-400': form.errors.content }"
                         ></textarea>
                         <button

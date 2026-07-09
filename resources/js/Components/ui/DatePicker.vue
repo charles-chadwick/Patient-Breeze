@@ -76,7 +76,7 @@ function onUpdate(val) {
     >
         <DatePickerTrigger
             :class="cn(
-                'flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50',
+                'flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50',
                 !displayValue && 'text-muted-foreground',
                 disabled && 'cursor-not-allowed opacity-50'
             )"
@@ -87,7 +87,7 @@ function onUpdate(val) {
 
         <DatePickerContent
             align="start"
-            class="z-50 mt-1 rounded-xl border border-border bg-white p-3 shadow-lg"
+            class="z-50 mt-1 rounded-xl border border-border bg-popover p-3 shadow-lg"
         >
             <DatePickerCalendar v-slot="{ weekDays, grid }">
                 <DatePickerHeader class="mb-3 flex items-center justify-between">

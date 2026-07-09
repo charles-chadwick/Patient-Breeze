@@ -51,7 +51,19 @@ abstract class ManagesTwoFactorAuthentication extends Controller
             'recovery_codes' => ($account->two_factor_secret && $password_confirmed)
                 ? $account->recoveryCodes()
                 : [],
+            ...$this->additionalSettingsProps($request),
         ]);
+    }
+
+    /**
+     * Extra props merged into the settings page. Guard-specific controllers
+     * override this to surface preferences their account type supports.
+     *
+     * @return array<string, mixed>
+     */
+    protected function additionalSettingsProps(Request $request): array
+    {
+        return [];
     }
 
     /**

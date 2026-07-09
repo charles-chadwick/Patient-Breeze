@@ -47,7 +47,7 @@ function submit() {
 <template>
     <form class="grid gap-6" @submit.prevent="submit">
         <!-- Avatar -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('users.form.section_avatar') }}</h2>
             </div>
@@ -62,7 +62,7 @@ function submit() {
         </div>
 
         <!-- Identity -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('users.form.section_identity') }}</h2>
             </div>
@@ -75,7 +75,7 @@ function submit() {
                     <input
                         v-model="form.prefix"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :placeholder="$t('users.form.placeholder_prefix')"
                     />
                     <p v-if="form.errors.prefix" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.prefix }}</p>
@@ -89,7 +89,7 @@ function submit() {
                     <input
                         v-model="form.first_name"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.first_name }"
                         :placeholder="$t('users.form.placeholder_first_name')"
                     />
@@ -104,7 +104,7 @@ function submit() {
                     <input
                         v-model="form.middle_name"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :placeholder="$t('users.form.placeholder_middle_name')"
                     />
                 </div>
@@ -117,7 +117,7 @@ function submit() {
                     <input
                         v-model="form.last_name"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.last_name }"
                         :placeholder="$t('users.form.placeholder_last_name')"
                     />
@@ -132,7 +132,7 @@ function submit() {
                     <input
                         v-model="form.suffix"
                         type="text"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :placeholder="$t('users.form.placeholder_suffix')"
                     />
                 </div>
@@ -145,7 +145,7 @@ function submit() {
                     <input
                         v-model="form.email"
                         type="email"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.email }"
                         :placeholder="$t('users.form.placeholder_email')"
                     />
@@ -155,7 +155,7 @@ function submit() {
         </div>
 
         <!-- Access -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">{{ $t('users.form.section_access') }}</h2>
             </div>
@@ -167,7 +167,7 @@ function submit() {
                     </label>
                     <select
                         v-model="form.role"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.role }"
                     >
                         <option value="">{{ $t('common.actions.select_placeholder') }}</option>
@@ -181,7 +181,7 @@ function submit() {
         </div>
 
         <!-- Password -->
-        <div class="rounded-xl border border-border bg-white shadow-sm">
+        <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
                 <h2 class="font-bold text-foreground">
                     {{ user ? $t('users.form.section_change_password') : $t('users.form.section_password') }}
@@ -198,7 +198,7 @@ function submit() {
                         v-model="form.password"
                         type="password"
                         autocomplete="new-password"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.password }"
                         :placeholder="$t('users.form.placeholder_password')"
                     />
@@ -214,7 +214,7 @@ function submit() {
                         v-model="form.password_confirmation"
                         type="password"
                         autocomplete="new-password"
-                        class="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :placeholder="$t('users.form.placeholder_confirm_password')"
                     />
                 </div>

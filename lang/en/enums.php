@@ -26,6 +26,18 @@ return [
         'Assistant' => 'Assistant',
     ],
 
+    'setting_key' => [
+        'Theme' => 'Theme',
+        'Email Notifications' => 'Email Notifications',
+        'Items Per Page' => 'Items Per Page',
+        'Receive Portal Messages' => 'Receive Portal Messages',
+    ],
+
+    'toggle_value' => [
+        'Enabled' => 'Enabled',
+        'Disabled' => 'Disabled',
+    ],
+
     'appointment_status' => [
         'Scheduled' => 'Scheduled',
         'Confirmed' => 'Confirmed',

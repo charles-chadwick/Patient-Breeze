@@ -10,7 +10,9 @@ use App\Models\DiscussionPost;
 use App\Models\Patient;
 use App\Models\PortalNotification;
 use App\Models\User;
+use App\Notifications\PortalMessageReceived;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class SendPortalMessage
@@ -19,14 +21,15 @@ class SendPortalMessage
 
     /**
      * Add a post to a Portal Message discussion. If $discussion is null, a
-     * new discussion is created for the given patient.
+     * new discussion is created for the given patient. Any recipient_ids are
+     * attached to a newly created discussion as (non-initiator) participants.
      *
-     * @param  array{title?: ?string, content: string}  $data
+     * @param  array{title?: ?string, content: string, recipient_ids?: list<int>}  $data
      */
     public function handle(Patient $patient, Patient|User $author, array $data, ?Discussion $discussion = null): DiscussionPost
     {
         return DB::transaction(function () use ($patient, $author, $data, $discussion) {
-            $discussion ??= $this->createDiscussion($patient, $author, $data['title'] ?? 'Portal Message');
+            $discussion ??= $this->createDiscussion($patient, $author, $data['title'] ?? 'Portal Message', $data['recipient_ids'] ?? []);
 
             $post = $discussion->posts()->create([
                 'user_id' => $author instanceof User ? $author->id : null,
@@ -49,13 +52,18 @@ class SendPortalMessage
                 ]);
 
                 PortalNotificationCreated::dispatch($notification);
+
+                $this->notifyDirectedRecipients($patient, $discussion, $post, $data['recipient_ids'] ?? []);
             }
 
             return $post;
         });
     }
 
-    private function createDiscussion(Patient $patient, Patient|User $author, string $title): Discussion
+    /**
+     * @param  list<int>  $recipientIds
+     */
+    private function createDiscussion(Patient $patient, Patient|User $author, string $title, array $recipientIds = []): Discussion
     {
         /** @var Discussion $discussion */
         $discussion = $patient->discussions()->create([
@@ -78,6 +86,31 @@ class SendPortalMessage
             ]);
         }
 
+        foreach (array_unique($recipientIds) as $recipient_id) {
+            $discussion->participants()->create([
+                'participantable_type' => User::class,
+                'participantable_id' => $recipient_id,
+                'is_initiator' => false,
+            ]);
+        }
+
         return $discussion;
+    }
+
+    /**
+     * Send a personal (bell) notification to each staff user the patient
+     * directed this new message to.
+     *
+     * @param  list<int>  $recipientIds
+     */
+    private function notifyDirectedRecipients(Patient $patient, Discussion $discussion, DiscussionPost $post, array $recipientIds): void
+    {
+        if ($recipientIds === []) {
+            return;
+        }
+
+        $recipients = User::whereKey(array_unique($recipientIds))->get();
+
+        Notification::send($recipients, new PortalMessageReceived($discussion, $post, $patient));
     }
 }

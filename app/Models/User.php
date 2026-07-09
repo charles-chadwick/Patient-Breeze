@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\SettingKey;
+use App\Enums\ToggleValue;
 use App\Enums\UserRole;
 use App\Models\Concerns\Filterable;
 use App\Models\Concerns\HasListing;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -57,6 +60,43 @@ class User extends Authenticatable implements HasMedia
         return $this->morphMany(Document::class, 'documentable');
     }
 
+    public function settings(): HasMany
+    {
+        return $this->hasMany(UserSetting::class);
+    }
+
+    /**
+     * Resolve the stored value for a setting, falling back to its default.
+     */
+    public function getSetting(SettingKey $key): string
+    {
+        return $this->settings->firstWhere('key', $key)?->value ?? $key->default();
+    }
+
+    /**
+     * Persist a value for a setting, creating or updating its row.
+     */
+    public function setSetting(SettingKey $key, string $value): UserSetting
+    {
+        return $this->settings()->updateOrCreate(
+            ['key' => $key->value],
+            ['value' => $value],
+        );
+    }
+
+    /**
+     * Resolve every setting for this user keyed by its enum value, filling in
+     * defaults for any the user has not chosen.
+     *
+     * @return array<string, string>
+     */
+    public function resolvedSettings(): array
+    {
+        return collect(SettingKey::cases())
+            ->mapWithKeys(fn (SettingKey $key): array => [$key->value => $this->getSetting($key)])
+            ->all();
+    }
+
     /**
      * @return array<string, string>
      */
@@ -74,6 +114,16 @@ class User extends Authenticatable implements HasMedia
     public function scopeStaff($query)
     {
         return $query->whereDoesntHave('roles', fn ($query) => $query->where('name', UserRole::SuperAdmin->value));
+    }
+
+    /**
+     * Limit to users who have opted in to receiving directed portal messages.
+     */
+    public function scopeReceivingPortalMessages(Builder $query): Builder
+    {
+        return $query->whereHas('settings', fn (Builder $query) => $query
+            ->where('key', SettingKey::ReceivesPortalMessages->value)
+            ->where('value', ToggleValue::Enabled->value));
     }
 
     /**

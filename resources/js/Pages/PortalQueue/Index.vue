@@ -74,7 +74,7 @@ onBeforeUnmount(() => {
             </div>
         </div>
 
-        <div class="rounded-2xl border border-border bg-white shadow-sm">
+        <div class="rounded-2xl border border-border bg-card shadow-sm">
             <div v-if="live_notifications.length === 0" class="p-10 text-center text-sm text-muted-foreground">
                 {{ $t('portal_queue.empty') }}
             </div>

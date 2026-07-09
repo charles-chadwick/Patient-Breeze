@@ -75,7 +75,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
     <div ref="container" class="relative">
         <button
             type="button"
-            class="flex items-center gap-2 rounded-lg border border-border bg-white px-3 py-2 text-sm font-bold text-foreground hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            class="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-bold text-foreground hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
             @click="open = !open"
         >
             <Filter class="size-4 text-muted-foreground" />
@@ -94,7 +94,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 
         <div
             v-if="open"
-            class="absolute right-0 top-full z-20 mt-1 w-56 rounded-lg border border-border bg-white py-1 shadow-md"
+            class="absolute right-0 top-full z-20 mt-1 w-56 rounded-lg border border-border bg-popover py-1 shadow-md"
         >
             <button
                 v-for="option in options"

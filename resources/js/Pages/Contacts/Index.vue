@@ -64,7 +64,7 @@ function contactableLabel(contact) {
 </script>
 
 <template>
-    <div class="rounded border border-border bg-white shadow-sm">
+    <div class="rounded border border-border bg-card shadow-sm">
         <div class="flex items-center justify-between border-b border-border px-6 py-4">
             <div class="flex items-center gap-3">
                 <h2 class="font-bold text-foreground">{{ $t('contacts.index.heading') }}</h2>
