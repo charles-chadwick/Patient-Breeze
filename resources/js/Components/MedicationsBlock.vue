@@ -18,6 +18,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    frequencyOptions: {
+        type: Array,
+        default: () => [],
+    },
     flat: {
         type: Boolean,
         default: false,
@@ -76,6 +80,8 @@ function confirmDelete() {
                     <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('medications.column_name') }}</th>
                     <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('medications.column_dosage') }}</th>
                     <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('medications.column_dose_form') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('medications.column_frequency') }}</th>
+                    <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('medications.column_amount') }}</th>
                     <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('medications.column_type') }}</th>
                     <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('medications.column_ndc') }}</th>
                     <th class="px-6 py-3 text-right font-bold text-muted-foreground">{{ $t('medications.column_actions') }}</th>
@@ -94,6 +100,8 @@ function confirmDelete() {
                             {{ medication.dose_form_label }}
                         </span>
                     </td>
+                    <td class="px-6 py-3 text-foreground">{{ medication.frequency_label }}</td>
+                    <td class="px-6 py-3 text-foreground">{{ medication.amount }}</td>
                     <td class="px-6 py-3 text-muted-foreground">{{ medication.type }}</td>
                     <td class="px-6 py-3 text-muted-foreground">{{ medication.ndc || $t('common.placeholders.em_dash') }}</td>
                     <td class="px-6 py-3 text-right">
@@ -113,6 +121,7 @@ function confirmDelete() {
             v-model:open="add_open"
             :action="route('patients.medications.store', patientId)"
             :dose-form-options="doseFormOptions"
+            :frequency-options="frequencyOptions"
         />
 
         <ConfirmDialog

@@ -9,6 +9,7 @@ use App\Enums\ContactType;
 use App\Enums\DiscussionType;
 use App\Enums\DocumentType;
 use App\Enums\DoseForm;
+use App\Enums\Frequency;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Enums\NoteType;
@@ -84,6 +85,9 @@ class PatientController extends Controller
             'dosage' => $medication->dosage,
             'dose_form' => $medication->dose_form->value,
             'dose_form_label' => $medication->dose_form->label(),
+            'frequency' => $medication->frequency->value,
+            'frequency_label' => $medication->frequency->label(),
+            'amount' => $medication->amount,
             'ndc' => $medication->ndc,
             'created_at' => $medication->created_at->toDateString(),
         ]);
@@ -96,6 +100,7 @@ class PatientController extends Controller
             'document_type_options' => DocumentType::values(),
             'medications' => $medications,
             'dose_form_options' => DoseForm::values(),
+            'frequency_options' => Frequency::values(),
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),

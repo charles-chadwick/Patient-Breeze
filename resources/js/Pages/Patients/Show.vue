@@ -44,6 +44,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    frequency_options: {
+        type: Array,
+        default: () => [],
+    },
     contact_types: {
         type: Array,
         default: () => [],
@@ -341,6 +345,7 @@ setLayoutProps({
                 :patient-id="patient.id"
                 :medications="medications"
                 :dose-form-options="dose_form_options"
+                :frequency-options="frequency_options"
                 flat
             />
 

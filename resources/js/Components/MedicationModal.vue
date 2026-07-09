@@ -24,6 +24,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    frequencyOptions: {
+        type: Array,
+        required: true,
+    },
 })
 
 const emit = defineEmits(['update:open', 'saved'])
@@ -157,6 +161,7 @@ onUnmounted(() => clearTimeout(debounce_timer))
                 :key="selected?.id"
                 :action="action"
                 :dose-form-options="doseFormOptions"
+                :frequency-options="frequencyOptions"
                 :initial="selected"
                 form-id="medication-form"
                 @success="handleSuccess"

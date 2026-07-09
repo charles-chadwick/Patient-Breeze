@@ -109,6 +109,19 @@ return [
         'Granules' => 'Granules',
     ],
 
+    'frequency' => [
+        'Once Daily' => 'Once Daily',
+        'Twice Daily' => 'Twice Daily',
+        'Three Times Daily' => 'Three Times Daily',
+        'Four Times Daily' => 'Four Times Daily',
+        'Every Morning' => 'Every Morning',
+        'Every Night' => 'Every Night',
+        'Every Other Day' => 'Every Other Day',
+        'Weekly' => 'Weekly',
+        'Monthly' => 'Monthly',
+        'As Needed' => 'As Needed',
+    ],
+
     'gender_at_birth' => [
         'Male' => 'Male',
         'Female' => 'Female',

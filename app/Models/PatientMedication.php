@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\DoseForm;
+use App\Enums\Frequency;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,8 @@ class PatientMedication extends Model
         'name',
         'dosage',
         'dose_form',
+        'frequency',
+        'amount',
         'ndc',
     ];
 
@@ -26,6 +29,7 @@ class PatientMedication extends Model
     {
         return [
             'dose_form' => DoseForm::class,
+            'frequency' => Frequency::class,
         ];
     }
 

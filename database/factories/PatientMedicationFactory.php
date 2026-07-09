@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\DoseForm;
+use App\Enums\Frequency;
 use App\Models\Patient;
 use App\Models\PatientMedication;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,6 +22,8 @@ class PatientMedicationFactory extends Factory
             'name' => $this->faker->name(),
             'dosage' => $this->faker->word(),
             'dose_form' => $this->faker->randomElement(DoseForm::cases()),
+            'frequency' => $this->faker->randomElement(Frequency::cases()),
+            'amount' => $this->faker->numberBetween(1, 3).' tablets',
             'ndc' => $this->faker->word(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

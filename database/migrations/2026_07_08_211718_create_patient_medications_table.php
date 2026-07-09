@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('dosage');
             $table->string('dose_form');
+            $table->string('frequency');
+            $table->string('amount');
             $table->string('ndc');
             $table->timestamps();
             $table->softDeletes();

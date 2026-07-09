@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\DoseForm;
+use App\Enums\Frequency;
 use App\Enums\UserRole;
 use App\Models\Medication;
 use App\Models\Patient;
@@ -25,6 +26,8 @@ it('adds a medication to a patient chart', function (): void {
             'name' => 'Atorvastatin',
             'dosage' => '20 mg',
             'dose_form' => DoseForm::Tablet->value,
+            'frequency' => Frequency::OnceDaily->value,
+            'amount' => '1 tablet',
             'ndc' => '12345-6789-01',
         ])
         ->assertRedirect(route('patients.show', $patient))
@@ -34,7 +37,9 @@ it('adds a medication to a patient chart', function (): void {
 
     expect($medication->patient_id)->toBe($patient->id)
         ->and($medication->name)->toBe('Atorvastatin')
-        ->and($medication->dose_form)->toBe(DoseForm::Tablet);
+        ->and($medication->dose_form)->toBe(DoseForm::Tablet)
+        ->and($medication->frequency)->toBe(Frequency::OnceDaily)
+        ->and($medication->amount)->toBe('1 tablet');
 });
 
 it('validates the medication payload', function (array $payload, string $invalidField): void {
@@ -46,10 +51,13 @@ it('validates the medication payload', function (array $payload, string $invalid
 
     expect(PatientMedication::count())->toBe(0);
 })->with([
-    'missing name' => [['type' => 'Statin', 'dosage' => '20 mg', 'dose_form' => 'Tablet'], 'name'],
-    'missing dosage' => [['type' => 'Statin', 'name' => 'Atorvastatin', 'dose_form' => 'Tablet'], 'dosage'],
-    'missing dose form' => [['type' => 'Statin', 'name' => 'Atorvastatin', 'dosage' => '20 mg'], 'dose_form'],
-    'invalid dose form' => [['type' => 'Statin', 'name' => 'Atorvastatin', 'dosage' => '20 mg', 'dose_form' => 'Nope'], 'dose_form'],
+    'missing name' => [['type' => 'Statin', 'dosage' => '20 mg', 'dose_form' => 'Tablet', 'frequency' => 'Once Daily', 'amount' => '1 tablet'], 'name'],
+    'missing dosage' => [['type' => 'Statin', 'name' => 'Atorvastatin', 'dose_form' => 'Tablet', 'frequency' => 'Once Daily', 'amount' => '1 tablet'], 'dosage'],
+    'missing dose form' => [['type' => 'Statin', 'name' => 'Atorvastatin', 'dosage' => '20 mg', 'frequency' => 'Once Daily', 'amount' => '1 tablet'], 'dose_form'],
+    'invalid dose form' => [['type' => 'Statin', 'name' => 'Atorvastatin', 'dosage' => '20 mg', 'dose_form' => 'Nope', 'frequency' => 'Once Daily', 'amount' => '1 tablet'], 'dose_form'],
+    'missing frequency' => [['type' => 'Statin', 'name' => 'Atorvastatin', 'dosage' => '20 mg', 'dose_form' => 'Tablet', 'amount' => '1 tablet'], 'frequency'],
+    'invalid frequency' => [['type' => 'Statin', 'name' => 'Atorvastatin', 'dosage' => '20 mg', 'dose_form' => 'Tablet', 'frequency' => 'Nope', 'amount' => '1 tablet'], 'frequency'],
+    'missing amount' => [['type' => 'Statin', 'name' => 'Atorvastatin', 'dosage' => '20 mg', 'dose_form' => 'Tablet', 'frequency' => 'Once Daily'], 'amount'],
 ]);
 
 it('removes a medication from a patient chart', function (): void {
@@ -81,6 +89,7 @@ it('includes the medications list in the patient chart props', function (): void
     PatientMedication::factory()->create([
         'patient_id' => $patient->id,
         'dose_form' => DoseForm::Capsule,
+        'frequency' => Frequency::TwiceDaily,
     ]);
 
     $this->actingAs($this->staff)
@@ -90,7 +99,9 @@ it('includes the medications list in the patient chart props', function (): void
             ->component('Patients/Show')
             ->has('medications', 1)
             ->has('dose_form_options')
+            ->has('frequency_options')
             ->where('medications.0.dose_form_label', DoseForm::Capsule->label())
+            ->where('medications.0.frequency_label', Frequency::TwiceDaily->label())
         );
 });
 

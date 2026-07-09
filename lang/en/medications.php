@@ -17,6 +17,8 @@ return [
     'column_type' => 'Type',
     'column_dosage' => 'Dosage',
     'column_dose_form' => 'Form',
+    'column_frequency' => 'Frequency',
+    'column_amount' => 'Amount',
     'column_ndc' => 'NDC',
     'column_actions' => 'Actions',
 
@@ -36,6 +38,8 @@ return [
         'label_type' => 'Type',
         'label_dosage' => 'Dosage',
         'label_dose_form' => 'Dose Form',
+        'label_frequency' => 'Frequency',
+        'label_amount' => 'Amount',
         'label_ndc' => 'NDC',
         'back' => 'Back to search',
         'submit' => 'Add Medication',
