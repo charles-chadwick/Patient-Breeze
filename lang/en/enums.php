@@ -134,6 +134,12 @@ return [
         'As Needed' => 'As Needed',
     ],
 
+    'appointment_request_status' => [
+        'Pending' => 'Pending',
+        'Approved' => 'Approved',
+        'Declined' => 'Declined',
+    ],
+
     'gender_at_birth' => [
         'Male' => 'Male',
         'Female' => 'Female',

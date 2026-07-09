@@ -83,6 +83,37 @@ class Patient extends Authenticatable implements HasMedia
         return $this->hasMany(Appointment::class, 'patient_id');
     }
 
+    public function appointmentRequests(): HasMany
+    {
+        return $this->hasMany(AppointmentRequest::class);
+    }
+
+    /**
+     * Build this patient's recent appointment requests, shaped for the portal.
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function portalAppointmentRequests(int $limit = 10): Collection
+    {
+        return $this->appointmentRequests()
+            ->with('provider:id,first_name,last_name')
+            ->latest()
+            ->limit($limit)
+            ->get()
+            ->map(fn (AppointmentRequest $request): array => [
+                'id' => $request->id,
+                'date' => $request->date->toDateString(),
+                'start_time' => substr($request->start_time, 0, 5),
+                'end_time' => substr($request->end_time, 0, 5),
+                'reason' => $request->reason,
+                'status' => $request->status->value,
+                'status_label' => $request->status->label(),
+                'provider' => $request->provider
+                    ? $request->provider->only(['id', 'first_name', 'last_name'])
+                    : null,
+            ]);
+    }
+
     public function contacts(): MorphMany
     {
         return $this->morphMany(Contact::class, 'contactable');

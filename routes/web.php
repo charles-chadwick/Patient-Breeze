@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AppointmentRequestReviewController;
 use App\Http\Controllers\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientMedicationController;
+use App\Http\Controllers\Portal\AppointmentRequestController as PortalAppointmentRequestController;
 use App\Http\Controllers\Portal\DocumentController as PortalDocumentController;
 use App\Http\Controllers\Portal\MessageController;
 use App\Http\Controllers\PortalQueueController;
@@ -69,6 +71,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/portal-queue', [PortalQueueController::class, 'index'])->name('portal-queue.index');
     Route::post('/portal-queue/{notification}/read', [PortalQueueController::class, 'markRead'])->name('portal-queue.read');
+    Route::post('/portal-queue/appointment-requests/{appointmentRequest}/approve', [AppointmentRequestReviewController::class, 'approve'])
+        ->name('portal-queue.appointment-requests.approve');
+    Route::post('/portal-queue/appointment-requests/{appointmentRequest}/decline', [AppointmentRequestReviewController::class, 'decline'])
+        ->name('portal-queue.appointment-requests.decline');
 
     Route::get('/notifications/{notification}', [NotificationController::class, 'open'])->name('notifications.open');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
@@ -105,6 +111,8 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::delete('/settings/two-factor-authentication', [App\Http\Controllers\Portal\TwoFactorAuthenticationController::class, 'destroy'])->name('two-factor.disable');
 
         Route::get('/', App\Http\Controllers\Portal\DashboardController::class)->name('dashboard');
+        Route::post('/appointment-requests', [PortalAppointmentRequestController::class, 'store'])->name('appointment-requests.store');
+        Route::get('/appointment-requests/providers/search', [PortalAppointmentRequestController::class, 'providerSearch'])->name('appointment-requests.providers.search');
         Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
         Route::get('/messages/recipients/search', [MessageController::class, 'recipientSearch'])->name('messages.recipients.search');
         Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');

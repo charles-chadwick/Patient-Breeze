@@ -22,6 +22,13 @@ return [
         'updated' => 'Appointment updated successfully.',
     ],
 
+    'appointment_requests' => [
+        'requested' => 'Appointment request submitted. Our team will review it shortly.',
+        'approved' => 'Appointment request approved and added to the schedule.',
+        'declined' => 'Appointment request declined.',
+        'conflict' => 'The requested provider now has a conflicting appointment at that time.',
+    ],
+
     'contacts' => [
         'created' => 'Contact added successfully.',
         'updated' => 'Contact updated successfully.',

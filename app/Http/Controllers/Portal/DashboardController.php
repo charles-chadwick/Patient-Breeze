@@ -19,6 +19,7 @@ class DashboardController extends Controller
         return Inertia::render('Portal/Dashboard', [
             'patient' => $patient->only(['id', 'first_name', 'last_name', 'mrn', 'date_of_birth', 'blood_type', 'gender_identity']),
             'appointments' => $patient->upcomingAppointments(),
+            'appointment_requests' => $patient->portalAppointmentRequests(),
             'discussions' => $patient->recentDiscussions(),
             'documents' => $patient->portalDocuments(),
             'document_type_options' => DocumentType::values(),
