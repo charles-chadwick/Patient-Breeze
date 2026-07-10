@@ -33,6 +33,7 @@ return [
         'tab_demographics' => 'Demographics',
         'tab_contacts' => 'Contacts',
         'tab_notes' => 'Notes',
+        'tab_encounters' => 'Encounters',
         'tab_discussions' => 'Discussions',
         'tab_appointments' => 'Appointments',
         'tab_medications' => 'Medications',

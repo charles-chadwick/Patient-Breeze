@@ -9,6 +9,7 @@ import AppointmentStatusBadge from '@/Components/AppointmentStatusBadge.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import ContactsTab from '@/Components/ContactsTab.vue'
 import NotesTab from '@/Components/NotesTab.vue'
+import EncountersTab from '@/Components/EncountersTab.vue'
 import DiscussionList from '@/Components/DiscussionList.vue'
 import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 import MedicationsBlock from '@/Components/MedicationsBlock.vue'
@@ -64,6 +65,18 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    encounter_notes: {
+        type: Array,
+        default: null,
+    },
+    encounter_note_types: {
+        type: Array,
+        default: () => [],
+    },
+    patient_appointments: {
+        type: Array,
+        default: () => [],
+    },
     discussions: {
         type: Array,
         default: null,
@@ -80,7 +93,7 @@ const initial_discussion_id = url_params.get('discussion')
     ? Number(url_params.get('discussion'))
     : null
 
-const active_tab = ref(['demographics', 'contacts', 'notes', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
+const active_tab = ref(['demographics', 'contacts', 'notes', 'encounters', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
 
 const records_tab = ref('appointments')
 
@@ -140,6 +153,17 @@ setLayoutProps({
                 </button>
                 <button
                     type="button"
+                    data-testid="patient-tab-encounters"
+                    @click="active_tab = 'encounters'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="active_tab === 'encounters'
+                        ? 'bg-card text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    {{ $t('patients.show.tab_encounters') }}
+                </button>
+                <button
+                    type="button"
                     @click="active_tab = 'discussions'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'discussions'
@@ -167,6 +191,14 @@ setLayoutProps({
                 :notable-type="contactable_type"
                 :notable-id="patient.id"
                 :types="note_types"
+            />
+
+            <EncountersTab
+                v-if="active_tab === 'encounters'"
+                :patient-id="patient.id"
+                :notes="encounter_notes"
+                :types="encounter_note_types"
+                :appointments="patient_appointments"
             />
 
             <DiscussionList
