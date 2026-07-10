@@ -15,5 +15,7 @@ class CoSignEncounterNoteAction
             'co_signed_by' => $user->id,
             'co_signed_at' => now(),
         ])->save();
+
+        activity()->performedOn($note)->causedBy($user)->event('co_signed')->log('co_signed');
     }
 }

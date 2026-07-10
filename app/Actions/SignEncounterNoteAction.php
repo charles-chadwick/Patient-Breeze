@@ -15,5 +15,7 @@ class SignEncounterNoteAction
             'signed_by' => $user->id,
             'signed_at' => now(),
         ])->save();
+
+        activity()->performedOn($note)->causedBy($user)->event('signed')->log('signed');
     }
 }

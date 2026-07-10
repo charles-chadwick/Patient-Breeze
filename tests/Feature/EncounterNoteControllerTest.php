@@ -1,5 +1,7 @@
 <?php
 
+use App\Actions\CoSignEncounterNoteAction;
+use App\Actions\SignEncounterNoteAction;
 use App\Enums\EncounterNoteStatus;
 use App\Enums\EncounterNoteType;
 use App\Enums\UserRole;
@@ -7,6 +9,7 @@ use App\Models\EncounterNote;
 use App\Models\Patient;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
+use Spatie\Activitylog\Models\Activity;
 
 beforeEach(function (): void {
     $this->seed(RoleAndPermissionSeeder::class);
@@ -71,6 +74,37 @@ it('forbids co-signing by the signer', function () {
     $this->actingAs($author)
         ->post(route('patients.encounter-notes.co-sign', [$note->patient_id, $note]))
         ->assertForbidden();
+});
+
+it('audit-logs the sign event', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->create();
+
+    expect(Activity::forSubject($note)->where('description', 'signed')->count())->toBe(0);
+
+    app(SignEncounterNoteAction::class)->execute($note, $author);
+
+    expect(Activity::forSubject($note)->where('description', 'signed')->count())->toBe(1);
+
+    $activity = Activity::forSubject($note)->where('description', 'signed')->first();
+    expect($activity->causer_id)->toBe($author->id);
+});
+
+it('audit-logs the co-sign event', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $coSigner = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->signed()->create([
+        'signed_by' => $author->id,
+    ]);
+
+    expect(Activity::forSubject($note)->where('description', 'co_signed')->count())->toBe(0);
+
+    app(CoSignEncounterNoteAction::class)->execute($note, $coSigner);
+
+    expect(Activity::forSubject($note)->where('description', 'co_signed')->count())->toBe(1);
+
+    $activity = Activity::forSubject($note)->where('description', 'co_signed')->first();
+    expect($activity->causer_id)->toBe($coSigner->id);
 });
 
 it('exposes encounter note props on the patient chart', function () {
