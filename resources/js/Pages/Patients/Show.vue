@@ -13,6 +13,7 @@ import EncountersTab from '@/Components/EncountersTab.vue'
 import DiscussionList from '@/Components/DiscussionList.vue'
 import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 import MedicationsBlock from '@/Components/MedicationsBlock.vue'
+import AppointmentModal from '@/Components/AppointmentModal.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -28,6 +29,14 @@ const props = defineProps({
     appointment_search: {
         type: String,
         default: '',
+    },
+    status_options: {
+        type: Array,
+        default: () => [],
+    },
+    role_options: {
+        type: Array,
+        default: () => [],
     },
     documents: {
         type: Array,
@@ -96,6 +105,14 @@ const initial_discussion_id = url_params.get('discussion')
 const active_tab = ref(['demographics', 'contacts', 'notes', 'encounters', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
 
 const records_tab = ref('appointments')
+
+const appointment_modal_open = ref(false)
+const editing_appointment = ref(null)
+
+function editAppointment(appointment) {
+    editing_appointment.value = appointment
+    appointment_modal_open.value = true
+}
 
 setLayoutProps({
     breadcrumbs: computed(() => [
@@ -281,7 +298,6 @@ setLayoutProps({
                         <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_reason') }}</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_staff') }}</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_status') }}</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_notes') }}</th>
                         <th class="px-6 py-3"></th>
                     </tr>
                 </thead>
@@ -317,16 +333,15 @@ setLayoutProps({
                         <td class="px-6 py-3">
                             <AppointmentStatusBadge :status="appointment.status" />
                         </td>
-                        <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? $t('common.placeholders.em_dash') }}</td>
                         <td class="px-6 py-3">
-                            <Link
-                                as="button"
+                            <button
                                 type="button"
-                                :href="route('patients.appointments.edit', [patient.id, appointment.id])"
+                                data-testid="appointment-edit-button"
+                                @click="editAppointment(appointment)"
                                 class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
                             >
                                 {{ $t('common.actions.edit') }}
-                            </Link>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -374,6 +389,14 @@ setLayoutProps({
                     </Link>
                 </div>
             </div>
+
+            <AppointmentModal
+                v-model:open="appointment_modal_open"
+                :patient-id="patient.id"
+                :appointment="editing_appointment"
+                :status_options="status_options"
+                :role_options="role_options"
+            />
             </div>
 
             <MedicationsBlock
