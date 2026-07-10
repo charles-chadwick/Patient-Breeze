@@ -87,6 +87,17 @@ class RickAndMortyDialogue
     }
 
     /**
+     * A {@see self::censoredBody()} block rendered as HTML paragraphs, suitable
+     * for rich-text content columns.
+     */
+    public static function censoredHtml(int $min_lines, int $max_lines): string
+    {
+        return collect(explode("\n\n", self::censoredBody($min_lines, $max_lines)))
+            ->map(fn (string $paragraph): string => '<p>'.e($paragraph).'</p>')
+            ->implode('');
+    }
+
+    /**
      * Load every non-empty script line into the {@see self::$all_lines} pool.
      */
     private static function loadAll(): void

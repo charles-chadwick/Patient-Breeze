@@ -20,6 +20,9 @@ class DatabaseSeeder extends Seeder
             PatientSeeder::class,
             AppointmentSeeder::class,
             MedicationSeeder::class,
+            EncounterNoteSeeder::class,
+            NoteSeeder::class,
+            ContactSeeder::class,
         ]);
     }
 }
