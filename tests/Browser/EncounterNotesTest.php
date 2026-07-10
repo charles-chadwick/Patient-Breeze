@@ -43,9 +43,14 @@ test('a doctor can create and sign an encounter note through the chart UI', func
         ->click('button[type="submit"][form="encounter-note-form"]')
         ->assertNoJavascriptErrors();
 
-    // The created note is Unsigned and can be signed by its author.
+    // The created note is Unsigned and can be signed by its author. Signing
+    // triggers an async Inertia partial reload of the `encounter_notes`
+    // prop, so wait for the Sign button to disappear (it's rendered only
+    // when `can_sign` is true) before reading the DB, otherwise the
+    // assertion can race the request.
     $page->click('[data-testid="encounter-note-sign"]')
-        ->assertNoJavascriptErrors();
+        ->assertNoJavascriptErrors()
+        ->assertMissing('[data-testid="encounter-note-sign"]');
 
     $note = $patient->encounterNotes()->firstOrFail();
 
