@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Actions\CreatePatientAction;
 use App\Actions\UpdatePatientAction;
+use App\Enums\AppointmentRole;
+use App\Enums\AppointmentStatus;
 use App\Enums\BloodType;
 use App\Enums\ContactType;
 use App\Enums\DiscussionType;
@@ -100,6 +102,8 @@ class PatientController extends Controller
             'patient' => $patient,
             'appointments' => $patient->paginatedAppointments($search),
             'appointment_search' => $search,
+            'status_options' => array_column(AppointmentStatus::cases(), 'value'),
+            'role_options' => array_column(AppointmentRole::cases(), 'value'),
             'documents' => $documents,
             'document_type_options' => DocumentType::values(),
             'medications' => $medications,
