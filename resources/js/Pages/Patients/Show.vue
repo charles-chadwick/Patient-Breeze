@@ -9,9 +9,11 @@ import AppointmentStatusBadge from '@/Components/AppointmentStatusBadge.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import ContactsTab from '@/Components/ContactsTab.vue'
 import NotesTab from '@/Components/NotesTab.vue'
+import EncountersTab from '@/Components/EncountersTab.vue'
 import DiscussionList from '@/Components/DiscussionList.vue'
 import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 import MedicationsBlock from '@/Components/MedicationsBlock.vue'
+import AppointmentModal from '@/Components/AppointmentModal.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -27,6 +29,14 @@ const props = defineProps({
     appointment_search: {
         type: String,
         default: '',
+    },
+    status_options: {
+        type: Array,
+        default: () => [],
+    },
+    role_options: {
+        type: Array,
+        default: () => [],
     },
     documents: {
         type: Array,
@@ -64,6 +74,18 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    encounter_notes: {
+        type: Array,
+        default: null,
+    },
+    encounter_note_types: {
+        type: Array,
+        default: () => [],
+    },
+    patient_appointments: {
+        type: Array,
+        default: () => [],
+    },
     discussions: {
         type: Array,
         default: null,
@@ -80,9 +102,17 @@ const initial_discussion_id = url_params.get('discussion')
     ? Number(url_params.get('discussion'))
     : null
 
-const active_tab = ref(['demographics', 'contacts', 'notes', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
+const active_tab = ref(['demographics', 'contacts', 'notes', 'encounters', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
 
 const records_tab = ref('appointments')
+
+const appointment_modal_open = ref(false)
+const editing_appointment = ref(null)
+
+function editAppointment(appointment) {
+    editing_appointment.value = appointment
+    appointment_modal_open.value = true
+}
 
 setLayoutProps({
     breadcrumbs: computed(() => [
@@ -140,6 +170,17 @@ setLayoutProps({
                 </button>
                 <button
                     type="button"
+                    data-testid="patient-tab-encounters"
+                    @click="active_tab = 'encounters'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="active_tab === 'encounters'
+                        ? 'bg-card text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    {{ $t('patients.show.tab_encounters') }}
+                </button>
+                <button
+                    type="button"
                     @click="active_tab = 'discussions'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'discussions'
@@ -167,6 +208,14 @@ setLayoutProps({
                 :notable-type="contactable_type"
                 :notable-id="patient.id"
                 :types="note_types"
+            />
+
+            <EncountersTab
+                v-if="active_tab === 'encounters'"
+                :patient-id="patient.id"
+                :notes="encounter_notes"
+                :types="encounter_note_types"
+                :appointments="patient_appointments"
             />
 
             <DiscussionList
@@ -249,7 +298,6 @@ setLayoutProps({
                         <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_reason') }}</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_staff') }}</th>
                         <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_status') }}</th>
-                        <th class="px-6 py-3 font-bold text-muted-foreground">{{ $t('patients.show.column_notes') }}</th>
                         <th class="px-6 py-3"></th>
                     </tr>
                 </thead>
@@ -285,16 +333,15 @@ setLayoutProps({
                         <td class="px-6 py-3">
                             <AppointmentStatusBadge :status="appointment.status" />
                         </td>
-                        <td class="px-6 py-3 text-muted-foreground">{{ appointment.notes ?? $t('common.placeholders.em_dash') }}</td>
                         <td class="px-6 py-3">
-                            <Link
-                                as="button"
+                            <button
                                 type="button"
-                                :href="route('patients.appointments.edit', [patient.id, appointment.id])"
-                                class="text-xs font-bold text-primary hover:underline"
+                                data-testid="appointment-edit-button"
+                                @click="editAppointment(appointment)"
+                                class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
                             >
                                 {{ $t('common.actions.edit') }}
-                            </Link>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -342,6 +389,14 @@ setLayoutProps({
                     </Link>
                 </div>
             </div>
+
+            <AppointmentModal
+                v-model:open="appointment_modal_open"
+                :patient-id="patient.id"
+                :appointment="editing_appointment"
+                :status_options="status_options"
+                :role_options="role_options"
+            />
             </div>
 
             <MedicationsBlock

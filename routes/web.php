@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionPostController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EncounterNoteController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\NotificationController;
@@ -66,6 +67,18 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('notes', NoteController::class)->only(['store', 'update', 'destroy']);
+    Route::scopeBindings()->group(function (): void {
+        Route::post('/patients/{patient}/encounter-notes', [EncounterNoteController::class, 'store'])
+            ->name('patients.encounter-notes.store');
+        Route::put('/patients/{patient}/encounter-notes/{encounterNote}', [EncounterNoteController::class, 'update'])
+            ->name('patients.encounter-notes.update');
+        Route::delete('/patients/{patient}/encounter-notes/{encounterNote}', [EncounterNoteController::class, 'destroy'])
+            ->name('patients.encounter-notes.destroy');
+        Route::post('/patients/{patient}/encounter-notes/{encounterNote}/sign', [EncounterNoteController::class, 'sign'])
+            ->name('patients.encounter-notes.sign');
+        Route::post('/patients/{patient}/encounter-notes/{encounterNote}/co-sign', [EncounterNoteController::class, 'coSign'])
+            ->name('patients.encounter-notes.co-sign');
+    });
     Route::resource('discussions', DiscussionController::class)->only(['store']);
     Route::resource('discussions.posts', DiscussionPostController::class)->only(['store']);
 

@@ -74,6 +74,22 @@ return [
         'CarePlan' => 'Care Plan',
     ],
 
+    'encounter_note_type' => [
+        'Progress' => 'Progress Note',
+        'InitialVisit' => 'Initial Visit',
+        'FollowUp' => 'Follow-up',
+        'Consultation' => 'Consultation',
+        'Procedure' => 'Procedure',
+        'DischargeSummary' => 'Discharge Summary',
+        'Telephone' => 'Telephone',
+    ],
+
+    'encounter_note_status' => [
+        'Unsigned' => 'Unsigned',
+        'Signed' => 'Signed',
+        'CoSigned' => 'Co-signed',
+    ],
+
     'discussion_post_status' => [
         'Draft' => 'Draft',
         'Published' => 'Published',

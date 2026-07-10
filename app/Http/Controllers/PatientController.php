@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Actions\CreatePatientAction;
 use App\Actions\UpdatePatientAction;
+use App\Enums\AppointmentRole;
+use App\Enums\AppointmentStatus;
 use App\Enums\BloodType;
 use App\Enums\ContactType;
 use App\Enums\DiscussionType;
 use App\Enums\DocumentType;
 use App\Enums\DoseForm;
+use App\Enums\EncounterNoteType;
 use App\Enums\Frequency;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
@@ -16,6 +19,7 @@ use App\Enums\NoteType;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Document;
+use App\Models\EncounterNote;
 use App\Models\Patient;
 use App\Models\PatientMedication;
 use Illuminate\Http\RedirectResponse;
@@ -57,6 +61,8 @@ class PatientController extends Controller
     {
         $this->authorize('view', $patient);
 
+        $user = $request->user();
+
         $search = $request->string('search')->trim()->toString();
 
         $patient->load([
@@ -96,6 +102,8 @@ class PatientController extends Controller
             'patient' => $patient,
             'appointments' => $patient->paginatedAppointments($search),
             'appointment_search' => $search,
+            'status_options' => array_column(AppointmentStatus::cases(), 'value'),
+            'role_options' => array_column(AppointmentRole::cases(), 'value'),
             'documents' => $documents,
             'document_type_options' => DocumentType::values(),
             'medications' => $medications,
@@ -107,6 +115,39 @@ class PatientController extends Controller
             'discussions' => Inertia::defer(fn () => $patient->discussionThread()),
             'note_types' => NoteType::values(),
             'notes' => Inertia::defer(fn () => $patient->notes()->latest()->get()),
+            'encounter_note_types' => EncounterNoteType::values(),
+            'patient_appointments' => $patient->appointments()
+                ->orderBy('date', 'desc')
+                ->get(['id', 'date', 'reason'])
+                ->map(fn ($appointment) => [
+                    'id' => $appointment->id,
+                    'date' => $appointment->date->toDateString(),
+                    'reason' => $appointment->reason,
+                ]),
+            'encounter_notes' => Inertia::defer(fn () => $patient->encounterNotes()
+                ->with(['author', 'signer', 'coSigner'])
+                ->orderBy('encounter_date', 'desc')
+                ->get()
+                ->map(fn (EncounterNote $note) => [
+                    'id' => $note->id,
+                    'type' => $note->type->value,
+                    'type_label' => $note->type->label(),
+                    'encounter_date' => $note->encounter_date->toDateString(),
+                    'title' => $note->title,
+                    'content' => $note->content,
+                    'status' => $note->status->value,
+                    'status_label' => $note->status->label(),
+                    'appointment_id' => $note->appointment_id,
+                    'author_name' => trim("{$note->author->first_name} {$note->author->last_name}"),
+                    'signer_name' => $note->signer ? trim("{$note->signer->first_name} {$note->signer->last_name}") : null,
+                    'co_signer_name' => $note->coSigner ? trim("{$note->coSigner->first_name} {$note->coSigner->last_name}") : null,
+                    'signed_at' => $note->signed_at?->toDateString(),
+                    'co_signed_at' => $note->co_signed_at?->toDateString(),
+                    'can_edit' => $user->can('update', $note),
+                    'can_delete' => $user->can('delete', $note),
+                    'can_sign' => $user->can('sign', $note),
+                    'can_co_sign' => $user->can('coSign', $note),
+                ])),
         ]);
     }
 

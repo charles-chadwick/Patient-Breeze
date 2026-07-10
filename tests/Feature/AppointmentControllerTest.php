@@ -302,3 +302,16 @@ it('caps the number of staff results returned', function () {
         ->assertOk()
         ->assertJsonCount(20, 'staff');
 });
+
+it('exposes appointment form options on the patient chart', function () {
+    $user = User::factory()->withRole(UserRole::Staff)->create();
+    $patient = Patient::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('patients.show', $patient))
+        ->assertInertia(fn ($page) => $page
+            ->component('Patients/Show')
+            ->has('status_options')
+            ->has('role_options')
+        );
+});

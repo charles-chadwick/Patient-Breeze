@@ -19,7 +19,7 @@ const props = defineProps({
     },
     cancelHref: {
         type: String,
-        required: true,
+        default: null,
     },
     status_options: {
         type: Array,
@@ -29,7 +29,17 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    formId: {
+        type: String,
+        default: 'appointment-form',
+    },
+    showActions: {
+        type: Boolean,
+        default: true,
+    },
 })
+
+const emit = defineEmits(['success'])
 
 const form = useForm({
     date: props.appointment?.date?.substring(0, 10) ?? '',
@@ -54,12 +64,15 @@ const initial_staff = props.appointment?.users?.map((u) => ({
 })) ?? []
 
 function submit() {
-    form[props.method](props.action)
+    form[props.method](props.action, {
+        preserveScroll: true,
+        onSuccess: () => emit('success'),
+    })
 }
 </script>
 
 <template>
-    <form @submit.prevent="submit" class="grid gap-6">
+    <form :id="formId" @submit.prevent="submit" class="grid gap-6">
         <!-- Scheduling -->
         <div class="rounded-xl border border-border bg-card shadow-sm">
             <div class="border-b border-border px-6 py-4">
@@ -152,6 +165,7 @@ function submit() {
                     <textarea
                         v-model="form.notes"
                         rows="3"
+                        data-testid="appointment-notes-input"
                         class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                         :class="{ 'border-vibrant-coral-400': form.errors.notes }"
                         :placeholder="$t('appointments.form.placeholder_notes')"
@@ -184,7 +198,7 @@ function submit() {
         </div>
 
         <!-- Actions -->
-        <div class="flex items-center justify-end gap-3">
+        <div v-if="showActions" class="flex items-center justify-end gap-3">
             <Link
                 :href="cancelHref"
                 class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
