@@ -83,6 +83,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    owner_options: {
+        type: Array,
+        default: () => [],
+    },
     patient_appointments: {
         type: Array,
         default: () => [],
@@ -329,6 +333,7 @@ setLayoutProps({
                 :patient-id="patient.id"
                 :notes="encounter_notes"
                 :types="encounter_note_types"
+                :owner-options="owner_options"
                 :appointments="patient_appointments"
             />
         </div>

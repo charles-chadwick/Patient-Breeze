@@ -22,6 +22,7 @@ use App\Models\Document;
 use App\Models\EncounterNote;
 use App\Models\Patient;
 use App\Models\PatientMedication;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -116,6 +117,12 @@ class PatientController extends Controller
             'note_types' => NoteType::values(),
             'notes' => Inertia::defer(fn () => $patient->notes()->latest()->get()),
             'encounter_note_types' => EncounterNoteType::values(),
+            'owner_options' => User::orderBy('first_name')->orderBy('last_name')
+                ->get(['id', 'first_name', 'last_name'])
+                ->map(fn (User $owner) => [
+                    'id' => $owner->id,
+                    'name' => trim("{$owner->first_name} {$owner->last_name}"),
+                ]),
             'patient_appointments' => $patient->appointments()
                 ->orderBy('date', 'desc')
                 ->get(['id', 'date', 'reason'])
@@ -138,6 +145,7 @@ class PatientController extends Controller
                     'status' => $note->status->value,
                     'status_label' => $note->status->label(),
                     'appointment_id' => $note->appointment_id,
+                    'author_id' => $note->author_id,
                     'author_name' => trim("{$note->author->first_name} {$note->author->last_name}"),
                     'signer_name' => $note->signer ? trim("{$note->signer->first_name} {$note->signer->last_name}") : null,
                     'co_signer_name' => $note->coSigner ? trim("{$note->coSigner->first_name} {$note->coSigner->last_name}") : null,

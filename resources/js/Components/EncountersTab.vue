@@ -2,7 +2,7 @@
 import EncounterNoteModal from '@/Components/EncounterNoteModal.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 import { useEncounterNoteManager } from '@/composables/useEncounterNoteManager'
-import { formatDate, DATE_SHORT } from '@/lib/utils'
+import { formatDate, DATE_SHORT, htmlSnippet } from '@/lib/utils'
 import { trans } from 'laravel-vue-i18n'
 
 const props = defineProps({
@@ -17,6 +17,10 @@ const props = defineProps({
     types: {
         type: Array,
         required: true,
+    },
+    ownerOptions: {
+        type: Array,
+        default: () => [],
     },
     appointments: {
         type: Array,
@@ -44,11 +48,6 @@ const statusClasses = {
     Unsigned: 'bg-light-yellow-100 text-light-yellow-700',
     Signed: 'bg-tropical-teal-100 text-tropical-teal-700',
     CoSigned: 'bg-cerulean-100 text-cerulean-700',
-}
-
-function snippet(html) {
-    const text = (html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-    return text.length > 80 ? text.slice(0, 80) + '…' : text
 }
 </script>
 
@@ -97,7 +96,7 @@ function snippet(html) {
             >
                 <td class="px-6 py-3">
                     <div class="font-bold text-foreground">{{ note.title }}</div>
-                    <div class="text-xs text-muted-foreground">{{ snippet(note.content) }}</div>
+                    <div class="text-xs text-muted-foreground">{{ htmlSnippet(note.content) }}</div>
                     <div v-if="note.signer_name" class="mt-0.5 text-xs text-muted-foreground">
                         {{ $t('encounter_notes.signed_by', { name: note.signer_name }) }}
                         <template v-if="note.co_signer_name">
@@ -182,6 +181,7 @@ function snippet(html) {
         :patient-id="patientId"
         :note="editing_note"
         :types="types"
+        :owner-options="ownerOptions"
         :appointments="appointments"
         @saved="handleSaved"
     />

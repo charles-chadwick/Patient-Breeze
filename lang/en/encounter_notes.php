@@ -16,6 +16,7 @@ return [
     ],
     'form' => [
         'label_type' => 'Type',
+        'label_owner' => 'Owner',
         'label_encounter_date' => 'Encounter Date',
         'label_title' => 'Title',
         'label_content' => 'Content',

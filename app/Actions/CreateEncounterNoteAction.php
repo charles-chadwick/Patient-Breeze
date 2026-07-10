@@ -22,7 +22,7 @@ class CreateEncounterNoteAction
             'appointment_id' => $validated['appointment_id'] ?? null,
         ]);
 
-        $note->author_id = $author->id;
+        $note->author_id = $validated['author_id'] ?? $author->id;
         $note->status = EncounterNoteStatus::Unsigned;
         $note->save();
 

@@ -2,7 +2,7 @@
 import NoteModal from '@/Components/NoteModal.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 import { useNoteManager } from '@/composables/useNoteManager'
-import { formatDate, DATE_SHORT } from '@/lib/utils'
+import { formatDate, DATE_SHORT, htmlSnippet } from '@/lib/utils'
 
 const props = defineProps({
     notes: {
@@ -35,11 +35,6 @@ const {
     askDeleteNote,
     confirmDeleteNote,
 } = useNoteManager()
-
-function snippet(html) {
-    const text = (html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-    return text.length > 80 ? text.slice(0, 80) + '…' : text
-}
 </script>
 
 <template>
@@ -86,7 +81,7 @@ function snippet(html) {
             >
                 <td class="px-6 py-3">
                     <div class="font-bold text-foreground">{{ note.title }}</div>
-                    <div class="text-xs text-muted-foreground">{{ snippet(note.content) }}</div>
+                    <div class="text-xs text-muted-foreground">{{ htmlSnippet(note.content) }}</div>
                 </td>
                 <td class="px-6 py-3">
                     <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">

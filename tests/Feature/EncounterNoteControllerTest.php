@@ -34,6 +34,57 @@ it('stores an encounter note as the author, unsigned', function () {
         ->and($note->status)->toBe(EncounterNoteStatus::Unsigned);
 });
 
+it('stores an encounter note with a chosen owner', function () {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+    $owner = User::factory()->withRole(UserRole::Doctor)->create();
+    $patient = Patient::factory()->create();
+
+    $this->actingAs($user)
+        ->post(route('patients.encounter-notes.store', $patient), [
+            'type' => EncounterNoteType::Progress->value,
+            'author_id' => $owner->id,
+            'encounter_date' => '2026-07-01',
+            'title' => 'Initial visit',
+            'content' => '<p>Seen today</p>',
+        ])
+        ->assertRedirect();
+
+    expect(EncounterNote::firstOrFail()->author_id)->toBe($owner->id);
+});
+
+it('reassigns the owner when updating a note', function () {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+    $new_owner = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($user, 'author')->create();
+
+    $this->actingAs($user)
+        ->put(route('patients.encounter-notes.update', [$note->patient_id, $note]), [
+            'type' => EncounterNoteType::Progress->value,
+            'author_id' => $new_owner->id,
+            'encounter_date' => '2026-07-02',
+            'title' => 'Updated',
+            'content' => '<p>Updated</p>',
+        ])
+        ->assertRedirect();
+
+    expect($note->fresh()->author_id)->toBe($new_owner->id);
+});
+
+it('rejects an owner that does not exist', function () {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+    $patient = Patient::factory()->create();
+
+    $this->actingAs($user)
+        ->post(route('patients.encounter-notes.store', $patient), [
+            'type' => EncounterNoteType::Progress->value,
+            'author_id' => 999999,
+            'encounter_date' => '2026-07-01',
+            'title' => 'Initial visit',
+            'content' => '<p>Seen today</p>',
+        ])
+        ->assertInvalid(['author_id']);
+});
+
 it('forbids updating a signed note', function () {
     $user = User::factory()->withRole(UserRole::Doctor)->create();
     $note = EncounterNote::factory()->for($user, 'author')->signed()->create([
@@ -188,6 +239,7 @@ it('exposes encounter note props on the patient chart', function () {
         ->assertInertia(fn ($page) => $page
             ->component('Patients/Show')
             ->has('encounter_note_types')
+            ->has('owner_options')
             ->has('patient_appointments')
         );
 });

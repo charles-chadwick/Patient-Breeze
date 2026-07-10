@@ -28,7 +28,11 @@ class EncounterNoteController extends Controller
     {
         $this->authorize('update', $encounterNote);
 
-        $encounterNote->update($request->validated());
+        $validated = $request->validated();
+
+        $encounterNote->fill($validated);
+        $encounterNote->author_id = $validated['author_id'] ?? $encounterNote->author_id;
+        $encounterNote->save();
 
         return redirect()->back()->with('success', __('flash.encounter_notes.updated'));
     }

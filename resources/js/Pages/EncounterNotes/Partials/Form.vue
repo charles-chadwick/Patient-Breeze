@@ -1,5 +1,5 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3'
+import { useForm, usePage } from '@inertiajs/vue3'
 import RichTextEditor from '@/Components/RichTextEditor.vue'
 import DatePicker from '@/Components/ui/DatePicker.vue'
 
@@ -21,6 +21,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    ownerOptions: {
+        type: Array,
+        default: () => [],
+    },
     appointments: {
         type: Array,
         default: () => [],
@@ -29,8 +33,13 @@ const props = defineProps({
 
 const emit = defineEmits(['success'])
 
+// A new note defaults to the current user as owner; an existing note keeps its
+// author. Owner maps to the note's author_id.
+const current_user_id = usePage().props.auth.user?.id ?? ''
+
 const form = useForm({
     type: props.note?.type ?? '',
+    author_id: props.note?.author_id ?? current_user_id,
     encounter_date: props.note?.encounter_date ?? '',
     title: props.note?.title ?? '',
     content: props.note?.content ?? '',
@@ -74,6 +83,22 @@ function submit() {
                 />
                 <p v-if="form.errors.encounter_date" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.encounter_date }}</p>
             </div>
+        </div>
+
+        <div>
+            <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                {{ $t('encounter_notes.form.label_owner') }} <span class="text-vibrant-coral-500">*</span>
+            </label>
+            <select
+                v-model="form.author_id"
+                data-testid="encounter-note-owner"
+                class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                :class="{ 'border-vibrant-coral-400': form.errors.author_id }"
+            >
+                <option value="">{{ $t('common.actions.select_placeholder') }}</option>
+                <option v-for="owner in ownerOptions" :key="owner.id" :value="owner.id">{{ owner.name }}</option>
+            </select>
+            <p v-if="form.errors.author_id" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.author_id }}</p>
         </div>
 
         <div>

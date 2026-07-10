@@ -24,6 +24,7 @@ class UpdateEncounterNoteRequest extends FormRequest
 
         return [
             'type' => ['required', Rule::enum(EncounterNoteType::class)],
+            'author_id' => ['nullable', 'integer', Rule::exists('users', 'id')],
             'encounter_date' => ['required', 'date'],
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],

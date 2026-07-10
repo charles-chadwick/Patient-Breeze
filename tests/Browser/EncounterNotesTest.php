@@ -39,9 +39,15 @@ test('a doctor can create and sign an encounter note through the chart UI', func
         ->click('[data-today]')
         ->keys('#encounter-note-form', 'Escape')
         ->type('#encounter-note-form input[type="text"]:not([data-link])', 'Initial visit note')
-        ->type('.ql-editor', 'Seen today, patient reports improvement.')
+        ->type('.ql-editor', 'Vitals & labs stable.')
         ->click('button[type="submit"][form="encounter-note-form"]')
         ->assertNoJavascriptErrors();
+
+    // The list preview renders decoded plain text, not raw HTML entities. The
+    // browser serializes the typed "&" to "&amp;" in the stored content, so a
+    // naive tag-strip would surface "&amp;" — assert it is decoded to "&".
+    $page->assertSee('Vitals & labs stable.')
+        ->assertDontSee('&amp;');
 
     // The created note is Unsigned and can be signed by its author. Signing
     // triggers an async Inertia partial reload of the `encounter_notes`

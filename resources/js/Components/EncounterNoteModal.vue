@@ -29,6 +29,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    ownerOptions: {
+        type: Array,
+        default: () => [],
+    },
     appointments: {
         type: Array,
         default: () => [],
@@ -109,6 +113,12 @@ function handleOpenUpdate(value) {
                     </div>
                     <div>
                         <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                            {{ $t('encounter_notes.form.label_owner') }}
+                        </p>
+                        <p class="mt-1 text-sm text-foreground">{{ note.author_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                             {{ $t('encounter_notes.columns.status') }}
                         </p>
                         <p class="mt-1 text-sm text-foreground">{{ note.status_label }}</p>
@@ -148,6 +158,7 @@ function handleOpenUpdate(value) {
                 :method="method"
                 :note="note"
                 :types="types"
+                :owner-options="ownerOptions"
                 :appointments="appointments"
                 @success="handleSuccess"
             />
