@@ -24,6 +24,9 @@ flow, a new patient-chart tab, and tests.
   user and is only allowed after the note is signed.
 - **Locking:** signing freezes title/content/type/encounter_date (read-only). Only
   unsigned notes are editable/deletable.
+- **Role access (confirmed):** same grants as the regular `notes` resource — Staff,
+  Nurse, and Medical Assistant get view/create/update; Doctor additionally gets delete;
+  SuperAdmin gets all. Any author-capable user (different from the signer) may co-sign.
 
 ## 1. Data model — `encounter_notes`
 
