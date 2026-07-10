@@ -34,6 +34,14 @@ return [
         'deleted' => 'Note removed successfully.',
     ],
 
+    'encounter_notes' => [
+        'created' => 'Encounter note added successfully.',
+        'updated' => 'Encounter note updated successfully.',
+        'deleted' => 'Encounter note removed successfully.',
+        'signed' => 'Encounter note signed.',
+        'co_signed' => 'Encounter note co-signed.',
+    ],
+
     'discussions' => [
         'created' => 'Discussion started successfully.',
     ],
