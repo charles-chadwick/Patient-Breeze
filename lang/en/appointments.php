@@ -27,6 +27,7 @@ return [
     'form' => [
         'new_title' => 'New Appointment',
         'edit_title' => 'Edit Appointment',
+        'edit_hint' => 'Update the appointment details below.',
         'section_scheduling' => 'Scheduling',
         'section_details' => 'Details',
         'section_staff' => 'Staff',
