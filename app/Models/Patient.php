@@ -83,6 +83,11 @@ class Patient extends Authenticatable implements HasMedia
         return $this->hasMany(Appointment::class, 'patient_id');
     }
 
+    public function encounterNotes(): HasMany
+    {
+        return $this->hasMany(EncounterNote::class);
+    }
+
     public function contacts(): MorphMany
     {
         return $this->morphMany(Contact::class, 'contactable');
