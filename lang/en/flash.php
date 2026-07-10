@@ -70,6 +70,9 @@ return [
     'medications' => [
         'added' => 'Medication added successfully.',
         'removed' => 'Medication removed successfully.',
+        'created' => 'Medication created successfully.',
+        'updated' => 'Medication updated successfully.',
+        'deleted' => 'Medication deleted successfully.',
     ],
 
     'settings' => [

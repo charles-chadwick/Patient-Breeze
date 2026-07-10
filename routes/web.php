@@ -64,6 +64,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
         Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+        Route::resource('medications', MedicationController::class)
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     });
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('notes', NoteController::class)->only(['store', 'update', 'destroy']);

@@ -14,6 +14,7 @@ return [
     'portal_queue' => 'Portal Queue',
     'administration' => 'Administration',
     'users' => 'Users',
+    'medications' => 'Medications',
     'settings' => 'Settings',
 
     // Patient portal top bar
