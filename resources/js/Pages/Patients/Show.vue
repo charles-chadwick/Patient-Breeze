@@ -14,6 +14,7 @@ import DiscussionList from '@/Components/DiscussionList.vue'
 import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 import MedicationsBlock from '@/Components/MedicationsBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
+import TabBar from '@/Components/ui/TabBar.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -102,7 +103,24 @@ const initial_discussion_id = url_params.get('discussion')
     ? Number(url_params.get('discussion'))
     : null
 
-const active_tab = ref(['demographics', 'contacts', 'notes', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
+const primary_tabs = [
+    { key: 'demographics', label: 'patients.show.tab_demographics' },
+    { key: 'contacts', label: 'patients.show.tab_contacts' },
+    { key: 'notes', label: 'patients.show.tab_notes', testid: 'patient-tab-notes' },
+    { key: 'discussions', label: 'patients.show.tab_discussions' },
+]
+
+const records_tabs = [
+    { key: 'appointments', label: 'patients.show.tab_appointments', testid: 'records-tab-appointments' },
+    { key: 'encounters', label: 'patients.show.tab_encounters', testid: 'patient-tab-encounters' },
+]
+
+const care_tabs = [
+    { key: 'medications', label: 'patients.show.tab_medications', testid: 'records-tab-medications' },
+    { key: 'documents', label: 'patients.show.tab_documents', testid: 'records-tab-documents' },
+]
+
+const active_tab = ref(primary_tabs.some((tab) => tab.key === initial_tab) ? initial_tab : 'demographics')
 
 const records_tab = ref('appointments')
 
@@ -138,49 +156,7 @@ setLayoutProps({
         </div>
 
         <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-            <div class="flex bg-muted/40 p-1">
-                <button
-                    type="button"
-                    @click="active_tab = 'demographics'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="active_tab === 'demographics'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_demographics') }}
-                </button>
-                <button
-                    type="button"
-                    @click="active_tab = 'contacts'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="active_tab === 'contacts'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_contacts') }}
-                </button>
-                <button
-                    type="button"
-                    data-testid="patient-tab-notes"
-                    @click="active_tab = 'notes'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="active_tab === 'notes'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_notes') }}
-                </button>
-                <button
-                    type="button"
-                    @click="active_tab = 'discussions'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="active_tab === 'discussions'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_discussions') }}
-                </button>
-            </div>
+            <TabBar v-model="active_tab" :tabs="primary_tabs" />
 
             <PatientCard v-if="active_tab === 'demographics'" :patient="patient" flat />
 
@@ -213,30 +189,7 @@ setLayoutProps({
         </div>
 
         <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-            <div class="flex bg-muted/40 p-1">
-                <button
-                    type="button"
-                    data-testid="records-tab-appointments"
-                    @click="records_tab = 'appointments'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="records_tab === 'appointments'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_appointments') }}
-                </button>
-                <button
-                    type="button"
-                    data-testid="patient-tab-encounters"
-                    @click="records_tab = 'encounters'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="records_tab === 'encounters'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_encounters') }}
-                </button>
-            </div>
+            <TabBar v-model="records_tab" :tabs="records_tabs" />
 
             <div v-if="records_tab === 'appointments'">
             <div class="flex items-center justify-between border-b border-border px-6 py-4">
@@ -381,30 +334,7 @@ setLayoutProps({
         </div>
 
         <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-            <div class="flex bg-muted/40 p-1">
-                <button
-                    type="button"
-                    data-testid="records-tab-medications"
-                    @click="care_tab = 'medications'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="care_tab === 'medications'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_medications') }}
-                </button>
-                <button
-                    type="button"
-                    data-testid="records-tab-documents"
-                    @click="care_tab = 'documents'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="care_tab === 'documents'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_documents') }}
-                </button>
-            </div>
+            <TabBar v-model="care_tab" :tabs="care_tabs" />
 
             <MedicationsBlock
                 v-if="care_tab === 'medications'"
