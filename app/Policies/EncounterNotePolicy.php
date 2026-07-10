@@ -46,4 +46,11 @@ class EncounterNotePolicy
             && $note->status === EncounterNoteStatus::Signed
             && $user->id !== $note->signed_by;
     }
+
+    public function unsign(User $user, EncounterNote $note): bool
+    {
+        return $user->can('update_encounter_notes')
+            && $note->status !== EncounterNoteStatus::Unsigned
+            && $user->id === $note->signed_by;
+    }
 }

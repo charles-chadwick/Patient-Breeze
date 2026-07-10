@@ -31,12 +31,13 @@ const {
     deleting_note,
     deleting,
     openCreate,
-    openEdit,
+    openNote,
     handleSaved,
     askDelete,
     confirmDelete,
     sign,
     coSign,
+    unsign,
 } = useEncounterNoteManager(props.patientId)
 
 const statusClasses = {
@@ -137,13 +138,31 @@ function snippet(html) {
                         {{ $t('encounter_notes.actions.co_sign') }}
                     </button>
                     <button
+                        v-if="note.can_unsign"
+                        type="button"
+                        data-testid="encounter-note-unsign"
+                        @click="unsign(note)"
+                        class="ml-2 rounded-lg border border-light-yellow-200 px-3 py-1.5 text-xs font-bold text-light-yellow-700 hover:bg-light-yellow-50"
+                    >
+                        {{ $t('encounter_notes.actions.unsign') }}
+                    </button>
+                    <button
                         v-if="note.can_edit"
                         type="button"
                         data-testid="encounter-note-edit"
-                        @click="openEdit(note)"
+                        @click="openNote(note)"
                         class="ml-2 rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
                     >
                         {{ $t('encounter_notes.actions.edit') }}
+                    </button>
+                    <button
+                        v-else
+                        type="button"
+                        data-testid="encounter-note-view"
+                        @click="openNote(note)"
+                        class="ml-2 rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
+                    >
+                        {{ $t('encounter_notes.actions.view') }}
                     </button>
                     <button
                         v-if="note.can_delete"

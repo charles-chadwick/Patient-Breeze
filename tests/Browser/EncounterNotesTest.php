@@ -56,4 +56,21 @@ test('a doctor can create and sign an encounter note through the chart UI', func
 
     expect($patient->encounterNotes()->count())->toBe(1)
         ->and($note->status)->toBe(EncounterNoteStatus::Signed);
+
+    // A signed note is no longer editable, so its row exposes a View action
+    // instead of Edit. Opening it shows the read-only display (not the form).
+    $page->click('[data-testid="encounter-note-view"]')
+        ->assertVisible('[data-testid="encounter-note-view-content"]')
+        ->assertMissing('#encounter-note-form')
+        ->keys('[data-testid="encounter-note-view-content"]', 'Escape')
+        ->assertMissing('[data-testid="encounter-note-view-content"]');
+
+    // The signer can revert their own signature. Unsigning reloads the notes,
+    // returning the note to Unsigned so the Sign button reappears.
+    $page->click('[data-testid="encounter-note-unsign"]')
+        ->assertNoJavascriptErrors()
+        ->assertVisible('[data-testid="encounter-note-sign"]')
+        ->assertMissing('[data-testid="encounter-note-unsign"]');
+
+    expect($note->fresh()->status)->toBe(EncounterNoteStatus::Unsigned);
 })->group('browser');

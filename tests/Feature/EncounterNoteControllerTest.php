@@ -2,6 +2,7 @@
 
 use App\Actions\CoSignEncounterNoteAction;
 use App\Actions\SignEncounterNoteAction;
+use App\Actions\UnsignEncounterNoteAction;
 use App\Enums\EncounterNoteStatus;
 use App\Enums\EncounterNoteType;
 use App\Enums\UserRole;
@@ -63,6 +64,77 @@ it('signs a note as the author and co-signs as a different user', function () {
         ->post(route('patients.encounter-notes.co-sign', [$note->patient_id, $note]))
         ->assertRedirect();
     expect($note->fresh()->status)->toBe(EncounterNoteStatus::CoSigned);
+});
+
+it('lets the signer unsign a note, reverting it to unsigned and editable', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->signed()->create([
+        'signed_by' => $author->id,
+    ]);
+
+    $this->actingAs($author)
+        ->post(route('patients.encounter-notes.unsign', [$note->patient_id, $note]))
+        ->assertRedirect();
+
+    $note->refresh();
+    expect($note->status)->toBe(EncounterNoteStatus::Unsigned)
+        ->and($note->signed_by)->toBeNull()
+        ->and($note->signed_at)->toBeNull()
+        ->and($note->isEditable())->toBeTrue();
+});
+
+it('clears both signatures when unsigning a co-signed note', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->coSigned()->create([
+        'signed_by' => $author->id,
+    ]);
+
+    $this->actingAs($author)
+        ->post(route('patients.encounter-notes.unsign', [$note->patient_id, $note]))
+        ->assertRedirect();
+
+    $note->refresh();
+    expect($note->status)->toBe(EncounterNoteStatus::Unsigned)
+        ->and($note->signed_by)->toBeNull()
+        ->and($note->co_signed_by)->toBeNull()
+        ->and($note->co_signed_at)->toBeNull();
+});
+
+it('forbids unsigning by a user who is not the signer', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $other = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->signed()->create([
+        'signed_by' => $author->id,
+    ]);
+
+    $this->actingAs($other)
+        ->post(route('patients.encounter-notes.unsign', [$note->patient_id, $note]))
+        ->assertForbidden();
+});
+
+it('forbids unsigning a note that is already unsigned', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->create();
+
+    $this->actingAs($author)
+        ->post(route('patients.encounter-notes.unsign', [$note->patient_id, $note]))
+        ->assertForbidden();
+});
+
+it('audit-logs the unsign event', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->signed()->create([
+        'signed_by' => $author->id,
+    ]);
+
+    expect(Activity::forSubject($note)->where('description', 'unsigned')->count())->toBe(0);
+
+    app(UnsignEncounterNoteAction::class)->execute($note, $author);
+
+    expect(Activity::forSubject($note)->where('description', 'unsigned')->count())->toBe(1);
+
+    $activity = Activity::forSubject($note)->where('description', 'unsigned')->first();
+    expect($activity->causer_id)->toBe($author->id);
 });
 
 it('forbids co-signing by the signer', function () {

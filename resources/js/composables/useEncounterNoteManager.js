@@ -13,7 +13,7 @@ export function useEncounterNoteManager(patientId) {
         modal_open.value = true
     }
 
-    function openEdit(note) {
+    function openNote(note) {
         editing_note.value = note
         modal_open.value = true
     }
@@ -59,6 +59,13 @@ export function useEncounterNoteManager(patientId) {
         })
     }
 
+    function unsign(note) {
+        router.post(route('patients.encounter-notes.unsign', [patientId, note.id]), {}, {
+            preserveScroll: true,
+            only: ['encounter_notes'],
+        })
+    }
+
     return {
         modal_open,
         editing_note,
@@ -66,11 +73,12 @@ export function useEncounterNoteManager(patientId) {
         deleting_note,
         deleting,
         openCreate,
-        openEdit,
+        openNote,
         handleSaved,
         askDelete,
         confirmDelete,
         sign,
         coSign,
+        unsign,
     }
 }

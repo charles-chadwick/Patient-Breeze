@@ -47,6 +47,7 @@ return [
         'deleted' => 'Encounter note removed successfully.',
         'signed' => 'Encounter note signed.',
         'co_signed' => 'Encounter note co-signed.',
+        'unsigned' => 'Encounter note unsigned.',
     ],
 
     'discussions' => [

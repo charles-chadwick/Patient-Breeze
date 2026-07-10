@@ -78,6 +78,8 @@ Route::middleware('auth')->group(function () {
             ->name('patients.encounter-notes.sign');
         Route::post('/patients/{patient}/encounter-notes/{encounterNote}/co-sign', [EncounterNoteController::class, 'coSign'])
             ->name('patients.encounter-notes.co-sign');
+        Route::post('/patients/{patient}/encounter-notes/{encounterNote}/unsign', [EncounterNoteController::class, 'unsign'])
+            ->name('patients.encounter-notes.unsign');
     });
     Route::resource('discussions', DiscussionController::class)->only(['store']);
     Route::resource('discussions.posts', DiscussionPostController::class)->only(['store']);

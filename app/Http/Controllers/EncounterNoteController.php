@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\CoSignEncounterNoteAction;
 use App\Actions\CreateEncounterNoteAction;
 use App\Actions\SignEncounterNoteAction;
+use App\Actions\UnsignEncounterNoteAction;
 use App\Http\Requests\StoreEncounterNoteRequest;
 use App\Http\Requests\UpdateEncounterNoteRequest;
 use App\Models\EncounterNote;
@@ -57,5 +58,14 @@ class EncounterNoteController extends Controller
         $coSign->execute($encounterNote, $request->user());
 
         return redirect()->back()->with('success', __('flash.encounter_notes.co_signed'));
+    }
+
+    public function unsign(Request $request, Patient $patient, EncounterNote $encounterNote, UnsignEncounterNoteAction $unsign): RedirectResponse
+    {
+        $this->authorize('unsign', $encounterNote);
+
+        $unsign->execute($encounterNote, $request->user());
+
+        return redirect()->back()->with('success', __('flash.encounter_notes.unsigned'));
     }
 }

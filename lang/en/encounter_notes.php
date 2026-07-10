@@ -11,6 +11,7 @@ return [
         'type' => 'Type',
         'encounter_date' => 'Encounter Date',
         'status' => 'Status',
+        'signatures' => 'Signatures',
         'actions' => 'Actions',
     ],
     'form' => [
@@ -27,16 +28,20 @@ return [
     'modal' => [
         'new_title' => 'New Encounter Note',
         'edit_title' => 'Edit Encounter Note',
+        'view_title' => 'View Encounter Note',
         'new_description' => 'Document a patient encounter.',
         'edit_description' => 'Update this encounter note.',
+        'view_description' => 'Review this signed encounter note.',
         'submit_create' => 'Create Note',
         'submit_update' => 'Save Changes',
     ],
     'actions' => [
         'edit' => 'Edit',
+        'view' => 'View',
         'delete' => 'Delete',
         'sign' => 'Sign',
         'co_sign' => 'Co-sign',
+        'unsign' => 'Unsign',
     ],
     'delete_confirm' => 'Remove this encounter note? This cannot be undone.',
     'signed_by' => 'Signed by :name',

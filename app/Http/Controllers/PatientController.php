@@ -147,6 +147,7 @@ class PatientController extends Controller
                     'can_delete' => $user->can('delete', $note),
                     'can_sign' => $user->can('sign', $note),
                     'can_co_sign' => $user->can('coSign', $note),
+                    'can_unsign' => $user->can('unsign', $note),
                 ])),
         ]);
     }
