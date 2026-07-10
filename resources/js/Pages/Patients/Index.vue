@@ -57,19 +57,19 @@ function calculateAge(dateOfBirth) {
 }
 
 function bloodTypeBadgeClass(bloodType) {
-    if (!bloodType) return 'bg-muted text-muted-foreground'
+    if (!bloodType) return 'bg-muted text-muted-foreground dark:bg-muted dark:text-foreground'
     return bloodType.includes('+')
-        ? 'bg-accent/20 text-accent-foreground'
-        : 'bg-primary/10 text-primary'
+        ? 'bg-accent/20 text-accent-foreground dark:bg-accent/30 dark:text-tropical-teal-200'
+        : 'bg-primary/10 text-primary dark:bg-primary/30 dark:text-cerulean-200'
 }
 
 function genderBadgeClass(gender) {
     const map = {
-        Male: 'bg-primary/10 text-primary',
-        Female: 'bg-accent/20 text-accent-foreground',
-        Unknown: 'bg-muted text-muted-foreground',
+        Male: 'bg-primary/10 text-primary dark:bg-primary/30 dark:text-cerulean-200',
+        Female: 'bg-accent/20 text-accent-foreground dark:bg-accent/30 dark:text-tropical-teal-200',
+        Unknown: 'bg-muted text-muted-foreground dark:bg-muted dark:text-foreground',
     }
-    return map[gender] ?? 'bg-muted text-muted-foreground'
+    return map[gender] ?? 'bg-muted text-muted-foreground dark:bg-muted dark:text-foreground'
 }
 </script>
 

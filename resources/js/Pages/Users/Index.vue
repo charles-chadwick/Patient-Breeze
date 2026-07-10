@@ -161,7 +161,7 @@ const role_badge_classes = {
                                 as="button"
                                 type="button"
                                 :href="route('users.edit', user.id)"
-                                class="text-sm font-bold text-primary hover:underline"
+                                class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
                             >
                                 {{ $t('common.actions.edit') }}
                             </Link>
