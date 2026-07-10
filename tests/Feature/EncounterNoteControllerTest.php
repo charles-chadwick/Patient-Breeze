@@ -72,3 +72,16 @@ it('forbids co-signing by the signer', function () {
         ->post(route('patients.encounter-notes.co-sign', [$note->patient_id, $note]))
         ->assertForbidden();
 });
+
+it('exposes encounter note props on the patient chart', function () {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+    $patient = Patient::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('patients.show', $patient))
+        ->assertInertia(fn ($page) => $page
+            ->component('Patients/Show')
+            ->has('encounter_note_types')
+            ->has('patient_appointments')
+        );
+});
