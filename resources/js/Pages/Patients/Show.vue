@@ -102,9 +102,11 @@ const initial_discussion_id = url_params.get('discussion')
     ? Number(url_params.get('discussion'))
     : null
 
-const active_tab = ref(['demographics', 'contacts', 'notes', 'encounters', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
+const active_tab = ref(['demographics', 'contacts', 'notes', 'discussions'].includes(initial_tab) ? initial_tab : 'demographics')
 
 const records_tab = ref('appointments')
+
+const care_tab = ref('medications')
 
 const appointment_modal_open = ref(false)
 const editing_appointment = ref(null)
@@ -170,17 +172,6 @@ setLayoutProps({
                 </button>
                 <button
                     type="button"
-                    data-testid="patient-tab-encounters"
-                    @click="active_tab = 'encounters'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="active_tab === 'encounters'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_encounters') }}
-                </button>
-                <button
-                    type="button"
                     @click="active_tab = 'discussions'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
                     :class="active_tab === 'discussions'
@@ -210,14 +201,6 @@ setLayoutProps({
                 :types="note_types"
             />
 
-            <EncountersTab
-                v-if="active_tab === 'encounters'"
-                :patient-id="patient.id"
-                :notes="encounter_notes"
-                :types="encounter_note_types"
-                :appointments="patient_appointments"
-            />
-
             <DiscussionList
                 v-if="active_tab === 'discussions'"
                 :discussions="discussions"
@@ -244,25 +227,14 @@ setLayoutProps({
                 </button>
                 <button
                     type="button"
-                    data-testid="records-tab-medications"
-                    @click="records_tab = 'medications'"
+                    data-testid="patient-tab-encounters"
+                    @click="records_tab = 'encounters'"
                     class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="records_tab === 'medications'
+                    :class="records_tab === 'encounters'
                         ? 'bg-card text-foreground'
                         : 'text-muted-foreground hover:text-foreground'"
                 >
-                    {{ $t('patients.show.tab_medications') }}
-                </button>
-                <button
-                    type="button"
-                    data-testid="records-tab-documents"
-                    @click="records_tab = 'documents'"
-                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
-                    :class="records_tab === 'documents'
-                        ? 'bg-card text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'"
-                >
-                    {{ $t('patients.show.tab_documents') }}
+                    {{ $t('patients.show.tab_encounters') }}
                 </button>
             </div>
 
@@ -399,8 +371,43 @@ setLayoutProps({
             />
             </div>
 
+            <EncountersTab
+                v-if="records_tab === 'encounters'"
+                :patient-id="patient.id"
+                :notes="encounter_notes"
+                :types="encounter_note_types"
+                :appointments="patient_appointments"
+            />
+        </div>
+
+        <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+            <div class="flex bg-muted/40 p-1">
+                <button
+                    type="button"
+                    data-testid="records-tab-medications"
+                    @click="care_tab = 'medications'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="care_tab === 'medications'
+                        ? 'bg-card text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    {{ $t('patients.show.tab_medications') }}
+                </button>
+                <button
+                    type="button"
+                    data-testid="records-tab-documents"
+                    @click="care_tab = 'documents'"
+                    class="flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-colors"
+                    :class="care_tab === 'documents'
+                        ? 'bg-card text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'"
+                >
+                    {{ $t('patients.show.tab_documents') }}
+                </button>
+            </div>
+
             <MedicationsBlock
-                v-if="records_tab === 'medications'"
+                v-if="care_tab === 'medications'"
                 :patient-id="patient.id"
                 :medications="medications"
                 :dose-form-options="dose_form_options"
@@ -409,7 +416,7 @@ setLayoutProps({
             />
 
             <DocumentsBlock
-                v-if="records_tab === 'documents'"
+                v-if="care_tab === 'documents'"
                 :patient-id="patient.id"
                 :documents="documents"
                 :types="document_type_options"
