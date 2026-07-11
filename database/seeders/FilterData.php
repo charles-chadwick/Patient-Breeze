@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class FilterData
 {
     public const BAD_WORDS = [
+        'ass',
         'titty',
         'boob',
         'fuck',
