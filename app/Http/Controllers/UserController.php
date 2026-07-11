@@ -97,4 +97,14 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('success', __('flash.users.updated'));
     }
+
+    public function destroy(User $user): RedirectResponse
+    {
+        $this->authorize('delete', $user);
+
+        $user->delete();
+
+        return redirect()->route('users.index')
+            ->with('success', __('flash.users.deleted'));
+    }
 }

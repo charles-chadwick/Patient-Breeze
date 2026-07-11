@@ -373,3 +373,32 @@ it('rejects an email belonging to another user on update', function (): void {
         'role' => UserRole::Staff->value,
     ])->assertSessionHasErrors(['email']);
 });
+
+it('soft-deletes a user for a super admin', function (): void {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+
+    $response = $this->delete(route('users.destroy', $user));
+
+    $response->assertRedirect(route('users.index'));
+    $this->assertSoftDeleted($user);
+});
+
+it('forbids deleting your own account', function (): void {
+    $self = User::factory()->withRole(UserRole::SuperAdmin)->create();
+    $this->actingAs($self);
+
+    $response = $this->delete(route('users.destroy', $self));
+
+    $response->assertForbidden();
+    expect($self->fresh()->trashed())->toBeFalse();
+});
+
+it('forbids deleting a user without the delete permission', function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+    $target = User::factory()->withRole(UserRole::Staff)->create();
+
+    $response = $this->delete(route('users.destroy', $target));
+
+    $response->assertForbidden();
+    expect($target->fresh()->trashed())->toBeFalse();
+});

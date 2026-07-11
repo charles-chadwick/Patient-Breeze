@@ -1,5 +1,7 @@
 <script setup>
-import { Link, useForm } from '@inertiajs/vue3'
+import { computed } from 'vue'
+import { Link, router, useForm, usePage } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import DatePicker from '@/Components/ui/DatePicker.vue'
 import TimePicker from '@/Components/ui/TimePicker.vue'
 import StaffSelect from '@/Components/StaffSelect.vue'
@@ -37,9 +39,26 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    deleteAction: {
+        type: String,
+        default: null,
+    },
 })
 
 const emit = defineEmits(['success'])
+
+const page = usePage()
+
+const can_delete = computed(() => page.props.auth?.permissions?.includes('delete_appointments') ?? false)
+
+function destroy() {
+    if (window.confirm(trans('appointments.form.delete_confirm'))) {
+        router.delete(props.deleteAction, {
+            preserveScroll: true,
+            onSuccess: () => emit('success'),
+        })
+    }
+}
 
 const form = useForm({
     date: props.appointment?.date?.substring(0, 10) ?? '',
@@ -199,6 +218,14 @@ function submit() {
 
         <!-- Actions -->
         <div v-if="showActions" class="flex items-center justify-end gap-3">
+            <button
+                v-if="deleteAction && can_delete"
+                type="button"
+                @click="destroy"
+                class="mr-auto rounded-lg border border-vibrant-coral-300 px-4 py-2 text-sm font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
+            >
+                {{ $t('appointments.form.delete') }}
+            </button>
             <Link
                 :href="cancelHref"
                 class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"

@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Link, router, setLayoutProps } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import SortDropdown from '@/Components/SortDropdown.vue'
 import FilterDropdown from '@/Components/FilterDropdown.vue'
+import MedicationCatalogModal from '@/Components/MedicationCatalogModal.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -49,6 +50,19 @@ const sort_options = computed(() => [
     { label: trans('medications.catalog.index.sort.ndc'), value: 'ndc' },
 ])
 
+const modal_open = ref(false)
+const editing_medication = ref(null)
+
+function openCreate() {
+    editing_medication.value = null
+    modal_open.value = true
+}
+
+function openEdit(medication) {
+    editing_medication.value = medication
+    modal_open.value = true
+}
+
 function destroy(medication) {
     if (window.confirm(trans('medications.catalog.index.delete_confirm'))) {
         router.delete(route('medications.destroy', medication.id), { preserveScroll: true })
@@ -66,12 +80,13 @@ function destroy(medication) {
                 </span>
             </div>
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Link
-                    :href="route('medications.create')"
+                <button
+                    type="button"
+                    @click="openCreate"
                     class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90"
                 >
                     {{ $t('medications.catalog.index.new') }}
-                </Link>
+                </button>
                 <FilterDropdown
                     :label="$t('medications.catalog.index.filter_dose_form')"
                     param-name="dose_form"
@@ -122,12 +137,13 @@ function destroy(medication) {
                         :class="index % 2 !== 0 ? 'bg-muted/20' : 'bg-card'"
                     >
                         <td class="px-6 py-4">
-                            <Link
-                                :href="route('medications.edit', medication.id)"
-                                class="font-bold text-foreground hover:text-primary hover:underline"
+                            <button
+                                type="button"
+                                @click="openEdit(medication)"
+                                class="text-left font-bold text-foreground hover:text-primary hover:underline"
                             >
                                 {{ medication.name }}
-                            </Link>
+                            </button>
                         </td>
                         <td class="hidden px-6 py-4 text-muted-foreground sm:table-cell">{{ medication.type }}</td>
                         <td class="hidden px-6 py-4 text-muted-foreground md:table-cell">{{ medication.dosage }}</td>
@@ -135,14 +151,13 @@ function destroy(medication) {
                         <td class="hidden px-6 py-4 text-muted-foreground lg:table-cell">{{ medication.ndc }}</td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <Link
-                                    as="button"
+                                <button
                                     type="button"
-                                    :href="route('medications.edit', medication.id)"
+                                    @click="openEdit(medication)"
                                     class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
                                 >
                                     {{ $t('common.actions.edit') }}
-                                </Link>
+                                </button>
                                 <button
                                     type="button"
                                     class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
@@ -196,5 +211,11 @@ function destroy(medication) {
                 </Link>
             </div>
         </div>
+
+        <MedicationCatalogModal
+            v-model:open="modal_open"
+            :medication="editing_medication"
+            :dose_form_options="dose_form_options"
+        />
     </div>
 </template>

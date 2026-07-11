@@ -29,7 +29,8 @@ class UserPolicy
 
     public function delete(User $user, User $model): bool
     {
-        return $user->can('delete_users');
+        // Prevent users from deleting their own account.
+        return $user->can('delete_users') && $user->id !== $model->id;
     }
 
     public function restore(User $user, User $model): bool

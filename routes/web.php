@@ -43,9 +43,9 @@ Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
-    Route::resource('patients', PatientController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+    Route::resource('patients', PatientController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
     Route::resource('patients.appointments', AppointmentController::class)
-        ->only(['create', 'store', 'edit', 'update'])
+        ->only(['create', 'store', 'edit', 'update', 'destroy'])
         ->scoped();
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::get('/appointments/staff/search', [AppointmentController::class, 'staffSearch'])->name('appointments.staff.search');
@@ -63,12 +63,13 @@ Route::middleware('auth')->group(function () {
         ->name('patients.medications.destroy');
     Route::prefix('admin')->group(function () {
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
-        Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
+        Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
         Route::resource('medications', MedicationController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     });
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('notes', NoteController::class)->only(['store', 'update', 'destroy']);
+    Route::get('/encounter-notes', [EncounterNoteController::class, 'index'])->name('encounter-notes.index');
     Route::scopeBindings()->group(function (): void {
         Route::post('/patients/{patient}/encounter-notes', [EncounterNoteController::class, 'store'])
             ->name('patients.encounter-notes.store');
@@ -83,8 +84,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/patients/{patient}/encounter-notes/{encounterNote}/unsign', [EncounterNoteController::class, 'unsign'])
             ->name('patients.encounter-notes.unsign');
     });
-    Route::resource('discussions', DiscussionController::class)->only(['store']);
-    Route::resource('discussions.posts', DiscussionPostController::class)->only(['store']);
+    Route::resource('discussions', DiscussionController::class)->only(['store', 'destroy']);
+    Route::resource('discussions.posts', DiscussionPostController::class)->only(['store', 'update', 'destroy'])->scoped();
 
     Route::get('/portal-queue', [PortalQueueController::class, 'index'])->name('portal-queue.index');
     Route::post('/portal-queue/{notification}/read', [PortalQueueController::class, 'markRead'])->name('portal-queue.read');

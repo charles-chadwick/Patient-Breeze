@@ -153,3 +153,32 @@ it('creates an initial post from the initial reply', function (): void {
         ->and(DiscussionPost::first()->user_id)->toBe($this->user->id)
         ->and(DiscussionPost::first()->status)->toBe(DiscussionPostStatus::Published);
 });
+
+it('soft-deletes a discussion for a user with the delete permission', function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+
+    $patient = Patient::factory()->create();
+    $discussion = Discussion::factory()->create([
+        'discussionable_type' => Patient::class,
+        'discussionable_id' => $patient->id,
+    ]);
+
+    $response = $this->delete(route('discussions.destroy', $discussion));
+
+    $response->assertRedirect();
+    $this->assertSoftDeleted($discussion);
+});
+
+it('forbids deleting a discussion without the delete permission', function (): void {
+    // The default acting user is Staff, whose role lacks delete_discussions.
+    $patient = Patient::factory()->create();
+    $discussion = Discussion::factory()->create([
+        'discussionable_type' => Patient::class,
+        'discussionable_id' => $patient->id,
+    ]);
+
+    $response = $this->delete(route('discussions.destroy', $discussion));
+
+    $response->assertForbidden();
+    expect($discussion->fresh()->trashed())->toBeFalse();
+});

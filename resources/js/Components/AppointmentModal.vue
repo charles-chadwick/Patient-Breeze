@@ -1,4 +1,7 @@
 <script setup>
+import { computed } from 'vue'
+import { router, usePage } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import {
     Dialog,
     DialogContent,
@@ -34,6 +37,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:open', 'saved'])
 
+const page = usePage()
+
+const can_delete = computed(() => page.props.auth?.permissions?.includes('delete_appointments') ?? false)
+
 function handleOpenUpdate(value) {
     emit('update:open', value)
 }
@@ -41,6 +48,15 @@ function handleOpenUpdate(value) {
 function handleSuccess() {
     emit('saved')
     emit('update:open', false)
+}
+
+function handleDelete() {
+    if (window.confirm(trans('appointments.form.delete_confirm'))) {
+        router.delete(route('patients.appointments.destroy', [props.patientId, props.appointment.id]), {
+            preserveScroll: true,
+            onSuccess: handleSuccess,
+        })
+    }
 }
 </script>
 
@@ -66,6 +82,14 @@ function handleSuccess() {
             />
 
             <DialogFooter>
+                <button
+                    v-if="appointment && can_delete"
+                    type="button"
+                    @click="handleDelete"
+                    class="mr-auto rounded-lg border border-vibrant-coral-300 px-4 py-2 text-sm font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
+                >
+                    {{ $t('appointments.form.delete') }}
+                </button>
                 <button
                     type="button"
                     @click="handleOpenUpdate(false)"

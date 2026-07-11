@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { Link, router, setLayoutProps, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
@@ -144,11 +144,28 @@ setLayoutProps({
         { label: `${props.patient.first_name} ${props.patient.last_name}` },
     ]),
 })
+
+const page = usePage()
+const can_delete = computed(() => page.props.auth?.permissions?.includes('delete_patients') ?? false)
+
+function destroyPatient() {
+    if (window.confirm(trans('patients.show.delete_confirm'))) {
+        router.delete(route('patients.destroy', props.patient.id))
+    }
+}
 </script>
 
 <template>
     <div class="grid gap-6">
-        <div class="flex justify-end">
+        <div class="flex justify-end gap-3">
+            <button
+                v-if="can_delete"
+                type="button"
+                @click="destroyPatient"
+                class="inline-flex h-10 items-center rounded-lg border border-vibrant-coral-300 px-4 text-sm font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
+            >
+                {{ $t('patients.show.delete_patient') }}
+            </button>
             <Link
                 as="button"
                 type="button"

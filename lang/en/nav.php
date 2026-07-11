@@ -11,6 +11,7 @@ return [
     'dashboard' => 'Dashboard',
     'patients' => 'Patients',
     'appointments' => 'Appointments',
+    'encounter_notes' => 'Co-Signatures',
     'portal_queue' => 'Portal Queue',
     'administration' => 'Administration',
     'users' => 'Users',

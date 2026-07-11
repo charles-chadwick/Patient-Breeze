@@ -46,6 +46,12 @@ const formAction = computed(() =>
 )
 
 const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
+
+const deleteAction = computed(() =>
+    isEditing.value
+        ? route('patients.appointments.destroy', [props.patient.id, props.appointment.id])
+        : null
+)
 </script>
 
 <template>
@@ -57,6 +63,7 @@ const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
             :method="formMethod"
             :appointment="appointment"
             :cancel-href="backHref"
+            :delete-action="deleteAction"
             :status_options="status_options"
             :role_options="role_options"
         />

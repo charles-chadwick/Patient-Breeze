@@ -6,15 +6,40 @@ use App\Actions\CoSignEncounterNoteAction;
 use App\Actions\CreateEncounterNoteAction;
 use App\Actions\SignEncounterNoteAction;
 use App\Actions\UnsignEncounterNoteAction;
+use App\Enums\EncounterNoteStatus;
 use App\Http\Requests\StoreEncounterNoteRequest;
 use App\Http\Requests\UpdateEncounterNoteRequest;
 use App\Models\EncounterNote;
 use App\Models\Patient;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class EncounterNoteController extends Controller
 {
+    /**
+     * A cross-patient worklist of notes awaiting co-signature.
+     */
+    public function index(): Response
+    {
+        $this->authorize('viewAny', EncounterNote::class);
+
+        $notes = EncounterNote::query()
+            ->where('status', EncounterNoteStatus::Signed)
+            ->with([
+                'patient:id,first_name,last_name',
+                'signer:id,first_name,last_name',
+            ])
+            ->orderBy('signed_at')
+            ->paginate(15)
+            ->withQueryString();
+
+        return Inertia::render('EncounterNotes/Index', [
+            'notes' => $notes,
+        ]);
+    }
+
     public function store(StoreEncounterNoteRequest $request, Patient $patient, CreateEncounterNoteAction $createNote): RedirectResponse
     {
         $this->authorize('create', EncounterNote::class);

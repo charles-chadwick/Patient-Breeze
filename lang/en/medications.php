@@ -70,6 +70,7 @@ return [
         'form' => [
             'new_title' => 'New Medication',
             'edit_title' => 'Edit :name',
+            'hint' => 'Enter the medication catalog details below.',
             'label_name' => 'Name',
             'label_type' => 'Type',
             'label_dosage' => 'Dosage',

@@ -184,6 +184,16 @@ class PatientController extends Controller
             ->with('success', __('flash.patients.updated'));
     }
 
+    public function destroy(Patient $patient): RedirectResponse
+    {
+        $this->authorize('delete', $patient);
+
+        $patient->delete();
+
+        return redirect()->route('patients.index')
+            ->with('success', __('flash.patients.deleted'));
+    }
+
     private function uploaderName(Document $document): ?string
     {
         $uploader = $document->uploader;

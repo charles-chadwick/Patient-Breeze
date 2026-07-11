@@ -70,3 +70,90 @@ it('validates that content is required', function (): void {
 
     $response->assertSessionHasErrors(['content']);
 });
+
+function makePatientDiscussion(): Discussion
+{
+    $patient = Patient::factory()->create();
+
+    return Discussion::factory()->create([
+        'discussionable_type' => Patient::class,
+        'discussionable_id' => $patient->id,
+    ]);
+}
+
+it("updates the author's own post", function (): void {
+    $discussion = makePatientDiscussion();
+    $post = DiscussionPost::factory()->create([
+        'discussion_id' => $discussion->id,
+        'user_id' => $this->user->id,
+        'content' => 'Original message.',
+    ]);
+
+    $response = $this->put(route('discussions.posts.update', [$discussion, $post]), [
+        'content' => 'Corrected message.',
+    ]);
+
+    $response->assertRedirect();
+    expect($post->fresh()->content)->toBe('Corrected message.');
+});
+
+it("forbids editing another user's post", function (): void {
+    $discussion = makePatientDiscussion();
+    $post = DiscussionPost::factory()->create([
+        'discussion_id' => $discussion->id,
+        'user_id' => User::factory()->withRole(UserRole::Staff)->create()->id,
+        'content' => 'Someone else wrote this.',
+    ]);
+
+    $response = $this->put(route('discussions.posts.update', [$discussion, $post]), [
+        'content' => 'Tampered.',
+    ]);
+
+    $response->assertForbidden();
+    expect($post->fresh()->content)->toBe('Someone else wrote this.');
+});
+
+it("soft-deletes the author's own post", function (): void {
+    $doctor = User::factory()->withRole(UserRole::Doctor)->create();
+    $this->actingAs($doctor);
+
+    $discussion = makePatientDiscussion();
+    $post = DiscussionPost::factory()->create([
+        'discussion_id' => $discussion->id,
+        'user_id' => $doctor->id,
+    ]);
+
+    $response = $this->delete(route('discussions.posts.destroy', [$discussion, $post]));
+
+    $response->assertRedirect();
+    $this->assertSoftDeleted($post);
+});
+
+it('forbids deleting a post without the delete permission', function (): void {
+    // The default acting user (Staff) owns the post but lacks delete_discussions.
+    $discussion = makePatientDiscussion();
+    $post = DiscussionPost::factory()->create([
+        'discussion_id' => $discussion->id,
+        'user_id' => $this->user->id,
+    ]);
+
+    $response = $this->delete(route('discussions.posts.destroy', [$discussion, $post]));
+
+    $response->assertForbidden();
+    expect($post->fresh()->trashed())->toBeFalse();
+});
+
+it("forbids deleting another user's post even with the delete permission", function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+
+    $discussion = makePatientDiscussion();
+    $post = DiscussionPost::factory()->create([
+        'discussion_id' => $discussion->id,
+        'user_id' => User::factory()->withRole(UserRole::Staff)->create()->id,
+    ]);
+
+    $response = $this->delete(route('discussions.posts.destroy', [$discussion, $post]));
+
+    $response->assertForbidden();
+    expect($post->fresh()->trashed())->toBeFalse();
+});

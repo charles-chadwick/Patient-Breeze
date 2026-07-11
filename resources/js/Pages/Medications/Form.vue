@@ -43,11 +43,20 @@ const formMethod = computed(() => (isEditing.value ? 'put' : 'post'))
 </script>
 
 <template>
-    <MedicationForm
-        :action="formAction"
-        :method="formMethod"
-        :medication="medication"
-        :cancel-href="route('medications.index')"
-        :dose_form_options="dose_form_options"
-    />
+    <div class="rounded-xl border border-border bg-card shadow-sm">
+        <div class="border-b border-border px-6 py-4">
+            <h2 class="font-bold text-foreground">
+                {{ isEditing ? $t('medications.catalog.form.edit_title', { name: medication.name }) : $t('medications.catalog.form.new_title') }}
+            </h2>
+        </div>
+        <div class="px-6 py-5">
+            <MedicationForm
+                :action="formAction"
+                :method="formMethod"
+                :medication="medication"
+                :cancel-href="route('medications.index')"
+                :dose_form_options="dose_form_options"
+            />
+        </div>
+    </div>
 </template>

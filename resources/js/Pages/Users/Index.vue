@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { Link, router, setLayoutProps, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import SearchInput from '@/Components/SearchInput.vue'
@@ -49,6 +49,20 @@ const sort_options = computed(() => [
     { label: trans('users.sort.first_name'), value: 'first_name' },
     { label: trans('users.sort.email'), value: 'email' },
 ])
+
+const page = usePage()
+const current_user_id = computed(() => page.props.auth?.user?.id ?? null)
+const can_delete = computed(() => page.props.auth?.permissions?.includes('delete_users') ?? false)
+
+function canDelete(user) {
+    return can_delete.value && user.id !== current_user_id.value
+}
+
+function destroy(user) {
+    if (window.confirm(trans('users.index.delete_confirm'))) {
+        router.delete(route('users.destroy', user.id), { preserveScroll: true })
+    }
+}
 
 function userInitials(user) {
     return `${user.first_name[0]}${user.last_name[0]}`.toUpperCase()
@@ -157,14 +171,24 @@ const role_badge_classes = {
                             <span v-else class="text-muted-foreground">{{ $t('common.placeholders.em_dash') }}</span>
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <Link
-                                as="button"
-                                type="button"
-                                :href="route('users.edit', user.id)"
-                                class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
-                            >
-                                {{ $t('common.actions.edit') }}
-                            </Link>
+                            <div class="flex items-center justify-end gap-2">
+                                <Link
+                                    as="button"
+                                    type="button"
+                                    :href="route('users.edit', user.id)"
+                                    class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
+                                >
+                                    {{ $t('common.actions.edit') }}
+                                </Link>
+                                <button
+                                    v-if="canDelete(user)"
+                                    type="button"
+                                    @click="destroy(user)"
+                                    class="rounded-lg border border-vibrant-coral-300 px-3 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
+                                >
+                                    {{ $t('common.actions.delete') }}
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>

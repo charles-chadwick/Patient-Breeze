@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon, Pill } from 'lucide-vue-next'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon, Pill, FileSignature } from 'lucide-vue-next'
 import AuthorizationModal from '@/Components/AuthorizationModal.vue'
 import NotificationBell from '@/Components/NotificationBell.vue'
 import { applyTheme } from '@/theme'
