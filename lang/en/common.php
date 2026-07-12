@@ -36,6 +36,7 @@ return [
         'sign_out' => 'Sign out',
         'yes' => 'Yes',
         'no' => 'No',
+        'field' => 'Field',
     ],
 
     'confirm' => [

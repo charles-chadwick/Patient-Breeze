@@ -1,7 +1,6 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
-import { trans } from 'laravel-vue-i18n'
 import {
     Dialog,
     DialogContent,
@@ -11,6 +10,7 @@ import {
     DialogTitle,
 } from '@/Components/ui/dialog'
 import AppointmentForm from '@/Pages/Appointments/Partials/AppointmentForm.vue'
+import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 
 const props = defineProps({
     open: {
@@ -50,17 +50,29 @@ function handleSuccess() {
     emit('update:open', false)
 }
 
+const confirm_open = ref(false)
+const deleting = ref(false)
+
 function handleDelete() {
-    if (window.confirm(trans('appointments.form.delete_confirm'))) {
-        router.delete(route('patients.appointments.destroy', [props.patientId, props.appointment.id]), {
-            preserveScroll: true,
-            onSuccess: handleSuccess,
-        })
-    }
+    confirm_open.value = true
+}
+
+function confirmDelete() {
+    deleting.value = true
+
+    router.delete(route('patients.appointments.destroy', [props.patientId, props.appointment.id]), {
+        preserveScroll: true,
+        onSuccess: handleSuccess,
+        onFinish: () => {
+            deleting.value = false
+            confirm_open.value = false
+        },
+    })
 }
 </script>
 
 <template>
+    <div>
     <Dialog :open="open" @update:open="handleOpenUpdate">
         <DialogContent class="sm:max-w-3xl">
             <DialogHeader>
@@ -107,4 +119,14 @@ function handleDelete() {
             </DialogFooter>
         </DialogContent>
     </Dialog>
+
+    <ConfirmDialog
+        v-model:open="confirm_open"
+        :title="$t('appointments.form.delete')"
+        :description="$t('appointments.form.delete_confirm')"
+        :confirm-label="$t('appointments.form.delete')"
+        :processing="deleting"
+        @confirm="confirmDelete"
+    />
+    </div>
 </template>

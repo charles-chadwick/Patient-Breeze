@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\LinksActivityToPatient;
 use App\Enums\ContactType;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
@@ -18,7 +19,7 @@ use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Contact extends Model implements HasMedia
+class Contact extends Model implements HasMedia, LinksActivityToPatient
 {
     /** @use HasFactory<ContactFactory> */
     use HasFactory, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable;
@@ -82,5 +83,12 @@ class Contact extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnlyDirty()->logFillable();
+    }
+
+    public function auditPatientId(): ?int
+    {
+        return $this->contactable_type === Patient::class
+            ? (int) $this->contactable_id
+            : null;
     }
 }

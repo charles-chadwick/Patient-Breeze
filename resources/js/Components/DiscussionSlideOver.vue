@@ -2,6 +2,7 @@
 import { computed, ref, watch, onUnmounted } from 'vue'
 import { router, useForm, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
+import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 
 const props = defineProps({
@@ -83,23 +84,55 @@ function saveEdit(post) {
     })
 }
 
+const confirm_open = ref(false)
+const deleting = ref(false)
+const confirm_target = ref(null)
+
+const confirm_description = computed(() =>
+    confirm_target.value?.type === 'thread'
+        ? trans('discussions.slide_over.delete_thread_confirm')
+        : trans('discussions.slide_over.delete_post_confirm')
+)
+
 function deletePost(post) {
-    if (window.confirm(trans('discussions.slide_over.delete_post_confirm'))) {
-        router.delete(route('discussions.posts.destroy', [props.discussion.id, post.id]), {
-            preserveScroll: true,
-            onSuccess: () => emit('reply-posted'),
-        })
-    }
+    confirm_target.value = { type: 'post', post }
+    confirm_open.value = true
 }
 
 function deleteDiscussion() {
-    if (window.confirm(trans('discussions.slide_over.delete_thread_confirm'))) {
+    confirm_target.value = { type: 'thread' }
+    confirm_open.value = true
+}
+
+function confirmDelete() {
+    const target = confirm_target.value
+
+    if (!target) {
+        return
+    }
+
+    deleting.value = true
+
+    const finish = () => {
+        deleting.value = false
+        confirm_open.value = false
+        confirm_target.value = null
+    }
+
+    if (target.type === 'thread') {
         router.delete(route('discussions.destroy', props.discussion.id), {
             preserveScroll: true,
             onSuccess: () => {
                 emit('reply-posted')
                 emit('update:open', false)
             },
+            onFinish: finish,
+        })
+    } else {
+        router.delete(route('discussions.posts.destroy', [props.discussion.id, target.post.id]), {
+            preserveScroll: true,
+            onSuccess: () => emit('reply-posted'),
+            onFinish: finish,
         })
     }
 }
@@ -325,5 +358,14 @@ function submitReply() {
                 </div>
             </div>
         </div>
+
+        <ConfirmDialog
+            v-model:open="confirm_open"
+            :title="confirm_target?.type === 'thread' ? $t('discussions.slide_over.delete_thread') : $t('discussions.slide_over.delete_post')"
+            :description="confirm_description"
+            :confirm-label="$t('common.actions.delete')"
+            :processing="deleting"
+            @confirm="confirmDelete"
+        />
     </Teleport>
 </template>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\LinksActivityToPatient;
 use App\Enums\DiscussionType;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
@@ -16,7 +17,7 @@ use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Discussion extends Model implements HasMedia
+class Discussion extends Model implements HasMedia, LinksActivityToPatient
 {
     /** @use HasFactory<DiscussionFactory> */
     use HasFactory, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable;
@@ -72,5 +73,12 @@ class Discussion extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnlyDirty()->logFillable();
+    }
+
+    public function auditPatientId(): ?int
+    {
+        return $this->discussionable_type === Patient::class
+            ? (int) $this->discussionable_id
+            : null;
     }
 }

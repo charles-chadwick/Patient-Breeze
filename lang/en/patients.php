@@ -37,6 +37,7 @@ return [
         'tab_notes' => 'Notes',
         'tab_encounters' => 'Encounters',
         'tab_discussions' => 'Discussions',
+        'tab_history' => 'History',
         'tab_appointments' => 'Appointments',
         'tab_medications' => 'Medications',
         'tab_documents' => 'Documents',

@@ -14,6 +14,8 @@ import DiscussionList from '@/Components/DiscussionList.vue'
 import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 import MedicationsBlock from '@/Components/MedicationsBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
+import ConfirmDialog from '@/Components/ConfirmDialog.vue'
+import PatientHistoryTab from '@/Components/PatientHistoryTab.vue'
 import TabBar from '@/Components/ui/TabBar.vue'
 
 defineOptions({ layout: DashboardLayout })
@@ -99,6 +101,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    history: {
+        type: Object,
+        default: null,
+    },
 })
 
 const url_params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
@@ -112,6 +118,7 @@ const primary_tabs = [
     { key: 'contacts', label: 'patients.show.tab_contacts' },
     { key: 'notes', label: 'patients.show.tab_notes', testid: 'patient-tab-notes' },
     { key: 'discussions', label: 'patients.show.tab_discussions' },
+    { key: 'history', label: 'patients.show.tab_history', testid: 'patient-tab-history' },
 ]
 
 const records_tabs = [
@@ -148,10 +155,22 @@ setLayoutProps({
 const page = usePage()
 const can_delete = computed(() => page.props.auth?.permissions?.includes('delete_patients') ?? false)
 
-function destroyPatient() {
-    if (window.confirm(trans('patients.show.delete_confirm'))) {
-        router.delete(route('patients.destroy', props.patient.id))
-    }
+const confirm_open = ref(false)
+const deleting = ref(false)
+
+function askDeletePatient() {
+    confirm_open.value = true
+}
+
+function confirmDeletePatient() {
+    deleting.value = true
+
+    router.delete(route('patients.destroy', props.patient.id), {
+        onFinish: () => {
+            deleting.value = false
+            confirm_open.value = false
+        },
+    })
 }
 </script>
 
@@ -161,7 +180,7 @@ function destroyPatient() {
             <button
                 v-if="can_delete"
                 type="button"
-                @click="destroyPatient"
+                @click="askDeletePatient"
                 class="inline-flex h-10 items-center rounded-lg border border-vibrant-coral-300 px-4 text-sm font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
             >
                 {{ $t('patients.show.delete_patient') }}
@@ -206,6 +225,11 @@ function destroyPatient() {
                 :types="discussion_types"
                 :patient="patient"
                 :initial-discussion-id="initial_discussion_id"
+            />
+
+            <PatientHistoryTab
+                v-if="active_tab === 'history'"
+                :history="history"
             />
         </div>
 
@@ -342,6 +366,15 @@ function destroyPatient() {
                 :appointment="editing_appointment"
                 :status_options="status_options"
                 :role_options="role_options"
+            />
+
+            <ConfirmDialog
+                v-model:open="confirm_open"
+                :title="trans('patients.show.delete_patient')"
+                :description="trans('patients.show.delete_confirm')"
+                :confirm-label="trans('patients.show.delete_patient')"
+                :processing="deleting"
+                @confirm="confirmDeletePatient"
             />
             </div>
 

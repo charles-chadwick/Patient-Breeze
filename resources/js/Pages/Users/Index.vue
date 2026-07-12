@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Link, router, setLayoutProps, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import SortDropdown from '@/Components/SortDropdown.vue'
 import FilterDropdown from '@/Components/FilterDropdown.vue'
+import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -58,10 +59,30 @@ function canDelete(user) {
     return can_delete.value && user.id !== current_user_id.value
 }
 
-function destroy(user) {
-    if (window.confirm(trans('users.index.delete_confirm'))) {
-        router.delete(route('users.destroy', user.id), { preserveScroll: true })
+const confirm_open = ref(false)
+const deleting_user = ref(null)
+const deleting = ref(false)
+
+function askDelete(user) {
+    deleting_user.value = user
+    confirm_open.value = true
+}
+
+function confirmDelete() {
+    if (!deleting_user.value) {
+        return
     }
+
+    deleting.value = true
+
+    router.delete(route('users.destroy', deleting_user.value.id), {
+        preserveScroll: true,
+        onFinish: () => {
+            deleting.value = false
+            confirm_open.value = false
+            deleting_user.value = null
+        },
+    })
 }
 
 function userInitials(user) {
@@ -183,7 +204,7 @@ const role_badge_classes = {
                                 <button
                                     v-if="canDelete(user)"
                                     type="button"
-                                    @click="destroy(user)"
+                                    @click="askDelete(user)"
                                     class="rounded-lg border border-vibrant-coral-300 px-3 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
                                 >
                                     {{ $t('common.actions.delete') }}
@@ -234,5 +255,14 @@ const role_badge_classes = {
                 </Link>
             </div>
         </div>
+
+        <ConfirmDialog
+            v-model:open="confirm_open"
+            :title="trans('common.actions.delete')"
+            :description="trans('users.index.delete_confirm')"
+            :confirm-label="trans('common.actions.delete')"
+            :processing="deleting"
+            @confirm="confirmDelete"
+        />
     </div>
 </template>

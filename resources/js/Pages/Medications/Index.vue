@@ -7,6 +7,7 @@ import SearchInput from '@/Components/SearchInput.vue'
 import SortDropdown from '@/Components/SortDropdown.vue'
 import FilterDropdown from '@/Components/FilterDropdown.vue'
 import MedicationCatalogModal from '@/Components/MedicationCatalogModal.vue'
+import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -63,10 +64,30 @@ function openEdit(medication) {
     modal_open.value = true
 }
 
-function destroy(medication) {
-    if (window.confirm(trans('medications.catalog.index.delete_confirm'))) {
-        router.delete(route('medications.destroy', medication.id), { preserveScroll: true })
+const confirm_open = ref(false)
+const deleting_medication = ref(null)
+const deleting = ref(false)
+
+function askDelete(medication) {
+    deleting_medication.value = medication
+    confirm_open.value = true
+}
+
+function confirmDelete() {
+    if (!deleting_medication.value) {
+        return
     }
+
+    deleting.value = true
+
+    router.delete(route('medications.destroy', deleting_medication.value.id), {
+        preserveScroll: true,
+        onFinish: () => {
+            deleting.value = false
+            confirm_open.value = false
+            deleting_medication.value = null
+        },
+    })
 }
 </script>
 
@@ -161,7 +182,7 @@ function destroy(medication) {
                                 <button
                                     type="button"
                                     class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
-                                    @click="destroy(medication)"
+                                    @click="askDelete(medication)"
                                 >
                                     {{ $t('common.actions.delete') }}
                                 </button>
@@ -216,6 +237,15 @@ function destroy(medication) {
             v-model:open="modal_open"
             :medication="editing_medication"
             :dose_form_options="dose_form_options"
+        />
+
+        <ConfirmDialog
+            v-model:open="confirm_open"
+            :title="trans('common.actions.delete')"
+            :description="trans('medications.catalog.index.delete_confirm')"
+            :confirm-label="trans('common.actions.delete')"
+            :processing="deleting"
+            @confirm="confirmDelete"
         />
     </div>
 </template>

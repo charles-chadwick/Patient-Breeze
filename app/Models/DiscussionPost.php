@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\LinksActivityToPatient;
 use App\Enums\DiscussionPostStatus;
 use Database\Factories\DiscussionPostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
-class DiscussionPost extends Model
+class DiscussionPost extends Model implements LinksActivityToPatient
 {
     /** @use HasFactory<DiscussionPostFactory> */
     use HasFactory, LogsActivity, SoftDeletes;
@@ -54,5 +55,14 @@ class DiscussionPost extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnlyDirty()->logFillable();
+    }
+
+    public function auditPatientId(): ?int
+    {
+        if ($this->patient_id !== null) {
+            return $this->patient_id;
+        }
+
+        return Discussion::withTrashed()->find($this->discussion_id)?->auditPatientId();
     }
 }

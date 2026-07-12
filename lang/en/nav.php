@@ -16,6 +16,7 @@ return [
     'administration' => 'Administration',
     'users' => 'Users',
     'medications' => 'Medications',
+    'audit_log' => 'Audit Log',
     'settings' => 'Settings',
 
     // Patient portal top bar

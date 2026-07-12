@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AppointmentRequestReviewController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
@@ -66,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
         Route::resource('medications', MedicationController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log.index');
     });
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('notes', NoteController::class)->only(['store', 'update', 'destroy']);

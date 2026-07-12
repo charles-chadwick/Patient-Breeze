@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\LinksActivityToPatient;
 use App\Enums\DiscussionType;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
@@ -27,7 +28,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Patient extends Authenticatable implements HasMedia
+class Patient extends Authenticatable implements HasMedia, LinksActivityToPatient
 {
     /** @use HasFactory<PatientFactory> */
     use Filterable, HasFactory, HasListing, InteractsWithMedia, LogsActivity, Searchable, SoftDeletes, Sortable, TwoFactorAuthenticatable;
@@ -341,5 +342,10 @@ class Patient extends Authenticatable implements HasMedia
             'prefix', 'first_name', 'middle_name', 'last_name', 'suffix',
             'email', 'mrn', 'date_of_birth', 'gender_at_birth', 'gender_identity', 'blood_type',
         ]);
+    }
+
+    public function auditPatientId(): ?int
+    {
+        return $this->id;
     }
 }

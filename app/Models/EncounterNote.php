@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\LinksActivityToPatient;
 use App\Enums\EncounterNoteStatus;
 use App\Enums\EncounterNoteType;
 use App\Models\Concerns\Searchable;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
-class EncounterNote extends Model
+class EncounterNote extends Model implements LinksActivityToPatient
 {
     /** @use HasFactory<EncounterNoteFactory> */
     use HasFactory, LogsActivity, Searchable, SoftDeletes, Sortable;
@@ -86,5 +87,10 @@ class EncounterNote extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnlyDirty()->logFillable();
+    }
+
+    public function auditPatientId(): ?int
+    {
+        return $this->patient_id;
     }
 }

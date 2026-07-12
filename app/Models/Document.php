@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\LinksActivityToPatient;
 use App\Enums\DocumentType;
 use Database\Factories\DocumentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Document extends Model implements HasMedia
+class Document extends Model implements HasMedia, LinksActivityToPatient
 {
     /** @use HasFactory<DocumentFactory> */
     use HasFactory, InteractsWithMedia, LogsActivity, SoftDeletes;
@@ -51,5 +52,18 @@ class Document extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnlyDirty()->logFillable();
+    }
+
+    public function auditPatientId(): ?int
+    {
+        if ($this->documentable_type === Patient::class) {
+            return (int) $this->documentable_id;
+        }
+
+        if ($this->documentable_type === Appointment::class) {
+            return Appointment::withTrashed()->find($this->documentable_id)?->patient_id;
+        }
+
+        return null;
     }
 }
