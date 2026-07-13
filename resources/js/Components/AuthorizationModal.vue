@@ -23,11 +23,11 @@ function handleOpenUpdate(value) {
     <Dialog :open="state.is_open" @update:open="handleOpenUpdate">
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Not Authorized</DialogTitle>
+                <DialogTitle>{{ $t('errors.unauthorized.title') }}</DialogTitle>
                 <DialogDescription>{{ state.message }}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-                <Button @click="dismiss">OK</Button>
+                <Button @click="dismiss">{{ $t('errors.ok') }}</Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>

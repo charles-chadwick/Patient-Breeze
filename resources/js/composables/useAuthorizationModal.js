@@ -5,7 +5,7 @@ const state = reactive({
     message: '',
 })
 
-const DEFAULT_MESSAGE = 'You are not authorized to perform this action.'
+const DEFAULT_MESSAGE = 'You do not have access to this feature.'
 
 export function useAuthorizationModal() {
     function showDenied(message = DEFAULT_MESSAGE) {
