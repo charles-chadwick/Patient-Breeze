@@ -243,3 +243,20 @@ it('exposes encounter note props on the patient chart', function () {
             ->has('patient_appointments')
         );
 });
+
+it('renders the co-signature worklist with only signed notes', function () {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+
+    EncounterNote::factory()->signed()->create(['title' => 'Awaiting co-sign']);
+    EncounterNote::factory()->create(['title' => 'Draft']); // Unsigned
+    EncounterNote::factory()->coSigned()->create(['title' => 'Already co-signed']); // CoSigned
+
+    $this->actingAs($user)
+        ->get(route('encounter-notes.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('EncounterNotes/Index')
+            ->has('notes.data', 1)
+            ->where('notes.data.0.title', 'Awaiting co-sign')
+        );
+});

@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue'
-import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { computed, ref } from 'vue'
+import { Link, router, setLayoutProps, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import SortDropdown from '@/Components/SortDropdown.vue'
 import FilterDropdown from '@/Components/FilterDropdown.vue'
+import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 
 defineOptions({ layout: DashboardLayout })
 
@@ -49,6 +50,40 @@ const sort_options = computed(() => [
     { label: trans('users.sort.first_name'), value: 'first_name' },
     { label: trans('users.sort.email'), value: 'email' },
 ])
+
+const page = usePage()
+const current_user_id = computed(() => page.props.auth?.user?.id ?? null)
+const can_delete = computed(() => page.props.auth?.permissions?.includes('delete_users') ?? false)
+
+function canDelete(user) {
+    return can_delete.value && user.id !== current_user_id.value
+}
+
+const confirm_open = ref(false)
+const deleting_user = ref(null)
+const deleting = ref(false)
+
+function askDelete(user) {
+    deleting_user.value = user
+    confirm_open.value = true
+}
+
+function confirmDelete() {
+    if (!deleting_user.value) {
+        return
+    }
+
+    deleting.value = true
+
+    router.delete(route('users.destroy', deleting_user.value.id), {
+        preserveScroll: true,
+        onFinish: () => {
+            deleting.value = false
+            confirm_open.value = false
+            deleting_user.value = null
+        },
+    })
+}
 
 function userInitials(user) {
     return `${user.first_name[0]}${user.last_name[0]}`.toUpperCase()
@@ -157,14 +192,24 @@ const role_badge_classes = {
                             <span v-else class="text-muted-foreground">{{ $t('common.placeholders.em_dash') }}</span>
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <Link
-                                as="button"
-                                type="button"
-                                :href="route('users.edit', user.id)"
-                                class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
-                            >
-                                {{ $t('common.actions.edit') }}
-                            </Link>
+                            <div class="flex items-center justify-end gap-2">
+                                <Link
+                                    as="button"
+                                    type="button"
+                                    :href="route('users.edit', user.id)"
+                                    class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
+                                >
+                                    {{ $t('common.actions.edit') }}
+                                </Link>
+                                <button
+                                    v-if="canDelete(user)"
+                                    type="button"
+                                    @click="askDelete(user)"
+                                    class="rounded-lg border border-vibrant-coral-300 px-3 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
+                                >
+                                    {{ $t('common.actions.delete') }}
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -210,5 +255,14 @@ const role_badge_classes = {
                 </Link>
             </div>
         </div>
+
+        <ConfirmDialog
+            v-model:open="confirm_open"
+            :title="trans('common.actions.delete')"
+            :description="trans('users.index.delete_confirm')"
+            :confirm-label="trans('common.actions.delete')"
+            :processing="deleting"
+            @confirm="confirmDelete"
+        />
     </div>
 </template>

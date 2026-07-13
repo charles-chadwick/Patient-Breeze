@@ -145,3 +145,23 @@ it('resolves the patient as the author of their own discussion posts on the show
         ->assertJsonMissingPath('props.discussions.0.posts.0.patient.mrn')
         ->assertJsonMissingPath('props.discussions.0.posts.0.patient.date_of_birth');
 });
+
+it('soft-deletes a patient for a super admin', function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
+    $patient = Patient::factory()->create();
+
+    $response = $this->delete(route('patients.destroy', $patient));
+
+    $response->assertRedirect(route('patients.index'));
+    $this->assertSoftDeleted($patient);
+});
+
+it('forbids deleting a patient without the delete permission', function (): void {
+    // The default acting user is a Doctor, whose role lacks delete_patients.
+    $patient = Patient::factory()->create();
+
+    $response = $this->delete(route('patients.destroy', $patient));
+
+    $response->assertForbidden();
+    expect($patient->fresh()->trashed())->toBeFalse();
+});

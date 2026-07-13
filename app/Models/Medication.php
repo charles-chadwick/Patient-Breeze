@@ -3,15 +3,20 @@
 namespace App\Models;
 
 use App\Enums\DoseForm;
+use App\Models\Concerns\Filterable;
+use App\Models\Concerns\HasListing;
+use App\Models\Concerns\Searchable;
+use App\Models\Concerns\Sortable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class Medication extends Model
 {
-    use HasFactory, SoftDeletes;
+    use Filterable, HasFactory, HasListing, Searchable, SoftDeletes, Sortable;
 
     protected $fillable = [
         'type',
@@ -58,5 +63,33 @@ class Medication extends Model
                 'dose_form' => $medication->dose_form->value,
                 'ndc' => $medication->ndc,
             ]);
+    }
+
+    public function scopeListing(Builder $query, Request $request): array
+    {
+        return $this->paginatedListing($query, $request, 'medications', 'name');
+    }
+
+    /** @return list<string> */
+    protected function searchableFields(): array
+    {
+        return ['name', 'type', 'ndc'];
+    }
+
+    /** @return array<string, string> */
+    protected function sortableFields(): array
+    {
+        return [
+            'name' => 'name',
+            'type' => 'type',
+            'dose_form' => 'dose_form',
+            'ndc' => 'ndc',
+        ];
+    }
+
+    /** @return array<string, string> */
+    protected function filterableFields(): array
+    {
+        return ['dose_form' => 'dose_form'];
     }
 }

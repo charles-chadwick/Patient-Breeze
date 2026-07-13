@@ -1,6 +1,17 @@
 <?php
 
 return [
+    'index' => [
+        'heading' => 'Encounter Notes',
+        'subheading' => 'Notes awaiting co-signature',
+        'column_patient' => 'Patient',
+        'column_note' => 'Note',
+        'column_signed_by' => 'Signed by',
+        'column_signed_at' => 'Signed',
+        'empty' => 'No notes are awaiting co-signature.',
+        'record_label' => 'notes',
+        'open' => 'Open',
+    ],
     'tab' => [
         'heading' => 'Encounter Notes',
         'new' => 'New Encounter Note',

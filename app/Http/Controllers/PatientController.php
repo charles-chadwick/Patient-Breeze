@@ -23,10 +23,12 @@ use App\Models\EncounterNote;
 use App\Models\Patient;
 use App\Models\PatientMedication;
 use App\Models\User;
+use App\Support\ActivityPresenter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Activitylog\Models\Activity;
 
 class PatientController extends Controller
 {
@@ -157,6 +159,12 @@ class PatientController extends Controller
                     'can_co_sign' => $user->can('coSign', $note),
                     'can_unsign' => $user->can('unsign', $note),
                 ])),
+            'history' => Inertia::defer(fn () => Activity::query()
+                ->where('patient_id', $patient->id)
+                ->with('causer')
+                ->latest()
+                ->paginate(15, pageName: 'history_page')
+                ->through(fn (Activity $activity) => ActivityPresenter::present($activity))),
         ]);
     }
 
@@ -182,6 +190,16 @@ class PatientController extends Controller
 
         return redirect()->route('patients.show', $patient)
             ->with('success', __('flash.patients.updated'));
+    }
+
+    public function destroy(Patient $patient): RedirectResponse
+    {
+        $this->authorize('delete', $patient);
+
+        $patient->delete();
+
+        return redirect()->route('patients.index')
+            ->with('success', __('flash.patients.deleted'));
     }
 
     private function uploaderName(Document $document): ?string

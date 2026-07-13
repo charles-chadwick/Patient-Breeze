@@ -41,5 +41,12 @@ return [
         'empty_posts' => 'No messages yet. Start the conversation below.',
         'placeholder_reply' => 'Write a reply…',
         'reply' => 'Reply',
+        'delete_thread' => 'Delete',
+        'delete_thread_confirm' => 'Delete this entire discussion? This can be undone by an administrator.',
+        'edit_post' => 'Edit',
+        'delete_post' => 'Delete',
+        'delete_post_confirm' => 'Delete this message? This can be undone by an administrator.',
+        'save_edit' => 'Save',
+        'cancel_edit' => 'Cancel',
     ],
 ];

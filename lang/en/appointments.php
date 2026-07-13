@@ -47,5 +47,7 @@ return [
         'staff_empty' => 'No staff match your search.',
         'submit' => 'Save Appointment',
         'submitting' => 'Saving…',
+        'delete' => 'Delete Appointment',
+        'delete_confirm' => 'Delete this appointment? This can be undone by an administrator.',
     ],
 ];

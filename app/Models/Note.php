@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\LinksActivityToPatient;
 use App\Enums\NoteType;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
-class Note extends Model
+class Note extends Model implements LinksActivityToPatient
 {
     /** @use HasFactory<NoteFactory> */
     use HasFactory, LogsActivity, Searchable, SoftDeletes, Sortable;
@@ -61,5 +62,12 @@ class Note extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnlyDirty()->logFillable();
+    }
+
+    public function auditPatientId(): ?int
+    {
+        return $this->notable_type === Patient::class
+            ? (int) $this->notable_id
+            : null;
     }
 }

@@ -1,6 +1,8 @@
 <script setup>
-import { computed, watch, onUnmounted } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import { computed, ref, watch, onUnmounted } from 'vue'
+import { router, useForm, usePage } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
+import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 
 const props = defineProps({
@@ -37,7 +39,103 @@ function postAuthor(post) {
 
 const emit = defineEmits(['update:open', 'reply-posted'])
 
+const page = usePage()
+const current_user_id = computed(() => page.props.auth?.user?.id ?? null)
+const permissions = computed(() => page.props.auth?.permissions ?? [])
+const can_delete_discussion = computed(() => permissions.value.includes('delete_discussions'))
+
+function isOwnPost(post) {
+    return current_user_id.value !== null && post.user_id === current_user_id.value
+}
+
+function canEditPost(post) {
+    return isOwnPost(post) && permissions.value.includes('update_discussions')
+}
+
+function canDeletePost(post) {
+    return isOwnPost(post) && can_delete_discussion.value
+}
+
 const form = useForm({ content: '' })
+
+// Inline post editing.
+const editing_post_id = ref(null)
+const edit_form = useForm({ content: '' })
+
+function startEdit(post) {
+    editing_post_id.value = post.id
+    edit_form.clearErrors()
+    edit_form.content = post.content
+}
+
+function cancelEdit() {
+    editing_post_id.value = null
+    edit_form.reset()
+}
+
+function saveEdit(post) {
+    edit_form.put(route('discussions.posts.update', [props.discussion.id, post.id]), {
+        preserveScroll: true,
+        onSuccess: () => {
+            editing_post_id.value = null
+            edit_form.reset()
+            emit('reply-posted')
+        },
+    })
+}
+
+const confirm_open = ref(false)
+const deleting = ref(false)
+const confirm_target = ref(null)
+
+const confirm_description = computed(() =>
+    confirm_target.value?.type === 'thread'
+        ? trans('discussions.slide_over.delete_thread_confirm')
+        : trans('discussions.slide_over.delete_post_confirm')
+)
+
+function deletePost(post) {
+    confirm_target.value = { type: 'post', post }
+    confirm_open.value = true
+}
+
+function deleteDiscussion() {
+    confirm_target.value = { type: 'thread' }
+    confirm_open.value = true
+}
+
+function confirmDelete() {
+    const target = confirm_target.value
+
+    if (!target) {
+        return
+    }
+
+    deleting.value = true
+
+    const finish = () => {
+        deleting.value = false
+        confirm_open.value = false
+        confirm_target.value = null
+    }
+
+    if (target.type === 'thread') {
+        router.delete(route('discussions.destroy', props.discussion.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                emit('reply-posted')
+                emit('update:open', false)
+            },
+            onFinish: finish,
+        })
+    } else {
+        router.delete(route('discussions.posts.destroy', [props.discussion.id, target.post.id]), {
+            preserveScroll: true,
+            onSuccess: () => emit('reply-posted'),
+            onFinish: finish,
+        })
+    }
+}
 
 let subscribed_channel = null
 
@@ -118,15 +216,25 @@ function submitReply() {
                             </div>
                         </div>
                     </div>
-                    <button
-                        type="button"
-                        @click="close"
-                        class="ml-4 rounded-lg p-1.5 text-muted-foreground hover:bg-muted/40 hover:text-foreground"
-                    >
-                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+                    <div class="ml-4 flex shrink-0 items-center gap-1">
+                        <button
+                            v-if="can_delete_discussion"
+                            type="button"
+                            @click="deleteDiscussion"
+                            class="rounded-lg px-2 py-1.5 text-xs font-bold text-vibrant-coral-600 hover:bg-vibrant-coral-50"
+                        >
+                            {{ $t('discussions.slide_over.delete_thread') }}
+                        </button>
+                        <button
+                            type="button"
+                            @click="close"
+                            class="rounded-lg p-1.5 text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+                        >
+                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="border-b border-border px-6 py-3">
@@ -169,14 +277,61 @@ function submitReply() {
                                 :alt="postAuthor(post).name"
                                 class="size-8 shrink-0 rounded-full object-cover ring-1 ring-border"
                             />
-                            <div class="min-w-0 flex-1">
+                            <div class="group min-w-0 flex-1">
                                 <div class="flex items-baseline gap-2">
                                     <span class="text-sm font-bold text-foreground">
                                         {{ postAuthor(post).name ?? $t('discussions.slide_over.unknown_participant') }}
                                     </span>
                                     <span class="text-xs text-muted-foreground">{{ formatDate(post.created_at, DATE_SHORT) }}</span>
+                                    <div
+                                        v-if="editing_post_id !== post.id && (canEditPost(post) || canDeletePost(post))"
+                                        class="ml-auto flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100"
+                                    >
+                                        <button
+                                            v-if="canEditPost(post)"
+                                            type="button"
+                                            @click="startEdit(post)"
+                                            class="text-xs font-bold text-muted-foreground hover:text-foreground"
+                                        >
+                                            {{ $t('discussions.slide_over.edit_post') }}
+                                        </button>
+                                        <button
+                                            v-if="canDeletePost(post)"
+                                            type="button"
+                                            @click="deletePost(post)"
+                                            class="text-xs font-bold text-vibrant-coral-600 hover:text-vibrant-coral-700"
+                                        >
+                                            {{ $t('discussions.slide_over.delete_post') }}
+                                        </button>
+                                    </div>
                                 </div>
-                                <p class="mt-1 text-sm text-foreground">{{ post.content }}</p>
+                                <template v-if="editing_post_id === post.id">
+                                    <textarea
+                                        v-model="edit_form.content"
+                                        rows="2"
+                                        class="mt-1 w-full resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                        :class="{ 'border-vibrant-coral-400': edit_form.errors.content }"
+                                    ></textarea>
+                                    <p v-if="edit_form.errors.content" class="mt-1 text-xs text-vibrant-coral-600">{{ edit_form.errors.content }}</p>
+                                    <div class="mt-2 flex items-center gap-2">
+                                        <button
+                                            type="button"
+                                            @click="saveEdit(post)"
+                                            :disabled="edit_form.processing || !edit_form.content.trim()"
+                                            class="rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90 disabled:opacity-50"
+                                        >
+                                            {{ $t('discussions.slide_over.save_edit') }}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="cancelEdit"
+                                            class="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
+                                        >
+                                            {{ $t('discussions.slide_over.cancel_edit') }}
+                                        </button>
+                                    </div>
+                                </template>
+                                <p v-else class="mt-1 text-sm text-foreground">{{ post.content }}</p>
                             </div>
                         </div>
                     </div>
@@ -203,5 +358,14 @@ function submitReply() {
                 </div>
             </div>
         </div>
+
+        <ConfirmDialog
+            v-model:open="confirm_open"
+            :title="confirm_target?.type === 'thread' ? $t('discussions.slide_over.delete_thread') : $t('discussions.slide_over.delete_post')"
+            :description="confirm_description"
+            :confirm-label="$t('common.actions.delete')"
+            :processing="deleting"
+            @confirm="confirmDelete"
+        />
     </Teleport>
 </template>

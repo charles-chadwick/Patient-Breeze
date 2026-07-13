@@ -114,6 +114,29 @@ it('updates an appointment and redirects to patient show', function () {
     expect($appointment->fresh()->reason)->toBe('Updated reason');
 });
 
+it('soft-deletes an appointment and redirects to patient show', function () {
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+
+    $patient = Patient::factory()->create();
+    $appointment = Appointment::factory()->create(['patient_id' => $patient->id]);
+
+    $response = $this->delete(route('patients.appointments.destroy', [$patient, $appointment]));
+
+    $response->assertRedirect(route('patients.show', $patient));
+    $this->assertSoftDeleted($appointment);
+});
+
+it('forbids deleting an appointment without the delete permission', function () {
+    // The default acting user is Staff, whose role lacks delete_appointments.
+    $patient = Patient::factory()->create();
+    $appointment = Appointment::factory()->create(['patient_id' => $patient->id]);
+
+    $response = $this->delete(route('patients.appointments.destroy', [$patient, $appointment]));
+
+    $response->assertForbidden();
+    expect($appointment->fresh()->trashed())->toBeFalse();
+});
+
 it('excludes the appointment being edited from the conflict check', function () {
     $patient = Patient::factory()->create();
     $staff = User::factory()->withRole(UserRole::Staff)->create();

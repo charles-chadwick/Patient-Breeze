@@ -10,16 +10,19 @@ return [
     'users' => [
         'created' => 'User created successfully.',
         'updated' => 'User updated successfully.',
+        'deleted' => 'User deleted successfully.',
     ],
 
     'patients' => [
         'created' => 'Patient created successfully.',
         'updated' => 'Patient updated successfully.',
+        'deleted' => 'Patient deleted successfully.',
     ],
 
     'appointments' => [
         'created' => 'Appointment created successfully.',
         'updated' => 'Appointment updated successfully.',
+        'deleted' => 'Appointment deleted successfully.',
     ],
 
     'appointment_requests' => [
@@ -52,10 +55,13 @@ return [
 
     'discussions' => [
         'created' => 'Discussion started successfully.',
+        'deleted' => 'Discussion deleted successfully.',
     ],
 
     'discussion_posts' => [
         'created' => 'Reply posted successfully.',
+        'updated' => 'Reply updated successfully.',
+        'deleted' => 'Reply deleted successfully.',
     ],
 
     'portal_messages' => [
@@ -70,6 +76,9 @@ return [
     'medications' => [
         'added' => 'Medication added successfully.',
         'removed' => 'Medication removed successfully.',
+        'created' => 'Medication created successfully.',
+        'updated' => 'Medication updated successfully.',
+        'deleted' => 'Medication deleted successfully.',
     ],
 
     'settings' => [

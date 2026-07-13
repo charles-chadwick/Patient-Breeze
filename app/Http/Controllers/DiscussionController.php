@@ -17,4 +17,13 @@ class DiscussionController extends Controller
 
         return redirect()->back()->with('success', __('flash.discussions.created'));
     }
+
+    public function destroy(Discussion $discussion): RedirectResponse
+    {
+        $this->authorize('delete', $discussion);
+
+        $discussion->delete();
+
+        return redirect()->back()->with('success', __('flash.discussions.deleted'));
+    }
 }

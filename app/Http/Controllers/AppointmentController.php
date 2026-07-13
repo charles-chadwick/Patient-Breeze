@@ -84,6 +84,16 @@ class AppointmentController extends Controller
             ->with('success', __('flash.appointments.updated'));
     }
 
+    public function destroy(Patient $patient, Appointment $appointment): RedirectResponse
+    {
+        $this->authorize('delete', $appointment);
+
+        $appointment->delete();
+
+        return redirect()->route('patients.show', $patient)
+            ->with('success', __('flash.appointments.deleted'));
+    }
+
     /**
      * @return array<string, mixed>
      */

@@ -11,9 +11,12 @@ return [
     'dashboard' => 'Dashboard',
     'patients' => 'Patients',
     'appointments' => 'Appointments',
+    'encounter_notes' => 'Co-Signatures',
     'portal_queue' => 'Portal Queue',
     'administration' => 'Administration',
     'users' => 'Users',
+    'medications' => 'Medications',
+    'audit_log' => 'Audit Log',
     'settings' => 'Settings',
 
     // Patient portal top bar

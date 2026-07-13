@@ -17,6 +17,7 @@ return [
         'column_role' => 'Role',
         'empty' => 'No users found.',
         'record_label' => 'users',
+        'delete_confirm' => 'Delete this user? This can be undone by an administrator.',
     ],
 
     'sort' => [
