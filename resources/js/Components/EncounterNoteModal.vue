@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { trans } from 'laravel-vue-i18n'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 import {
@@ -79,6 +79,16 @@ const submit_label = computed(() =>
         : trans('encounter_notes.modal.submit_create'),
 )
 
+// Only the author of an unsigned note may sign it, so the combined
+// save-and-sign action mirrors the note's own `can_sign` permission.
+const can_save_and_sign = computed(() => is_edit.value && Boolean(props.note?.can_sign))
+
+const form_ref = ref(null)
+
+function save(sign) {
+    form_ref.value?.submit(sign)
+}
+
 function handleSuccess() {
     emit('saved')
     emit('update:open', false)
@@ -153,6 +163,7 @@ function handleOpenUpdate(value) {
 
             <EncounterNoteForm
                 v-else
+                ref="form_ref"
                 :key="note?.id ?? 'new'"
                 :action="action"
                 :method="method"
@@ -178,6 +189,15 @@ function handleOpenUpdate(value) {
                     class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90"
                 >
                     {{ submit_label }}
+                </button>
+                <button
+                    v-if="can_save_and_sign"
+                    type="button"
+                    data-testid="encounter-note-save-and-sign"
+                    @click="save(true)"
+                    class="rounded-lg bg-tropical-teal-600 px-4 py-2 text-sm font-bold text-white hover:bg-tropical-teal-700"
+                >
+                    {{ $t('encounter_notes.modal.submit_sign') }}
                 </button>
             </DialogFooter>
         </DialogContent>

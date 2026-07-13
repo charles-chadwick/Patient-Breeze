@@ -44,18 +44,22 @@ const form = useForm({
     title: props.note?.title ?? '',
     content: props.note?.content ?? '',
     appointment_id: props.note?.appointment_id ?? '',
+    sign: false,
 })
 
-function submit() {
+function submit(sign = false) {
+    form.sign = sign
     form[props.method](props.action, {
         preserveScroll: true,
         onSuccess: () => emit('success'),
     })
 }
+
+defineExpose({ submit })
 </script>
 
 <template>
-    <form id="encounter-note-form" action="#" method="post" @submit.prevent="submit" class="grid gap-5">
+    <form id="encounter-note-form" action="#" method="post" @submit.prevent="submit(false)" class="grid gap-5">
         <div class="grid gap-5 sm:grid-cols-2">
             <div>
                 <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">

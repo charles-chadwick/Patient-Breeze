@@ -47,6 +47,7 @@ return [
     'encounter_notes' => [
         'created' => 'Encounter note added successfully.',
         'updated' => 'Encounter note updated successfully.',
+        'updated_and_signed' => 'Encounter note updated and signed.',
         'deleted' => 'Encounter note removed successfully.',
         'signed' => 'Encounter note signed.',
         'co_signed' => 'Encounter note co-signed.',

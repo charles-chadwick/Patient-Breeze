@@ -49,7 +49,7 @@ class EncounterNoteController extends Controller
         return redirect()->back()->with('success', __('flash.encounter_notes.created'));
     }
 
-    public function update(UpdateEncounterNoteRequest $request, Patient $patient, EncounterNote $encounterNote): RedirectResponse
+    public function update(UpdateEncounterNoteRequest $request, Patient $patient, EncounterNote $encounterNote, SignEncounterNoteAction $sign): RedirectResponse
     {
         $this->authorize('update', $encounterNote);
 
@@ -58,6 +58,14 @@ class EncounterNoteController extends Controller
         $encounterNote->fill($validated);
         $encounterNote->author_id = $validated['author_id'] ?? $encounterNote->author_id;
         $encounterNote->save();
+
+        if ($request->boolean('sign')) {
+            $this->authorize('sign', $encounterNote);
+
+            $sign->execute($encounterNote, $request->user());
+
+            return redirect()->back()->with('success', __('flash.encounter_notes.updated_and_signed'));
+        }
 
         return redirect()->back()->with('success', __('flash.encounter_notes.updated'));
     }

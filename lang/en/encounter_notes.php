@@ -46,6 +46,7 @@ return [
         'view_description' => 'Review this signed encounter note.',
         'submit_create' => 'Create Note',
         'submit_update' => 'Save Changes',
+        'submit_sign' => 'Save and Sign',
     ],
     'actions' => [
         'edit' => 'Edit',

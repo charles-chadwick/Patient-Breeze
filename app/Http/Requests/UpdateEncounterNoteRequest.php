@@ -33,6 +33,7 @@ class UpdateEncounterNoteRequest extends FormRequest
                 'integer',
                 Rule::exists('appointments', 'id')->where('patient_id', $patient->id),
             ],
+            'sign' => ['sometimes', 'boolean'],
         ];
     }
 }

@@ -101,6 +101,61 @@ it('forbids updating a signed note', function () {
         ->assertForbidden();
 });
 
+it('saves and signs a note in one request when the author sets sign', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->create();
+
+    $this->actingAs($author)
+        ->put(route('patients.encounter-notes.update', [$note->patient_id, $note]), [
+            'type' => EncounterNoteType::Progress->value,
+            'encounter_date' => '2026-07-02',
+            'title' => 'Documented and signed',
+            'content' => '<p>Final</p>',
+            'sign' => true,
+        ])
+        ->assertRedirect();
+
+    $note->refresh();
+    expect($note->title)->toBe('Documented and signed')
+        ->and($note->status)->toBe(EncounterNoteStatus::Signed)
+        ->and($note->signed_by)->toBe($author->id);
+});
+
+it('saves without signing when sign is omitted', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->create();
+
+    $this->actingAs($author)
+        ->put(route('patients.encounter-notes.update', [$note->patient_id, $note]), [
+            'type' => EncounterNoteType::Progress->value,
+            'encounter_date' => '2026-07-02',
+            'title' => 'Just saved',
+            'content' => '<p>Draft</p>',
+        ])
+        ->assertRedirect();
+
+    expect($note->fresh()->status)->toBe(EncounterNoteStatus::Unsigned);
+});
+
+it('forbids saving and signing a note the user does not author', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $other = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->create();
+
+    $this->actingAs($other)
+        ->put(route('patients.encounter-notes.update', [$note->patient_id, $note]), [
+            'type' => EncounterNoteType::Progress->value,
+            'author_id' => $author->id,
+            'encounter_date' => '2026-07-02',
+            'title' => 'Not my note',
+            'content' => '<p>Nope</p>',
+            'sign' => true,
+        ])
+        ->assertForbidden();
+
+    expect($note->fresh()->status)->toBe(EncounterNoteStatus::Unsigned);
+});
+
 it('signs a note as the author and co-signs as a different user', function () {
     $author = User::factory()->withRole(UserRole::Doctor)->create();
     $other = User::factory()->withRole(UserRole::Doctor)->create();

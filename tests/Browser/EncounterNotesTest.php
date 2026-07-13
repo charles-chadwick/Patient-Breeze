@@ -2,6 +2,7 @@
 
 use App\Enums\EncounterNoteStatus;
 use App\Enums\UserRole;
+use App\Models\EncounterNote;
 use App\Models\Patient;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
@@ -79,4 +80,31 @@ test('a doctor can create and sign an encounter note through the chart UI', func
         ->assertMissing('[data-testid="encounter-note-unsign"]');
 
     expect($note->fresh()->status)->toBe(EncounterNoteStatus::Unsigned);
+})->group('browser');
+
+test('a doctor can save and sign a note in one step from the edit modal', function () {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+    $patient = Patient::factory()->create();
+    $note = EncounterNote::factory()->for($user, 'author')->create([
+        'patient_id' => $patient->id,
+    ]);
+
+    $this->actingAs($user);
+
+    $page = visit(route('patients.show', $patient));
+
+    // Editing an unsigned note the current user authored exposes the combined
+    // "Save and Sign" action (rendered only when the note's `can_sign` flag is
+    // true). Clicking it saves the edit and signs in one request, so the Sign
+    // action disappears from the row after the notes prop reloads.
+    $page->assertNoJavascriptErrors()
+        ->click('[data-testid="patient-tab-encounters"]')
+        ->click('[data-testid="encounter-note-edit"]')
+        ->assertVisible('#encounter-note-form')
+        ->click('[data-testid="encounter-note-save-and-sign"]')
+        ->assertNoJavascriptErrors()
+        ->assertMissing('[data-testid="encounter-note-sign"]');
+
+    expect($note->fresh()->status)->toBe(EncounterNoteStatus::Signed)
+        ->and($note->fresh()->signed_by)->toBe($user->id);
 })->group('browser');
