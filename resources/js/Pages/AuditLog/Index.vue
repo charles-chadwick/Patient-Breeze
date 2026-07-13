@@ -49,7 +49,9 @@ const form = ref({
     date_to: props.filters.date_to ?? '',
 })
 
-function applyFilters() {
+// The active filters as query params, shared by the list request and the
+// PDF export link so both reflect exactly what the user is viewing.
+function currentParams() {
     const params = {}
     for (const [key, value] of Object.entries(form.value)) {
         if (value !== '' && value !== null) {
@@ -62,12 +64,18 @@ function applyFilters() {
         params.patient_id = props.filters.patient_id
     }
 
-    router.get(route('audit-log.index'), params, {
+    return params
+}
+
+function applyFilters() {
+    router.get(route('audit-log.index'), currentParams(), {
         preserveState: true,
         preserveScroll: true,
         replace: true,
     })
 }
+
+const export_url = computed(() => route('audit-log.export', currentParams()))
 
 function resetFilters() {
     form.value = { causer_id: '', subject_type: '', event: '', date_from: '', date_to: '' }
@@ -96,9 +104,18 @@ const select_class = 'w-full rounded-lg border border-border bg-background px-3 
 <template>
     <div class="rounded border border-border bg-card shadow-sm">
         <div class="border-b border-border px-6 py-4">
-            <div class="flex items-center gap-3">
-                <h2 class="font-bold text-foreground">{{ $t('audit.index.heading') }}</h2>
-                <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">{{ activities.total }}</span>
+            <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <h2 class="font-bold text-foreground">{{ $t('audit.index.heading') }}</h2>
+                    <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">{{ activities.total }}</span>
+                </div>
+                <a
+                    :href="export_url"
+                    data-testid="audit-log-export"
+                    class="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-bold text-white hover:bg-primary/90"
+                >
+                    {{ $t('audit.index.export') }}
+                </a>
             </div>
             <p class="mt-0.5 text-sm text-muted-foreground">{{ $t('audit.index.subheading') }}</p>
             <div v-if="patient" class="mt-3 flex flex-wrap items-center gap-3 rounded-lg bg-primary/5 px-3 py-2">

@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('diagnoses', DiagnosisController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log.index');
+        Route::get('/audit-log/export', [AuditLogController::class, 'export'])->name('audit-log.export');
     });
     Route::resource('contacts', ContactController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('notes', NoteController::class)->only(['store', 'update', 'destroy']);

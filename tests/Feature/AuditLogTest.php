@@ -3,6 +3,7 @@
 use App\Enums\UserRole;
 use App\Models\Patient;
 use App\Models\User;
+use Spatie\LaravelPdf\Facades\Pdf;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function (): void {
@@ -85,4 +86,62 @@ it('scopes the audit log to a single patient and exposes their name', function (
             ->where('activities.data', fn ($rows) => collect($rows)->every(fn ($row) => $row['subject_id'] === $patient->id))
             ->where('activities.data', fn ($rows) => collect($rows)->doesntContain('subject_id', $other->id))
         );
+});
+
+it('exports the audit log as a pdf for permitted roles', function (UserRole $role): void {
+    Pdf::fake();
+    $this->actingAs(User::factory()->withRole($role)->create());
+    Patient::factory()->create();
+
+    $this->get(route('audit-log.export'))->assertOk();
+
+    Pdf::assertRespondedWithPdf(fn ($pdf) => $pdf->viewName === 'pdf.audit-log'
+        && $pdf->downloadName === 'audit-log.pdf');
+})->with([
+    'super admin' => [UserRole::SuperAdmin],
+    'doctor' => [UserRole::Doctor],
+    'staff' => [UserRole::Staff],
+]);
+
+it('forbids exporting the audit log for roles without access', function (UserRole $role): void {
+    Pdf::fake();
+    $this->actingAs(User::factory()->withRole($role)->create());
+
+    $this->get(route('audit-log.export'))->assertForbidden();
+})->with([
+    'nurse' => [UserRole::Nurse],
+    'medical assistant' => [UserRole::MedicalAssistant],
+]);
+
+it('scopes the pdf export to a patient and names the file accordingly', function (): void {
+    Pdf::fake();
+    $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
+
+    $patient = Patient::factory()->create();
+    $other = Patient::factory()->create();
+
+    $this->get(route('audit-log.export', ['patient_id' => $patient->id]))->assertOk();
+
+    Pdf::assertRespondedWithPdf(function ($pdf) use ($patient, $other) {
+        $activities = collect($pdf->viewData['activities']);
+
+        return $pdf->viewName === 'pdf.audit-log'
+            && $pdf->downloadName === "audit-log-patient-{$patient->id}.pdf"
+            && $pdf->viewData['patient']['name'] === trim("{$patient->first_name} {$patient->last_name}")
+            && $activities->every(fn ($row) => $row['subject_id'] === $patient->id)
+            && $activities->doesntContain('subject_id', $other->id);
+    });
+});
+
+it('applies the event filter to the pdf export', function (): void {
+    Pdf::fake();
+    $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
+
+    $patient = Patient::factory()->create();       // logs a "created" event
+    $patient->update(['first_name' => 'Renamed']);  // logs an "updated" event
+
+    $this->get(route('audit-log.export', ['event' => 'updated']))->assertOk();
+
+    Pdf::assertRespondedWithPdf(fn ($pdf) => collect($pdf->viewData['activities'])
+        ->every(fn ($row) => $row['event'] === 'updated'));
 });
