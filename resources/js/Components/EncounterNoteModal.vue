@@ -101,13 +101,13 @@ function handleOpenUpdate(value) {
 
 <template>
     <Dialog :open="open" @update:open="handleOpenUpdate">
-        <DialogContent class="sm:max-w-2xl">
-            <DialogHeader>
+        <DialogContent class="flex h-[95vh] max-h-[95vh] w-[66vw] flex-col overflow-hidden sm:max-w-[66vw]">
+            <DialogHeader class="shrink-0">
                 <DialogTitle>{{ title }}</DialogTitle>
                 <DialogDescription>{{ description }}</DialogDescription>
             </DialogHeader>
 
-            <div v-if="is_readonly" data-testid="encounter-note-view-content" class="grid gap-5">
+            <div v-if="is_readonly" data-testid="encounter-note-view-content" class="flex min-h-0 flex-1 flex-col gap-5">
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div>
                         <p class="text-xs font-bold uppercase tracking-wide text-muted-foreground">
@@ -153,11 +153,11 @@ function handleOpenUpdate(value) {
                     <p class="text-sm font-bold text-foreground">{{ note.title }}</p>
                 </div>
 
-                <div>
+                <div class="flex min-h-0 flex-1 flex-col">
                     <p class="mb-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">
                         {{ $t('encounter_notes.form.label_content') }}
                     </p>
-                    <div class="encounter-note-content rounded-lg border border-border bg-background p-4 text-sm text-foreground" v-html="note.content"></div>
+                    <div class="encounter-note-content flex-1 overflow-y-auto rounded-lg border border-border bg-background p-4 text-sm text-foreground" v-html="note.content"></div>
                 </div>
             </div>
 
@@ -174,7 +174,7 @@ function handleOpenUpdate(value) {
                 @success="handleSuccess"
             />
 
-            <DialogFooter>
+            <DialogFooter class="shrink-0">
                 <button
                     type="button"
                     @click="handleOpenUpdate(false)"

@@ -59,7 +59,7 @@ defineExpose({ submit })
 </script>
 
 <template>
-    <form id="encounter-note-form" action="#" method="post" @submit.prevent="submit(false)" class="grid gap-5">
+    <form id="encounter-note-form" action="#" method="post" @submit.prevent="submit(false)" class="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto">
         <div class="grid gap-5 sm:grid-cols-2">
             <div>
                 <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
@@ -136,11 +136,11 @@ defineExpose({ submit })
             <p v-if="form.errors.appointment_id" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.appointment_id }}</p>
         </div>
 
-        <div>
+        <div class="flex min-h-0 flex-1 flex-col">
             <label class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
                 {{ $t('encounter_notes.form.label_content') }} <span class="text-vibrant-coral-500">*</span>
             </label>
-            <RichTextEditor v-model="form.content" :placeholder="$t('encounter_notes.form.placeholder_content')" />
+            <RichTextEditor v-model="form.content" class="min-h-0 flex-1" :placeholder="$t('encounter_notes.form.placeholder_content')" />
             <p v-if="form.errors.content" class="mt-1 text-xs text-vibrant-coral-600">{{ form.errors.content }}</p>
         </div>
     </form>

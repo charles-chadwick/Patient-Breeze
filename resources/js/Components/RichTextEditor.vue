@@ -61,12 +61,18 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="rounded-lg border border-border bg-background">
+    <div class="flex h-full flex-col rounded-lg border border-border bg-background">
         <div ref="editor_element"></div>
     </div>
 </template>
 
 <style scoped>
+:deep(.ql-container) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
 :deep(.ql-editor) {
     min-height: 12rem;
 }
