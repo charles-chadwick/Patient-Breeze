@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon, Pill, FileSignature, ScrollText } from 'lucide-vue-next'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon, Pill, Stethoscope, FileSignature, ScrollText } from 'lucide-vue-next'
 import AuthorizationModal from '@/Components/AuthorizationModal.vue'
 import NotificationBell from '@/Components/NotificationBell.vue'
 import Toaster from '@/Components/Toaster.vue'
@@ -41,6 +41,7 @@ const nav_sections = computed(() => [
         children: [
             { label: trans('nav.users'), route: 'users.index', icon: Users },
             { label: trans('nav.medications'), route: 'medications.index', icon: Pill },
+            { label: trans('nav.diagnoses'), route: 'diagnoses.index', icon: Stethoscope },
             { label: trans('nav.audit_log'), route: 'audit-log.index', icon: ScrollText },
         ],
     },

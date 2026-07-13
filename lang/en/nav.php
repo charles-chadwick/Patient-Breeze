@@ -16,6 +16,7 @@ return [
     'administration' => 'Administration',
     'users' => 'Users',
     'medications' => 'Medications',
+    'diagnoses' => 'Diagnoses',
     'audit_log' => 'Audit Log',
     'settings' => 'Settings',
 

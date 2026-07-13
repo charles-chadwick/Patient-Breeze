@@ -82,6 +82,14 @@ return [
         'deleted' => 'Medication deleted successfully.',
     ],
 
+    'diagnoses' => [
+        'added' => 'Diagnosis added successfully.',
+        'removed' => 'Diagnosis removed successfully.',
+        'created' => 'Diagnosis created successfully.',
+        'updated' => 'Diagnosis updated successfully.',
+        'deleted' => 'Diagnosis deleted successfully.',
+    ],
+
     'settings' => [
         'updated' => 'Preferences saved successfully.',
     ],

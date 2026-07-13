@@ -145,6 +145,11 @@ class Patient extends Authenticatable implements HasMedia, LinksActivityToPatien
         return $this->hasMany(PatientMedication::class, 'patient_id');
     }
 
+    public function patientDiagnoses(): HasMany
+    {
+        return $this->hasMany(PatientDiagnosis::class, 'patient_id');
+    }
+
     public function portalNotifications(): HasMany
     {
         return $this->hasMany(PortalNotification::class);

@@ -40,6 +40,7 @@ return [
         'tab_history' => 'History',
         'tab_appointments' => 'Appointments',
         'tab_medications' => 'Medications',
+        'tab_diagnoses' => 'Diagnoses',
         'tab_documents' => 'Documents',
         'appointments_heading' => 'Appointments',
         'appointments_search_placeholder' => 'Search reason or notes…',

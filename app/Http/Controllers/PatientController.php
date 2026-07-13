@@ -8,6 +8,7 @@ use App\Enums\AppointmentRole;
 use App\Enums\AppointmentStatus;
 use App\Enums\BloodType;
 use App\Enums\ContactType;
+use App\Enums\DiagnosisStatus;
 use App\Enums\DiscussionType;
 use App\Enums\DocumentType;
 use App\Enums\DoseForm;
@@ -21,6 +22,7 @@ use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Document;
 use App\Models\EncounterNote;
 use App\Models\Patient;
+use App\Models\PatientDiagnosis;
 use App\Models\PatientMedication;
 use App\Models\User;
 use App\Support\ActivityPresenter;
@@ -73,6 +75,7 @@ class PatientController extends Controller
             'contacts' => fn ($query) => $query->orderBy('name'),
             'documents' => fn ($query) => $query->with(['media', 'uploader'])->latest(),
             'patientMedications' => fn ($query) => $query->latest(),
+            'patientDiagnoses' => fn ($query) => $query->latest(),
         ]);
 
         $documents = $patient->documents->map(fn (Document $document) => [
@@ -101,6 +104,16 @@ class PatientController extends Controller
             'created_at' => $medication->created_at->toDateString(),
         ]);
 
+        $diagnoses = $patient->patientDiagnoses->map(fn (PatientDiagnosis $diagnosis) => [
+            'id' => $diagnosis->id,
+            'diagnosis' => $diagnosis->diagnosis,
+            'icd10_code' => $diagnosis->icd10_code,
+            'diagnosed_on' => $diagnosis->diagnosed_on?->toDateString(),
+            'status' => $diagnosis->status->value,
+            'status_label' => $diagnosis->status->label(),
+            'created_at' => $diagnosis->created_at->toDateString(),
+        ]);
+
         return Inertia::render('Patients/Show', [
             'patient' => $patient,
             'appointments' => $patient->paginatedAppointments($search),
@@ -112,6 +125,8 @@ class PatientController extends Controller
             'medications' => $medications,
             'dose_form_options' => DoseForm::values(),
             'frequency_options' => Frequency::values(),
+            'patient_diagnoses' => $diagnoses,
+            'diagnosis_status_options' => DiagnosisStatus::values(),
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),

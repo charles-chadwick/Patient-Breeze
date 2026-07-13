@@ -13,6 +13,7 @@ import EncountersTab from '@/Components/EncountersTab.vue'
 import DiscussionList from '@/Components/DiscussionList.vue'
 import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 import MedicationsBlock from '@/Components/MedicationsBlock.vue'
+import DiagnosesBlock from '@/Components/DiagnosesBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 import PatientHistoryTab from '@/Components/PatientHistoryTab.vue'
@@ -58,6 +59,14 @@ const props = defineProps({
         default: () => [],
     },
     frequency_options: {
+        type: Array,
+        default: () => [],
+    },
+    patient_diagnoses: {
+        type: Array,
+        default: () => [],
+    },
+    diagnosis_status_options: {
         type: Array,
         default: () => [],
     },
@@ -124,11 +133,12 @@ const primary_tabs = [
 const records_tabs = [
     { key: 'appointments', label: 'patients.show.tab_appointments', testid: 'records-tab-appointments' },
     { key: 'encounters', label: 'patients.show.tab_encounters', testid: 'patient-tab-encounters' },
+    { key: 'documents', label: 'patients.show.tab_documents', testid: 'records-tab-documents' },
 ]
 
 const care_tabs = [
     { key: 'medications', label: 'patients.show.tab_medications', testid: 'records-tab-medications' },
-    { key: 'documents', label: 'patients.show.tab_documents', testid: 'records-tab-documents' },
+    { key: 'diagnoses', label: 'patients.show.tab_diagnoses', testid: 'records-tab-diagnoses' },
 ]
 
 const active_tab = ref(primary_tabs.some((tab) => tab.key === initial_tab) ? initial_tab : 'demographics')
@@ -386,6 +396,14 @@ function confirmDeletePatient() {
                 :owner-options="owner_options"
                 :appointments="patient_appointments"
             />
+
+            <DocumentsBlock
+                v-if="records_tab === 'documents'"
+                :patient-id="patient.id"
+                :documents="documents"
+                :types="document_type_options"
+                flat
+            />
         </div>
 
         <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
@@ -400,11 +418,11 @@ function confirmDeletePatient() {
                 flat
             />
 
-            <DocumentsBlock
-                v-if="care_tab === 'documents'"
+            <DiagnosesBlock
+                v-if="care_tab === 'diagnoses'"
                 :patient-id="patient.id"
-                :documents="documents"
-                :types="document_type_options"
+                :diagnoses="patient_diagnoses"
+                :status-options="diagnosis_status_options"
                 flat
             />
         </div>

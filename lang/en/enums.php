@@ -114,6 +114,14 @@ return [
         'Other' => 'Other',
     ],
 
+    'diagnosis_status' => [
+        'Active' => 'Active',
+        'Chronic' => 'Chronic',
+        'In Remission' => 'In Remission',
+        'Resolved' => 'Resolved',
+        'Ruled Out' => 'Ruled Out',
+    ],
+
     'dose_form' => [
         'Tablet' => 'Tablet',
         'Capsule' => 'Capsule',

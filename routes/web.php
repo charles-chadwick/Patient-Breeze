@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\TwoFactorChallengeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DiagnosisController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionPostController;
 use App\Http\Controllers\DocumentController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PatientDiagnosisController;
 use App\Http\Controllers\PatientMedicationController;
 use App\Http\Controllers\Portal\AppointmentRequestController as PortalAppointmentRequestController;
 use App\Http\Controllers\Portal\DocumentController as PortalDocumentController;
@@ -57,15 +59,23 @@ Route::middleware('auth')->group(function () {
         ->scopeBindings()
         ->name('patients.documents.download');
     Route::get('/medications/search', [MedicationController::class, 'search'])->name('medications.search');
+    Route::get('/diagnoses/search', [DiagnosisController::class, 'search'])->name('diagnoses.search');
     Route::post('/patients/{patient}/medications', [PatientMedicationController::class, 'store'])
         ->name('patients.medications.store');
     Route::delete('/patients/{patient}/medications/{patient_medication}', [PatientMedicationController::class, 'destroy'])
         ->scopeBindings()
         ->name('patients.medications.destroy');
+    Route::post('/patients/{patient}/diagnoses', [PatientDiagnosisController::class, 'store'])
+        ->name('patients.diagnoses.store');
+    Route::delete('/patients/{patient}/diagnoses/{patient_diagnosis}', [PatientDiagnosisController::class, 'destroy'])
+        ->scopeBindings()
+        ->name('patients.diagnoses.destroy');
     Route::prefix('admin')->group(function () {
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
         Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
         Route::resource('medications', MedicationController::class)
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::resource('diagnoses', DiagnosisController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log.index');
     });
