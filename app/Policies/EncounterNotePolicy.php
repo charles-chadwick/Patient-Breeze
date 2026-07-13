@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\EncounterNoteStatus;
+use App\Enums\UserRole;
 use App\Models\EncounterNote;
 use App\Models\User;
 
@@ -49,8 +50,13 @@ class EncounterNotePolicy
 
     public function unsign(User $user, EncounterNote $note): bool
     {
-        return $user->can('update_encounter_notes')
-            && $note->status !== EncounterNoteStatus::Unsigned
-            && $user->id === $note->signed_by;
+        if (! $user->can('update_encounter_notes') || $note->status === EncounterNoteStatus::Unsigned) {
+            return false;
+        }
+
+        // The original signer may revert their own signature; Super Admins and
+        // Doctors may unsign any note regardless of who signed it.
+        return $user->id === $note->signed_by
+            || $user->hasRole([UserRole::SuperAdmin->value, UserRole::Doctor->value]);
     }
 }

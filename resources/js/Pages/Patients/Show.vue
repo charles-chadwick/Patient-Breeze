@@ -16,7 +16,6 @@ import MedicationsBlock from '@/Components/MedicationsBlock.vue'
 import DiagnosesBlock from '@/Components/DiagnosesBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
-import PatientHistoryTab from '@/Components/PatientHistoryTab.vue'
 import TabBar from '@/Components/ui/TabBar.vue'
 
 defineOptions({ layout: DashboardLayout })
@@ -110,10 +109,6 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
-    history: {
-        type: Object,
-        default: null,
-    },
 })
 
 const url_params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
@@ -127,7 +122,6 @@ const primary_tabs = [
     { key: 'contacts', label: 'patients.show.tab_contacts' },
     { key: 'notes', label: 'patients.show.tab_notes', testid: 'patient-tab-notes' },
     { key: 'discussions', label: 'patients.show.tab_discussions' },
-    { key: 'history', label: 'patients.show.tab_history', testid: 'patient-tab-history' },
 ]
 
 const records_tabs = [
@@ -165,6 +159,12 @@ setLayoutProps({
 const page = usePage()
 const can_delete = computed(() => page.props.auth?.permissions?.includes('delete_patients') ?? false)
 
+// Roles permitted to reach the audit log; keep in sync with AuditLogController.
+const audit_log_roles = ['Super Admin', 'Doctor', 'Staff']
+const can_view_audit_log = computed(
+    () => page.props.auth?.roles?.some((role) => audit_log_roles.includes(role)) ?? false,
+)
+
 const confirm_open = ref(false)
 const deleting = ref(false)
 
@@ -195,6 +195,16 @@ function confirmDeletePatient() {
             >
                 {{ $t('patients.show.delete_patient') }}
             </button>
+            <Link
+                v-if="can_view_audit_log"
+                as="button"
+                type="button"
+                data-testid="patient-audit-log-link"
+                :href="route('audit-log.index', { patient_id: patient.id })"
+                class="inline-flex h-10 items-center rounded-lg border border-border px-4 text-sm font-bold text-foreground hover:bg-muted/40"
+            >
+                {{ $t('patients.show.view_audit_log') }}
+            </Link>
             <Link
                 as="button"
                 type="button"
@@ -237,10 +247,6 @@ function confirmDeletePatient() {
                 :initial-discussion-id="initial_discussion_id"
             />
 
-            <PatientHistoryTab
-                v-if="active_tab === 'history'"
-                :history="history"
-            />
         </div>
 
         <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">

@@ -72,12 +72,40 @@ test('a doctor can create and sign an encounter note through the chart UI', func
         ->keys('[data-testid="encounter-note-view-content"]', 'Escape')
         ->assertMissing('[data-testid="encounter-note-view-content"]');
 
-    // The signer can revert their own signature. Unsigning reloads the notes,
-    // returning the note to Unsigned so the Sign button reappears.
+    // The signer can revert their own signature. Unsigning now prompts a
+    // confirmation dialog first; confirming reloads the notes, returning the
+    // note to Unsigned so the Sign button reappears.
     $page->click('[data-testid="encounter-note-unsign"]')
+        ->click('[data-testid="confirm-dialog-confirm"]')
         ->assertNoJavascriptErrors()
         ->assertVisible('[data-testid="encounter-note-sign"]')
         ->assertMissing('[data-testid="encounter-note-unsign"]');
+
+    expect($note->fresh()->status)->toBe(EncounterNoteStatus::Unsigned);
+})->group('browser');
+
+test('a doctor can unsign a signed note from the view modal', function () {
+    $user = User::factory()->withRole(UserRole::Doctor)->create();
+    $patient = Patient::factory()->create();
+    $note = EncounterNote::factory()->for($user, 'author')->signed()->create([
+        'patient_id' => $patient->id,
+        'signed_by' => $user->id,
+    ]);
+
+    $this->actingAs($user);
+
+    $page = visit(route('patients.show', $patient));
+
+    // A signed note opens read-only; the modal exposes an Unsign action that
+    // asks for confirmation before reverting the signature.
+    $page->assertNoJavascriptErrors()
+        ->click('[data-testid="patient-tab-encounters"]')
+        ->click('[data-testid="encounter-note-view"]')
+        ->assertVisible('[data-testid="encounter-note-view-content"]')
+        ->click('[data-testid="encounter-note-modal-unsign"]')
+        ->click('[data-testid="confirm-dialog-confirm"]')
+        ->assertNoJavascriptErrors()
+        ->assertVisible('[data-testid="encounter-note-sign"]');
 
     expect($note->fresh()->status)->toBe(EncounterNoteStatus::Unsigned);
 })->group('browser');

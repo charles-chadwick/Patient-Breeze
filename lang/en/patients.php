@@ -30,6 +30,7 @@ return [
 
     'show' => [
         'edit_patient' => 'Edit Patient',
+        'view_audit_log' => 'Audit Log',
         'delete_patient' => 'Delete Patient',
         'delete_confirm' => 'Delete this patient? Their record will be archived and can be restored by an administrator.',
         'tab_demographics' => 'Demographics',

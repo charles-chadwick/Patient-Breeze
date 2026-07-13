@@ -18,6 +18,8 @@ return [
         'filter_date_to' => 'To',
         'filter_all' => 'All',
         'reset_filters' => 'Reset',
+        'scoped_to_patient' => 'Showing activity for :name',
+        'view_all' => 'View all activity',
     ],
 
     // Patient chart History tab

@@ -34,6 +34,9 @@ const {
     confirm_open,
     deleting_note,
     deleting,
+    unsign_open,
+    unsigning_note,
+    unsigning,
     openCreate,
     openNote,
     handleSaved,
@@ -41,8 +44,17 @@ const {
     confirmDelete,
     sign,
     coSign,
-    unsign,
+    askUnsign,
+    confirmUnsign,
 } = useEncounterNoteManager(props.patientId)
+
+// The modal opens read-only for signed notes; unsigning from there closes the
+// modal first so the confirmation isn't stacked on top of it.
+function askUnsignFromModal() {
+    const note = editing_note.value
+    modal_open.value = false
+    askUnsign(note)
+}
 
 const statusClasses = {
     Unsigned: 'bg-light-yellow-100 text-light-yellow-700',
@@ -140,7 +152,7 @@ const statusClasses = {
                         v-if="note.can_unsign"
                         type="button"
                         data-testid="encounter-note-unsign"
-                        @click="unsign(note)"
+                        @click="askUnsign(note)"
                         class="ml-2 rounded-lg border border-light-yellow-200 px-3 py-1.5 text-xs font-bold text-light-yellow-700 hover:bg-light-yellow-50"
                     >
                         {{ $t('encounter_notes.actions.unsign') }}
@@ -184,6 +196,7 @@ const statusClasses = {
         :owner-options="ownerOptions"
         :appointments="appointments"
         @saved="handleSaved"
+        @unsign="askUnsignFromModal"
     />
 
     <ConfirmDialog
@@ -193,5 +206,14 @@ const statusClasses = {
         :confirm-label="trans('encounter_notes.actions.delete')"
         :processing="deleting"
         @confirm="confirmDelete"
+    />
+
+    <ConfirmDialog
+        v-model:open="unsign_open"
+        :title="trans('encounter_notes.actions.unsign')"
+        :description="unsigning_note ? trans('encounter_notes.unsign_confirm') : ''"
+        :confirm-label="trans('encounter_notes.actions.unsign')"
+        :processing="unsigning"
+        @confirm="confirmUnsign"
     />
 </template>

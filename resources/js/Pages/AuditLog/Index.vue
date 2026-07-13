@@ -35,6 +35,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    patient: {
+        type: Object,
+        default: null,
+    },
 })
 
 const form = ref({
@@ -51,6 +55,11 @@ function applyFilters() {
         if (value !== '' && value !== null) {
             params[key] = value
         }
+    }
+
+    // Keep the patient scope while adjusting the other filters.
+    if (props.filters.patient_id) {
+        params.patient_id = props.filters.patient_id
     }
 
     router.get(route('audit-log.index'), params, {
@@ -92,6 +101,17 @@ const select_class = 'w-full rounded-lg border border-border bg-background px-3 
                 <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">{{ activities.total }}</span>
             </div>
             <p class="mt-0.5 text-sm text-muted-foreground">{{ $t('audit.index.subheading') }}</p>
+            <div v-if="patient" class="mt-3 flex flex-wrap items-center gap-3 rounded-lg bg-primary/5 px-3 py-2">
+                <span class="text-sm font-bold text-foreground">
+                    {{ $t('audit.index.scoped_to_patient', { name: patient.name }) }}
+                </span>
+                <Link
+                    :href="route('audit-log.index')"
+                    class="text-sm font-bold text-primary hover:underline"
+                >
+                    {{ $t('audit.index.view_all') }}
+                </Link>
+            </div>
         </div>
 
         <!-- Filters -->

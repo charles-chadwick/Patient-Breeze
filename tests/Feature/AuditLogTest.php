@@ -26,11 +26,25 @@ it('renders the audit log for a super admin', function (): void {
         );
 });
 
-it('forbids the audit log for non super admins', function (): void {
-    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+it('renders the audit log for doctors and staff', function (UserRole $role): void {
+    $this->actingAs(User::factory()->withRole($role)->create());
+
+    $this->get(route('audit-log.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('AuditLog/Index'));
+})->with([
+    'doctor' => [UserRole::Doctor],
+    'staff' => [UserRole::Staff],
+]);
+
+it('forbids the audit log for roles without access', function (UserRole $role): void {
+    $this->actingAs(User::factory()->withRole($role)->create());
 
     $this->get(route('audit-log.index'))->assertForbidden();
-});
+})->with([
+    'nurse' => [UserRole::Nurse],
+    'medical assistant' => [UserRole::MedicalAssistant],
+]);
 
 it('filters the audit log by event', function (): void {
     $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
@@ -53,5 +67,22 @@ it('filters the audit log by subject type', function (): void {
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->where('activities.data', fn ($rows) => collect($rows)->every(fn ($row) => $row['subject_type'] === Patient::class))
+        );
+});
+
+it('scopes the audit log to a single patient and exposes their name', function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
+
+    $patient = Patient::factory()->create();
+    $other = Patient::factory()->create();
+
+    $this->get(route('audit-log.index', ['patient_id' => $patient->id]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('patient.id', $patient->id)
+            ->where('patient.name', trim("{$patient->first_name} {$patient->last_name}"))
+            ->where('filters.patient_id', $patient->id)
+            ->where('activities.data', fn ($rows) => collect($rows)->every(fn ($row) => $row['subject_id'] === $patient->id))
+            ->where('activities.data', fn ($rows) => collect($rows)->doesntContain('subject_id', $other->id))
         );
 });

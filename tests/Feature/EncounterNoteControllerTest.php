@@ -206,9 +206,9 @@ it('clears both signatures when unsigning a co-signed note', function () {
         ->and($note->co_signed_at)->toBeNull();
 });
 
-it('forbids unsigning by a user who is not the signer', function () {
+it('forbids unsigning by a non-signer without an elevated role', function () {
     $author = User::factory()->withRole(UserRole::Doctor)->create();
-    $other = User::factory()->withRole(UserRole::Doctor)->create();
+    $other = User::factory()->withRole(UserRole::Nurse)->create();
     $note = EncounterNote::factory()->for($author, 'author')->signed()->create([
         'signed_by' => $author->id,
     ]);
@@ -216,6 +216,34 @@ it('forbids unsigning by a user who is not the signer', function () {
     $this->actingAs($other)
         ->post(route('patients.encounter-notes.unsign', [$note->patient_id, $note]))
         ->assertForbidden();
+});
+
+it('lets a Super Admin unsign a note signed by someone else', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $superAdmin = User::factory()->withRole(UserRole::SuperAdmin)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->signed()->create([
+        'signed_by' => $author->id,
+    ]);
+
+    $this->actingAs($superAdmin)
+        ->post(route('patients.encounter-notes.unsign', [$note->patient_id, $note]))
+        ->assertRedirect();
+
+    expect($note->refresh()->status)->toBe(EncounterNoteStatus::Unsigned);
+});
+
+it('lets a Doctor unsign a note signed by someone else', function () {
+    $author = User::factory()->withRole(UserRole::Doctor)->create();
+    $doctor = User::factory()->withRole(UserRole::Doctor)->create();
+    $note = EncounterNote::factory()->for($author, 'author')->signed()->create([
+        'signed_by' => $author->id,
+    ]);
+
+    $this->actingAs($doctor)
+        ->post(route('patients.encounter-notes.unsign', [$note->patient_id, $note]))
+        ->assertRedirect();
+
+    expect($note->refresh()->status)->toBe(EncounterNoteStatus::Unsigned);
 });
 
 it('forbids unsigning a note that is already unsigned', function () {

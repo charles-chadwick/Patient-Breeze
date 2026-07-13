@@ -57,6 +57,7 @@ return [
         'unsign' => 'Unsign',
     ],
     'delete_confirm' => 'Remove this encounter note? This cannot be undone.',
+    'unsign_confirm' => 'Are you sure you want to unsign this encounter note? This will revert it to an editable draft and clear its signatures.',
     'signed_by' => 'Signed by :name',
     'co_signed_by' => 'Co-signed by :name',
 ];

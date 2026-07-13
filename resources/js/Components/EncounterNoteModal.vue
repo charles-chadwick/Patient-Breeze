@@ -39,7 +39,7 @@ const props = defineProps({
     },
 })
 
-const emit = defineEmits(['update:open', 'saved'])
+const emit = defineEmits(['update:open', 'saved', 'unsign'])
 
 const is_edit = computed(() => Boolean(props.note?.id))
 
@@ -82,6 +82,10 @@ const submit_label = computed(() =>
 // Only the author of an unsigned note may sign it, so the combined
 // save-and-sign action mirrors the note's own `can_sign` permission.
 const can_save_and_sign = computed(() => is_edit.value && Boolean(props.note?.can_sign))
+
+// A signed note opens read-only; Super Admins, Doctors, and the original signer
+// may revert the signature from here.
+const can_unsign = computed(() => Boolean(props.note?.can_unsign))
 
 const form_ref = ref(null)
 
@@ -198,6 +202,15 @@ function handleOpenUpdate(value) {
                     class="rounded-lg bg-tropical-teal-600 px-4 py-2 text-sm font-bold text-white hover:bg-tropical-teal-700"
                 >
                     {{ $t('encounter_notes.modal.submit_sign') }}
+                </button>
+                <button
+                    v-if="can_unsign"
+                    type="button"
+                    data-testid="encounter-note-modal-unsign"
+                    @click="emit('unsign')"
+                    class="rounded-lg border border-light-yellow-200 px-4 py-2 text-sm font-bold text-light-yellow-700 hover:bg-light-yellow-50"
+                >
+                    {{ $t('encounter_notes.actions.unsign') }}
                 </button>
             </DialogFooter>
         </DialogContent>

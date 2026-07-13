@@ -71,6 +71,7 @@ function handleOpenUpdate(value) {
                 </button>
                 <button
                     type="button"
+                    data-testid="confirm-dialog-confirm"
                     :disabled="processing"
                     @click="handleConfirm"
                     class="rounded-lg px-4 py-2 text-sm font-bold text-white disabled:opacity-50"

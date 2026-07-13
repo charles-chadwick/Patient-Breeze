@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
+use App\Models\Patient;
 use App\Models\User;
 use App\Support\ActivityPresenter;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +17,11 @@ class AuditLogController extends Controller
     public function index(Request $request): Response
     {
         abort_unless(
-            $request->user()?->hasRole(UserRole::SuperAdmin->value) ?? false,
+            $request->user()?->hasRole([
+                UserRole::SuperAdmin->value,
+                UserRole::Doctor->value,
+                UserRole::Staff->value,
+            ]) ?? false,
             403
         );
 
@@ -25,9 +30,15 @@ class AuditLogController extends Controller
         $event = $request->string('event')->toString() ?: null;
         $date_from = $request->date('date_from');
         $date_to = $request->date('date_to');
+        $patient_id = $request->integer('patient_id') ?: null;
+
+        // When scoped to a patient, surface their name so the page can show it
+        // in a banner rather than only echoing the raw id.
+        $patient = $patient_id ? Patient::find($patient_id) : null;
 
         $activities = Activity::query()
             ->with('causer')
+            ->when($patient_id, fn (Builder $query, int $id) => $query->where('patient_id', $id))
             ->when($causer_id, fn (Builder $query, int $id) => $query
                 ->where('causer_type', User::class)
                 ->where('causer_id', $id))
@@ -48,7 +59,12 @@ class AuditLogController extends Controller
                 'event' => $event,
                 'date_from' => $date_from?->toDateString(),
                 'date_to' => $date_to?->toDateString(),
+                'patient_id' => $patient_id,
             ],
+            'patient' => $patient ? [
+                'id' => $patient->id,
+                'name' => trim("{$patient->first_name} {$patient->last_name}"),
+            ] : null,
             'causer_options' => User::orderBy('first_name')->orderBy('last_name')
                 ->get(['id', 'first_name', 'last_name'])
                 ->map(fn (User $user): array => [
