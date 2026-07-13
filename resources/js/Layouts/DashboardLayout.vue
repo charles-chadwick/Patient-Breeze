@@ -5,6 +5,7 @@ import { trans } from 'laravel-vue-i18n'
 import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon, Pill, FileSignature, ScrollText } from 'lucide-vue-next'
 import AuthorizationModal from '@/Components/AuthorizationModal.vue'
 import NotificationBell from '@/Components/NotificationBell.vue'
+import Toaster from '@/Components/Toaster.vue'
 import { applyTheme } from '@/theme'
 
 const props = defineProps({
@@ -306,5 +307,6 @@ onUnmounted(() => document.removeEventListener('click', handleUserMenuClickOutsi
                 <AuthorizationModal />
             </main>
         </div>
+        <Toaster />
     </div>
 </template>

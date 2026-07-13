@@ -193,6 +193,7 @@ function regenerate_recovery_codes() {
 
                 <button
                     type="submit"
+                    data-testid="save-preferences"
                     :disabled="preferences_form.processing"
                     class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/90 disabled:opacity-50"
                 >

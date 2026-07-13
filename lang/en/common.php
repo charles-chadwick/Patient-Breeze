@@ -45,6 +45,7 @@ return [
 
     'a11y' => [
         'breadcrumb' => 'Breadcrumb',
+        'dismiss' => 'Dismiss',
     ],
 
     'avatar' => [
