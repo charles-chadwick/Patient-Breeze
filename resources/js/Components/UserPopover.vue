@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { Link } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import {
     HoverCardContent,
@@ -75,14 +76,12 @@ const translated_role = computed(() =>
                     </div>
                 </div>
 
-                <a
+                <Link
                     :href="route('users.show', user.id)"
-                    target="_blank"
-                    rel="noopener"
                     class="mt-4 flex w-full items-center justify-center rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted/40"
                 >
                     {{ $t('users.popover.view_profile') }}
-                </a>
+                </Link>
             </HoverCardContent>
         </HoverCardPortal>
     </HoverCardRoot>

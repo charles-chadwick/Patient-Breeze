@@ -6,6 +6,8 @@ use App\Enums\UserRole;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function (): void {
@@ -92,6 +94,23 @@ it('renders the edit form for an appointment', function () {
             ->has('status_options')
             ->has('role_options')
             ->missing('staff_options')
+        );
+});
+
+it('exposes the real avatar for an assigned provider on the edit form', function () {
+    Storage::fake('public');
+
+    $patient = Patient::factory()->create();
+    $provider = User::factory()->withRole(UserRole::Doctor)->create();
+    $provider->addMedia(UploadedFile::fake()->image('avatar.jpg'))->toMediaCollection('avatar');
+
+    $appointment = Appointment::factory()->withProvider($provider)->create(['patient_id' => $patient->id]);
+
+    $this->get(route('patients.appointments.edit', [$patient, $appointment]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('appointment.users.0.id', $provider->id)
+            ->where('appointment.users.0.avatar_url', fn ($url) => is_string($url) && ! str_contains($url, 'default-avatar'))
         );
 });
 

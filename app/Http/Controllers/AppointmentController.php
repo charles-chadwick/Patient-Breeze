@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,7 +66,10 @@ class AppointmentController extends Controller
     {
         $this->authorize('update', $appointment);
 
-        $appointment->load('users');
+        // Eager-load each assigned provider's avatar media so the staff picker
+        // shows their real avatar; the avatar_url accessor falls back to the
+        // default image unless the media relation is loaded.
+        $appointment->load(['users.media' => fn (MorphMany $query) => $query->where('collection_name', 'avatar')]);
 
         return Inertia::render('Appointments/Form', [
             'patient' => $patient->load('media'),

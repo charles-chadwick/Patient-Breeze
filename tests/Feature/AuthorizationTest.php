@@ -50,17 +50,48 @@ it('forbids nurses from creating patients', function (): void {
     test()->get(route('patients.create'))->assertForbidden();
 });
 
-it('forbids non-super-admins from reaching user management', function (): void {
-    actingAsRole(UserRole::Doctor);
+it('forbids clinical and front-desk roles from reaching user management', function (UserRole $role): void {
+    actingAsRole($role);
 
     test()->get(route('users.index'))->assertForbidden();
     test()->get(route('users.create'))->assertForbidden();
-});
+})->with([UserRole::Nurse, UserRole::MedicalAssistant, UserRole::Staff]);
 
 it('allows super admins to manage users', function (): void {
     actingAsRole(UserRole::SuperAdmin);
 
     test()->get(route('users.index'))->assertSuccessful();
+});
+
+it('lets doctors manage users like a super admin', function (): void {
+    actingAsRole(UserRole::Doctor);
+
+    test()->get(route('users.index'))->assertSuccessful();
+    test()->get(route('users.create'))->assertSuccessful();
+});
+
+it('lets a doctor edit and delete a non-super-admin user', function (): void {
+    $doctor = actingAsRole(UserRole::Doctor);
+    $target = User::factory()->withRole(UserRole::Staff)->create();
+
+    expect($doctor->can('update', $target))->toBeTrue()
+        ->and($doctor->can('delete', $target))->toBeTrue();
+});
+
+it('forbids a doctor from editing or deleting a super admin', function (): void {
+    $doctor = actingAsRole(UserRole::Doctor);
+    $super_admin = User::factory()->withRole(UserRole::SuperAdmin)->create();
+
+    expect($doctor->can('update', $super_admin))->toBeFalse()
+        ->and($doctor->can('delete', $super_admin))->toBeFalse();
+});
+
+it('lets a super admin edit and delete another super admin', function (): void {
+    $super_admin = actingAsRole(UserRole::SuperAdmin);
+    $other_super_admin = User::factory()->withRole(UserRole::SuperAdmin)->create();
+
+    expect($super_admin->can('update', $other_super_admin))->toBeTrue()
+        ->and($super_admin->can('delete', $other_super_admin))->toBeTrue();
 });
 
 it('lets front-desk staff schedule appointments and manage contacts', function (): void {

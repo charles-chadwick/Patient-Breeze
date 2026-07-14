@@ -90,6 +90,23 @@ return [
         'deleted' => 'Diagnosis deleted successfully.',
     ],
 
+    'lab_orders' => [
+        'created' => 'Lab order created successfully.',
+        'updated' => 'Lab order updated successfully.',
+        'deleted' => 'Lab order deleted successfully.',
+    ],
+
+    'lab_results' => [
+        'added' => 'Lab result added successfully.',
+        'removed' => 'Lab result removed successfully.',
+    ],
+
+    'lab_reference_ranges' => [
+        'created' => 'Reference range added successfully.',
+        'updated' => 'Reference range updated successfully.',
+        'deleted' => 'Reference range removed successfully.',
+    ],
+
     'settings' => [
         'updated' => 'Preferences saved successfully.',
     ],

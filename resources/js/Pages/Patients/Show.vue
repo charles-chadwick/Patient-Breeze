@@ -14,6 +14,7 @@ import DiscussionList from '@/Components/DiscussionList.vue'
 import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 import MedicationsBlock from '@/Components/MedicationsBlock.vue'
 import DiagnosesBlock from '@/Components/DiagnosesBlock.vue'
+import LabResultsBlock from '@/Components/LabResultsBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
 import UserPopover from '@/Components/UserPopover.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
@@ -63,6 +64,10 @@ const props = defineProps({
         default: () => [],
     },
     patient_diagnoses: {
+        type: Array,
+        default: () => [],
+    },
+    lab_results: {
         type: Array,
         default: () => [],
     },
@@ -134,6 +139,7 @@ const records_tabs = [
 const care_tabs = [
     { key: 'medications', label: 'patients.show.tab_medications', testid: 'records-tab-medications' },
     { key: 'diagnoses', label: 'patients.show.tab_diagnoses', testid: 'records-tab-diagnoses' },
+    { key: 'lab_results', label: 'patients.show.tab_lab_results', testid: 'records-tab-lab-results' },
 ]
 
 const active_tab = ref(primary_tabs.some((tab) => tab.key === initial_tab) ? initial_tab : 'demographics')
@@ -437,6 +443,13 @@ function confirmDeletePatient() {
                 :patient-id="patient.id"
                 :diagnoses="patient_diagnoses"
                 :status-options="diagnosis_status_options"
+                flat
+            />
+
+            <LabResultsBlock
+                v-if="care_tab === 'lab_results'"
+                :patient-id="patient.id"
+                :lab-results="lab_results"
                 flat
             />
         </div>

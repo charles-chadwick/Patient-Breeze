@@ -47,6 +47,26 @@ it('forbids the audit log for roles without access', function (UserRole $role): 
     'medical assistant' => [UserRole::MedicalAssistant],
 ]);
 
+it('scopes the audit log to a single causer', function (): void {
+    $actor = User::factory()->withRole(UserRole::SuperAdmin)->create(['first_name' => 'Aria', 'last_name' => 'Vance']);
+    $other_actor = User::factory()->withRole(UserRole::SuperAdmin)->create(['first_name' => 'Bram', 'last_name' => 'Okafor']);
+
+    $this->actingAs($other_actor);
+    Patient::factory()->create(); // caused by the other actor
+
+    $this->actingAs($actor);
+    Patient::factory()->create(); // caused by the acting user
+
+    $this->get(route('audit-log.index', ['causer_id' => $actor->id]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('filters.causer_id', $actor->id)
+            ->where('activities.data', fn ($rows) => collect($rows)->isNotEmpty()
+                && collect($rows)->every(fn ($row) => $row['causer_name'] === 'Aria Vance'))
+            ->where('activities.data', fn ($rows) => collect($rows)->doesntContain('causer_name', 'Bram Okafor'))
+        );
+});
+
 it('filters the audit log by event', function (): void {
     $this->actingAs(User::factory()->withRole(UserRole::SuperAdmin)->create());
 

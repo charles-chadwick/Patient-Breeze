@@ -15,7 +15,7 @@ enum UserRole: string
      *
      * @var list<string>
      */
-    private const RESOURCES = ['patients', 'appointments', 'discussions', 'documents', 'contacts', 'notes', 'encounter_notes', 'users', 'medications', 'diagnoses'];
+    private const RESOURCES = ['patients', 'appointments', 'discussions', 'documents', 'contacts', 'notes', 'encounter_notes', 'users', 'medications', 'diagnoses', 'lab_orders'];
 
     /**
      * Actions available for every guarded resource.
@@ -69,25 +69,17 @@ enum UserRole: string
     }
 
     /**
-     * Resource => allowed actions for this role. Only the Super Admin manages users.
+     * Resource => allowed actions for this role. Doctors have the same full
+     * grants as the Super Admin; the one carve-out — that a Doctor cannot edit
+     * or delete a Super Admin account — is enforced in UserPolicy, since it
+     * depends on the target user's role rather than a static permission.
      *
      * @return array<string, list<string>>
      */
     private function grants(): array
     {
         return match ($this) {
-            self::SuperAdmin => array_fill_keys(self::RESOURCES, self::ACTIONS),
-            self::Doctor => [
-                'patients' => ['view', 'create', 'update'],
-                'appointments' => ['view', 'create', 'update', 'delete'],
-                'discussions' => ['view', 'create', 'update', 'delete'],
-                'documents' => ['view', 'create', 'update', 'delete'],
-                'contacts' => ['view', 'create', 'update', 'delete'],
-                'notes' => ['view', 'create', 'update', 'delete'],
-                'encounter_notes' => ['view', 'create', 'update', 'delete'],
-                'medications' => ['view', 'create', 'update', 'delete'],
-                'diagnoses' => ['view', 'create', 'update', 'delete'],
-            ],
+            self::SuperAdmin, self::Doctor => array_fill_keys(self::RESOURCES, self::ACTIONS),
             self::Nurse, self::MedicalAssistant => [
                 'patients' => ['view', 'update'],
                 'appointments' => ['view', 'create', 'update'],
@@ -98,6 +90,7 @@ enum UserRole: string
                 'encounter_notes' => ['view', 'create', 'update'],
                 'medications' => ['view', 'create', 'update', 'delete'],
                 'diagnoses' => ['view', 'create', 'update', 'delete'],
+                'lab_orders' => ['view', 'create', 'update', 'delete'],
             ],
             self::Staff => [
                 'patients' => ['view'],
@@ -109,6 +102,7 @@ enum UserRole: string
                 'encounter_notes' => ['view', 'create', 'update'],
                 'medications' => ['view', 'create', 'update', 'delete'],
                 'diagnoses' => ['view', 'create', 'update', 'delete'],
+                'lab_orders' => ['view', 'create', 'update', 'delete'],
             ],
         };
     }

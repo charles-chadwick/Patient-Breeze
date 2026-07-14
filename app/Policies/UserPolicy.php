@@ -25,11 +25,19 @@ class UserPolicy
 
     public function update(User $user, User $model): bool
     {
+        if ($this->isProtectedSuperAdmin($user, $model)) {
+            return false;
+        }
+
         return $user->can('update_users');
     }
 
     public function delete(User $user, User $model): bool
     {
+        if ($this->isProtectedSuperAdmin($user, $model)) {
+            return false;
+        }
+
         // Prevent users from deleting their own account.
         return $user->can('delete_users') && $user->id !== $model->id;
     }
@@ -42,5 +50,16 @@ class UserPolicy
     public function forceDelete(User $user, User $model): bool
     {
         return $user->hasRole(UserRole::SuperAdmin->value);
+    }
+
+    /**
+     * A Super Admin account may only be edited or deleted by another Super
+     * Admin. This is the sole restriction on a Doctor's otherwise full user
+     * management.
+     */
+    private function isProtectedSuperAdmin(User $user, User $model): bool
+    {
+        return $model->hasRole(UserRole::SuperAdmin->value)
+            && ! $user->hasRole(UserRole::SuperAdmin->value);
     }
 }

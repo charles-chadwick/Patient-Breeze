@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { Link, setLayoutProps } from '@inertiajs/vue3'
+import { Link, setLayoutProps, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
@@ -36,6 +36,25 @@ const props = defineProps({
 
 const active_tab = ref('details')
 
+// Role name whose accounts only a fellow Super Admin may edit, mirroring UserPolicy.
+const SUPER_ADMIN_ROLE = 'Super Admin'
+
+const page = usePage()
+
+// A Super Admin's profile may only be edited by another Super Admin.
+const can_edit_user = computed(() => {
+    const viewer_is_super_admin = (page.props.auth?.roles ?? []).includes(SUPER_ADMIN_ROLE)
+    const target_is_super_admin = (props.user.roles ?? []).some((role) => role.name === SUPER_ADMIN_ROLE)
+
+    return viewer_is_super_admin || ! target_is_super_admin
+})
+
+// Roles permitted to reach the audit log; keep in sync with AuditLogController.
+const audit_log_roles = ['Super Admin', 'Doctor', 'Staff']
+const can_view_audit_log = computed(
+    () => page.props.auth?.roles?.some((role) => audit_log_roles.includes(role)) ?? false,
+)
+
 setLayoutProps({
     breadcrumbs: computed(() => [
         { label: trans('nav.users'), href: route('users.index') },
@@ -46,8 +65,19 @@ setLayoutProps({
 
 <template>
     <div class="grid gap-6">
-        <div class="flex justify-end">
+        <div class="flex justify-end gap-3">
             <Link
+                v-if="can_view_audit_log"
+                as="button"
+                type="button"
+                data-testid="user-audit-log-link"
+                :href="route('audit-log.index', { causer_id: user.id })"
+                class="rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground hover:bg-muted/40"
+            >
+                {{ $t('users.show.view_audit_log') }}
+            </Link>
+            <Link
+                v-if="can_edit_user"
                 as="button"
                 type="button"
                 :href="route('users.edit', user.id)"

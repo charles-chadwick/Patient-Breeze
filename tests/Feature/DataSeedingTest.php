@@ -70,9 +70,13 @@ it('never grants a role a permission outside the master list', function (UserRol
     expect($role->permissions())->each->toBeIn(UserRole::allPermissions());
 })->with(fn () => collect(UserRole::cases())->mapWithKeys(fn (UserRole $role) => [$role->value => [$role]])->all());
 
-it('only lets the Super Admin manage users', function () {
+it('only lets the Super Admin and Doctor manage users', function () {
+    $user_managers = [UserRole::SuperAdmin, UserRole::Doctor];
+
     foreach (UserRole::cases() as $role) {
-        if ($role === UserRole::SuperAdmin) {
+        if (in_array($role, $user_managers, strict: true)) {
+            expect($role->permissions())->toContain('view_users', 'create_users', 'update_users', 'delete_users');
+
             continue;
         }
 

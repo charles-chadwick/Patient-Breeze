@@ -170,6 +170,13 @@ return [
         'Unknown' => 'Unknown',
     ],
 
+    'result_flag' => [
+        'Normal' => 'Normal',
+        'Low' => 'Low',
+        'High' => 'High',
+        'Unknown' => 'No Range',
+    ],
+
     'gender_identity' => [
         'Male' => 'Male',
         'Female' => 'Female',

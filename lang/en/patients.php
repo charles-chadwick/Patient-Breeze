@@ -42,6 +42,7 @@ return [
         'tab_appointments' => 'Appointments',
         'tab_medications' => 'Medications',
         'tab_diagnoses' => 'Diagnoses',
+        'tab_lab_results' => 'Lab Results',
         'tab_documents' => 'Documents',
         'appointments_heading' => 'Appointments',
         'appointments_search_placeholder' => 'Search reason or notes…',

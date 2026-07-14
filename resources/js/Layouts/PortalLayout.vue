@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { LogOut } from 'lucide-vue-next'
-import AuthorizationModal from '@/Components/AuthorizationModal.vue'
+import ErrorModal from '@/Components/ErrorModal.vue'
 
 const page = usePage()
 const patient = computed(() => page.props.auth?.portal_patient)
@@ -48,7 +48,7 @@ function logout() {
         <!-- Page content -->
         <main class="mx-auto max-w-5xl px-6 py-8">
             <slot />
-            <AuthorizationModal />
+            <ErrorModal />
         </main>
     </div>
 </template>

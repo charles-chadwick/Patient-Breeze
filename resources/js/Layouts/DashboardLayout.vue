@@ -2,8 +2,8 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon, Pill, Stethoscope, FileSignature, ScrollText } from 'lucide-vue-next'
-import AuthorizationModal from '@/Components/AuthorizationModal.vue'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon, Pill, Stethoscope, TestTubes, FileSignature, ScrollText } from 'lucide-vue-next'
+import ErrorModal from '@/Components/ErrorModal.vue'
 import NotificationBell from '@/Components/NotificationBell.vue'
 import Toaster from '@/Components/Toaster.vue'
 import { applyTheme } from '@/theme'
@@ -42,6 +42,7 @@ const nav_sections = computed(() => [
             { label: trans('nav.users'), route: 'users.index', icon: Users },
             { label: trans('nav.medications'), route: 'medications.index', icon: Pill },
             { label: trans('nav.diagnoses'), route: 'diagnoses.index', icon: Stethoscope },
+            { label: trans('nav.lab_orders'), route: 'lab-orders.index', icon: TestTubes },
             { label: trans('nav.audit_log'), route: 'audit-log.index', icon: ScrollText },
         ],
     },
@@ -305,7 +306,7 @@ onUnmounted(() => document.removeEventListener('click', handleUserMenuClickOutsi
             <!-- Page content -->
             <main class="flex-1 overflow-y-auto bg-background p-6">
                 <slot />
-                <AuthorizationModal />
+                <ErrorModal />
             </main>
         </div>
         <Toaster />

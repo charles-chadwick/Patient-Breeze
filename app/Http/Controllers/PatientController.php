@@ -23,6 +23,7 @@ use App\Models\Document;
 use App\Models\EncounterNote;
 use App\Models\Patient;
 use App\Models\PatientDiagnosis;
+use App\Models\PatientLabResult;
 use App\Models\PatientMedication;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -74,6 +75,7 @@ class PatientController extends Controller
             'documents' => fn ($query) => $query->with(['media', 'uploader'])->latest(),
             'patientMedications' => fn ($query) => $query->latest(),
             'patientDiagnoses' => fn ($query) => $query->latest(),
+            'patientLabResults' => fn ($query) => $query->latest(),
         ]);
 
         $documents = $patient->documents->map(fn (Document $document) => [
@@ -112,6 +114,23 @@ class PatientController extends Controller
             'created_at' => $diagnosis->created_at->toDateString(),
         ]);
 
+        $labResults = $patient->patientLabResults->map(fn (PatientLabResult $result) => [
+            'id' => $result->id,
+            'name' => $result->name,
+            'performing_lab' => $result->performing_lab,
+            'cpt_code' => $result->cpt_code,
+            'value' => $result->value,
+            'unit' => $result->unit,
+            'reference_low' => $result->reference_low,
+            'reference_high' => $result->reference_high,
+            'reference_label' => $result->referenceLabel(),
+            'flag' => $result->flag->value,
+            'flag_label' => $result->flag->label(),
+            'collected_at' => $result->collected_at?->toDateString(),
+            'notes' => $result->notes,
+            'created_at' => $result->created_at->toDateString(),
+        ]);
+
         return Inertia::render('Patients/Show', [
             'patient' => $patient,
             'appointments' => $patient->paginatedAppointments($search),
@@ -125,6 +144,7 @@ class PatientController extends Controller
             'frequency_options' => Frequency::values(),
             'patient_diagnoses' => $diagnoses,
             'diagnosis_status_options' => DiagnosisStatus::values(),
+            'lab_results' => $labResults,
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),

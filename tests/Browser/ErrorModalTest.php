@@ -4,7 +4,7 @@ use App\Models\Patient;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 
-test('an unauthorized user sees the not-authorized modal when scheduling an appointment', function () {
+test('an unauthorized user sees the error modal when scheduling an appointment', function () {
     $this->seed(RoleAndPermissionSeeder::class);
 
     $user = User::factory()->create();
@@ -20,7 +20,7 @@ test('an unauthorized user sees the not-authorized modal when scheduling an appo
     // the "+" in "+ New Appointment" as CSS combinator syntax and times out.
     $page->assertSee('+ New Appointment')
         ->click('a[href*="appointments/create"]')
-        ->assertSee('Not Authorized')
-        ->assertSee('You are not authorized to perform this action.')
+        ->assertSee('Access denied')
+        ->assertSee('You do not have access to this feature.')
         ->assertNoJavascriptErrors();
 })->group('browser');

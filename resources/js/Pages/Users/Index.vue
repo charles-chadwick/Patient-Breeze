@@ -51,12 +51,22 @@ const sort_options = computed(() => [
     { label: trans('users.sort.email'), value: 'email' },
 ])
 
+// Role name whose accounts only a fellow Super Admin may edit or delete.
+const SUPER_ADMIN_ROLE = 'Super Admin'
+
 const page = usePage()
 const current_user_id = computed(() => page.props.auth?.user?.id ?? null)
 const can_delete = computed(() => page.props.auth?.permissions?.includes('delete_users') ?? false)
+const viewer_is_super_admin = computed(() => (page.props.auth?.roles ?? []).includes(SUPER_ADMIN_ROLE))
+
+// A Super Admin account may only be edited or deleted by another Super Admin,
+// mirroring UserPolicy. Everyone else's actions follow the plain permission.
+function canModify(user) {
+    return viewer_is_super_admin.value || (user.roles ?? []).every((role) => role.name !== SUPER_ADMIN_ROLE)
+}
 
 function canDelete(user) {
-    return can_delete.value && user.id !== current_user_id.value
+    return can_delete.value && user.id !== current_user_id.value && canModify(user)
 }
 
 const confirm_open = ref(false)
@@ -194,6 +204,7 @@ const role_badge_classes = {
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
                                 <Link
+                                    v-if="canModify(user)"
                                     as="button"
                                     type="button"
                                     :href="route('users.edit', user.id)"

@@ -32,6 +32,7 @@ return [
 
     'show' => [
         'edit_user' => 'Edit User',
+        'view_audit_log' => 'Audit Log',
         'tab_details' => 'Details',
         'tab_contacts' => 'Contacts',
         'appointments_heading' => 'Appointments',

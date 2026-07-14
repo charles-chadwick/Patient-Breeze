@@ -157,7 +157,8 @@ it('soft-deletes a patient for a super admin', function (): void {
 });
 
 it('forbids deleting a patient without the delete permission', function (): void {
-    // The default acting user is a Doctor, whose role lacks delete_patients.
+    // Staff lack delete_patients (unlike the default Doctor, who now has full grants).
+    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
     $patient = Patient::factory()->create();
 
     $response = $this->delete(route('patients.destroy', $patient));

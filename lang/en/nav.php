@@ -17,6 +17,7 @@ return [
     'users' => 'Users',
     'medications' => 'Medications',
     'diagnoses' => 'Diagnoses',
+    'lab_orders' => 'Lab Orders',
     'audit_log' => 'Audit Log',
     'settings' => 'Settings',
 

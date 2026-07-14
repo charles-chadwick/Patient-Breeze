@@ -3,22 +3,26 @@ import { createApp, h } from 'vue';
 import { createInertiaApp, router } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from 'ziggy-js';
-import { i18nVue, trans } from 'laravel-vue-i18n';
+import { i18nVue } from 'laravel-vue-i18n';
 import { applyTheme } from './theme';
-import { useAuthorizationModal } from '@/composables/useAuthorizationModal';
+import { useErrorModal } from '@/composables/useErrorModal';
 
-const HTTP_FORBIDDEN = 403;
+// HTTP error statuses surfaced as an in-app modal on client-side visits.
+const ERROR_MODAL_STATUSES = [403, 404, 500, 503];
 
-// Surface authorization denials as the in-app AuthorizationModal instead of
-// navigating to the full-page ErrorPage. Cancelling the event keeps the user
-// on the current page; the full page still renders on non-Inertia first loads.
+// Surface HTTP errors as the in-app ErrorModal instead of navigating to the
+// full-page ErrorPage. Cancelling the event keeps the user on their current
+// page; the full page still renders on non-Inertia first loads, where no app
+// is mounted yet to host a modal.
 router.on('httpException', (event) => {
-    if (event.detail.response?.status !== HTTP_FORBIDDEN) {
+    const status = event.detail.response?.status;
+
+    if (!ERROR_MODAL_STATUSES.includes(status)) {
         return;
     }
 
     event.preventDefault();
-    useAuthorizationModal().showDenied(trans('errors.unauthorized.description'));
+    useErrorModal().show(status);
 });
 
 createInertiaApp({

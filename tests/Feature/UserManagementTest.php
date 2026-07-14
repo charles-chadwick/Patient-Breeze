@@ -394,13 +394,49 @@ it('forbids deleting your own account', function (): void {
 });
 
 it('forbids deleting a user without the delete permission', function (): void {
-    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+    // Nurses lack delete_users (unlike Doctors, who now have full user management).
+    $this->actingAs(User::factory()->withRole(UserRole::Nurse)->create());
     $target = User::factory()->withRole(UserRole::Staff)->create();
 
     $response = $this->delete(route('users.destroy', $target));
 
     $response->assertForbidden();
     expect($target->fresh()->trashed())->toBeFalse();
+});
+
+it('lets a doctor delete a non-super-admin user', function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+    $target = User::factory()->withRole(UserRole::Staff)->create();
+
+    $response = $this->delete(route('users.destroy', $target));
+
+    $response->assertRedirect(route('users.index'));
+    $this->assertSoftDeleted($target);
+});
+
+it('forbids a doctor from deleting a super admin', function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+    $target = User::factory()->withRole(UserRole::SuperAdmin)->create();
+
+    $response = $this->delete(route('users.destroy', $target));
+
+    $response->assertForbidden();
+    expect($target->fresh()->trashed())->toBeFalse();
+});
+
+it('forbids a doctor from editing a super admin', function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+    $target = User::factory()->withRole(UserRole::SuperAdmin)->create(['first_name' => 'Original']);
+
+    $response = $this->patch(route('users.update', $target), [
+        'first_name' => 'Changed',
+        'last_name' => $target->last_name,
+        'email' => $target->email,
+        'role' => UserRole::SuperAdmin->value,
+    ]);
+
+    $response->assertForbidden();
+    expect($target->fresh()->first_name)->toBe('Original');
 });
 
 it('allows a user without the view permission to see their own profile', function (): void {
