@@ -122,7 +122,7 @@ class Appointment extends Model implements LinksActivityToPatient
             : [$date->copy()->startOfWeek(), $date->copy()->endOfWeek()];
 
         return [
-            'appointments' => $query->with(['patient.media', 'users.media'])
+            'appointments' => $query->with(['patient.media', 'users.media', 'users.roles'])
                 ->forDateRange($range_start, $range_end)
                 ->when($search, fn (Builder $query) => $query->matchingPatientName($search))
                 ->when($staff_ids, fn (Builder $query) => $query->whereHas(

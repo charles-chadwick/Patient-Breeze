@@ -20,6 +20,10 @@ return [
         'delete_confirm' => 'Delete this user? This can be undone by an administrator.',
     ],
 
+    'popover' => [
+        'view_profile' => 'View profile',
+    ],
+
     'sort' => [
         'last_name' => 'Last Name',
         'first_name' => 'First Name',

@@ -12,6 +12,7 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import MiniCalendar from '@/Components/ui/MiniCalendar.vue'
 import SearchInput from '@/Components/SearchInput.vue'
 import StaffFilter from '@/Components/StaffFilter.vue'
+import UserPopover from '@/Components/UserPopover.vue'
 import { cn, formatDate, DATE_SHORT } from '@/lib/utils'
 
 defineOptions ( { layout: DashboardLayout } )
@@ -312,14 +313,21 @@ function clearFilters () {
                           :key="user.id"
                           class="flex items-center gap-2 text-sm"
                       >
-                        <img
-                            :src="user.avatar_url"
-                            :alt="`${user.first_name} ${user.last_name}`"
-                            class="size-7 rounded-full object-cover"
-                        />
-                        <span class="flex-1 text-foreground">
-                                                    {{ user.first_name }} {{ user.last_name }}
-                                                </span>
+                        <UserPopover :user="user">
+                          <button
+                              type="button"
+                              class="flex flex-1 items-center gap-2 rounded-md text-left hover:bg-muted/40 focus:outline-none"
+                          >
+                            <img
+                                :src="user.avatar_url"
+                                :alt="`${user.first_name} ${user.last_name}`"
+                                class="size-7 rounded-full object-cover"
+                            />
+                            <span class="flex-1 text-foreground">
+                                                        {{ user.first_name }} {{ user.last_name }}
+                                                    </span>
+                          </button>
+                        </UserPopover>
                         <span class="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                                                     {{ $t('enums.appointment_role.' + user.pivot.role) }}
                                                 </span>

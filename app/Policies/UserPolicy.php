@@ -14,7 +14,8 @@ class UserPolicy
 
     public function view(User $user, User $model): bool
     {
-        return $user->can('view_users');
+        // Every user may view their own profile; viewing others requires the permission.
+        return $user->id === $model->id || $user->can('view_users');
     }
 
     public function create(User $user): bool

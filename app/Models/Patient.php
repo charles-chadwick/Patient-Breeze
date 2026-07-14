@@ -194,7 +194,7 @@ class Patient extends Authenticatable implements HasMedia, LinksActivityToPatien
     public function paginatedAppointments(string $search): LengthAwarePaginator
     {
         return $this->appointments()
-            ->with(['users.media'])
+            ->with(['users.media', 'users.roles'])
             ->when($search !== '', fn (Builder $query) => $query->matchingReasonOrNotes($search))
             ->orderBy('date', 'desc')
             ->paginate(10)

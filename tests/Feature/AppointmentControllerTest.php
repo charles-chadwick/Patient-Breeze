@@ -253,6 +253,20 @@ it('filters appointments by staff ids', function (): void {
         ->assertInertia(fn ($page) => $page->count('appointments', 1));
 });
 
+it('includes assigned users with their roles for the popover', function (): void {
+    $provider = User::factory()->withRole(UserRole::Doctor)->create();
+    $patient = Patient::factory()->create();
+    Appointment::factory()->forDate('2026-06-10')->withProvider($provider)->create(['patient_id' => $patient->id]);
+
+    $this->get(route('appointments.index', ['date' => '2026-06-10', 'view' => 'day']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('appointments.0.users.0.id', $provider->id)
+            ->where('appointments.0.users.0.roles.0.name', UserRole::Doctor->value)
+            ->etc()
+        );
+});
+
 it('orders appointments by start_time within a day', function (): void {
     $patient = Patient::factory()->create();
     Appointment::factory()->forDate('2026-06-10')->create([

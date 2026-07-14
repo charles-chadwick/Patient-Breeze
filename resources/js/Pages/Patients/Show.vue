@@ -15,6 +15,7 @@ import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 import MedicationsBlock from '@/Components/MedicationsBlock.vue'
 import DiagnosesBlock from '@/Components/DiagnosesBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
+import UserPopover from '@/Components/UserPopover.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 import TabBar from '@/Components/ui/TabBar.vue'
 
@@ -305,12 +306,19 @@ function confirmDeletePatient() {
                                     :key="user.id"
                                     class="flex items-center gap-1.5"
                                 >
-                                    <img
-                                        :src="user.avatar_url"
-                                        :alt="`${user.first_name} ${user.last_name}`"
-                                        class="size-6 rounded-full object-cover ring-1 ring-border"
-                                    />
-                                    <span class="text-foreground">{{ user.first_name }} {{ user.last_name }}</span>
+                                    <UserPopover :user="user">
+                                        <button
+                                            type="button"
+                                            class="flex items-center gap-1.5 rounded-md hover:bg-muted/40 focus:outline-none"
+                                        >
+                                            <img
+                                                :src="user.avatar_url"
+                                                :alt="`${user.first_name} ${user.last_name}`"
+                                                class="size-6 rounded-full object-cover ring-1 ring-border"
+                                            />
+                                            <span class="text-foreground">{{ user.first_name }} {{ user.last_name }}</span>
+                                        </button>
+                                    </UserPopover>
                                     <span class="text-xs text-muted-foreground">({{ $t('enums.appointment_role.' + user.pivot.role) }})</span>
                                 </div>
                             </div>

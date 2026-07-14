@@ -402,3 +402,20 @@ it('forbids deleting a user without the delete permission', function (): void {
     $response->assertForbidden();
     expect($target->fresh()->trashed())->toBeFalse();
 });
+
+it('allows a user without the view permission to see their own profile', function (): void {
+    $self = User::factory()->withRole(UserRole::Staff)->create();
+    $this->actingAs($self);
+
+    $this->get(route('users.show', $self))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page->component('Users/Show'));
+});
+
+it('forbids a user without the view permission from seeing another profile', function (): void {
+    $this->actingAs(User::factory()->withRole(UserRole::Staff)->create());
+    $other = User::factory()->withRole(UserRole::Doctor)->create();
+
+    $this->get(route('users.show', $other))
+        ->assertForbidden();
+});
