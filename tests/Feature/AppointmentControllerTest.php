@@ -8,6 +8,8 @@ use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Activitylog\Enums\ActivityEvent;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function (): void {
@@ -131,6 +133,55 @@ it('updates an appointment and redirects to patient show', function () {
 
     $response->assertRedirect(route('patients.show', $patient));
     expect($appointment->fresh()->reason)->toBe('Updated reason');
+});
+
+it('records a provider change in the audit log when only the staff differ', function () {
+    $patient = Patient::factory()->create();
+    $original = User::factory()->withRole(UserRole::Doctor)->create(['first_name' => 'Original', 'last_name' => 'Provider']);
+    $replacement = User::factory()->withRole(UserRole::Doctor)->create(['first_name' => 'New', 'last_name' => 'Provider']);
+
+    $appointment = Appointment::factory()
+        ->withProvider($original, AppointmentRole::Primary)
+        ->create(['patient_id' => $patient->id, 'date' => '2026-06-01', 'start_time' => '09:00', 'end_time' => '10:00']);
+
+    // Same date/time/reason as the seeded appointment — only the assigned staff changes.
+    $payload = makeStaffPayload($replacement);
+
+    $this->put(route('patients.appointments.update', [$patient, $appointment]), $payload)
+        ->assertRedirect(route('patients.show', $patient));
+
+    $activity = Activity::forSubject($appointment)
+        ->forEvent(ActivityEvent::Updated)
+        ->latest('id')
+        ->first();
+
+    expect($activity)->not->toBeNull()
+        ->and($activity->patient_id)->toBe($patient->id)
+        ->and(data_get($activity->properties, 'old.providers'))->toContain('Original Provider')
+        ->and(data_get($activity->properties, 'attributes.providers'))->toContain('New Provider');
+});
+
+it('does not record a provider change when the staff are unchanged', function () {
+    $patient = Patient::factory()->create();
+    $staff = User::factory()->withRole(UserRole::Doctor)->create();
+
+    $appointment = Appointment::factory()
+        ->withProvider($staff, AppointmentRole::Primary)
+        ->create(['patient_id' => $patient->id, 'date' => '2026-06-01', 'start_time' => '09:00', 'end_time' => '10:00']);
+
+    // Change an attribute but keep the same provider.
+    $payload = makeStaffPayload($staff);
+    $payload['reason'] = 'Updated reason';
+
+    $this->put(route('patients.appointments.update', [$patient, $appointment]), $payload)
+        ->assertRedirect(route('patients.show', $patient));
+
+    $activity = Activity::forSubject($appointment)
+        ->forEvent(ActivityEvent::Updated)
+        ->latest('id')
+        ->first();
+
+    expect(data_get($activity?->properties, 'attributes.providers'))->toBeNull();
 });
 
 it('soft-deletes an appointment and redirects to patient show', function () {
