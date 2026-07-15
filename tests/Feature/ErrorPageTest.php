@@ -11,7 +11,8 @@ beforeEach(function (): void {
 });
 
 it('renders a branded Inertia error page for unauthorized actions', function (): void {
-    $this->actingAs(User::factory()->withRole(UserRole::Doctor)->create());
+    // Nurse, not Doctor: Doctors hold full grants and can reach the audit log.
+    $this->actingAs(User::factory()->withRole(UserRole::Nurse)->create());
 
     $this->get(route('audit-log.index'))
         ->assertForbidden()
