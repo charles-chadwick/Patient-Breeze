@@ -90,6 +90,18 @@ return [
         'deleted' => 'Diagnosis deleted successfully.',
     ],
 
+    'allergies' => [
+        'added' => 'Allergy added successfully.',
+        'removed' => 'Allergy removed successfully.',
+        'reviewed' => 'Allergy list marked as reviewed.',
+    ],
+
+    'allergens' => [
+        'created' => 'Allergen created successfully.',
+        'updated' => 'Allergen updated successfully.',
+        'deleted' => 'Allergen deleted successfully.',
+    ],
+
     'lab_orders' => [
         'created' => 'Lab order created successfully.',
         'updated' => 'Lab order updated successfully.',

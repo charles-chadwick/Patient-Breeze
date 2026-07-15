@@ -14,6 +14,8 @@ import DiscussionList from '@/Components/DiscussionList.vue'
 import DocumentsBlock from '@/Components/DocumentsBlock.vue'
 import MedicationsBlock from '@/Components/MedicationsBlock.vue'
 import DiagnosesBlock from '@/Components/DiagnosesBlock.vue'
+import AllergiesBlock from '@/Components/AllergiesBlock.vue'
+import AllergyBanner from '@/Components/AllergyBanner.vue'
 import LabResultsBlock from '@/Components/LabResultsBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
 import UserPopover from '@/Components/UserPopover.vue'
@@ -64,6 +66,30 @@ const props = defineProps({
         default: () => [],
     },
     patient_diagnoses: {
+        type: Array,
+        default: () => [],
+    },
+    patient_allergies: {
+        type: Array,
+        default: () => [],
+    },
+    allergy_banner: {
+        type: Object,
+        required: true,
+    },
+    allergen_category_options: {
+        type: Array,
+        default: () => [],
+    },
+    allergy_reaction_options: {
+        type: Array,
+        default: () => [],
+    },
+    allergy_severity_options: {
+        type: Array,
+        default: () => [],
+    },
+    allergy_status_options: {
         type: Array,
         default: () => [],
     },
@@ -139,6 +165,7 @@ const records_tabs = [
 const care_tabs = [
     { key: 'medications', label: 'patients.show.tab_medications', testid: 'records-tab-medications' },
     { key: 'diagnoses', label: 'patients.show.tab_diagnoses', testid: 'records-tab-diagnoses' },
+    { key: 'allergies', label: 'patients.show.tab_allergies', testid: 'records-tab-allergies' },
     { key: 'lab_results', label: 'patients.show.tab_lab_results', testid: 'records-tab-lab-results' },
 ]
 
@@ -221,6 +248,8 @@ function confirmDeletePatient() {
                 {{ $t('patients.show.edit_patient') }}
             </Link>
         </div>
+
+        <AllergyBanner :patient-id="patient.id" :banner="allergy_banner" />
 
         <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
             <TabBar v-model="active_tab" :tabs="primary_tabs" />
@@ -443,6 +472,17 @@ function confirmDeletePatient() {
                 :patient-id="patient.id"
                 :diagnoses="patient_diagnoses"
                 :status-options="diagnosis_status_options"
+                flat
+            />
+
+            <AllergiesBlock
+                v-if="care_tab === 'allergies'"
+                :patient-id="patient.id"
+                :allergies="patient_allergies"
+                :category-options="allergen_category_options"
+                :reaction-options="allergy_reaction_options"
+                :severity-options="allergy_severity_options"
+                :status-options="allergy_status_options"
                 flat
             />
 

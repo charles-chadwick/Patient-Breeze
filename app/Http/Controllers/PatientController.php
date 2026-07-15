@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Actions\CreatePatientAction;
 use App\Actions\UpdatePatientAction;
+use App\Enums\AllergenCategory;
+use App\Enums\AllergyReaction;
+use App\Enums\AllergySeverity;
+use App\Enums\AllergyStatus;
 use App\Enums\AppointmentRole;
 use App\Enums\AppointmentStatus;
 use App\Enums\BloodType;
@@ -22,6 +26,7 @@ use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Document;
 use App\Models\EncounterNote;
 use App\Models\Patient;
+use App\Models\PatientAllergy;
 use App\Models\PatientDiagnosis;
 use App\Models\PatientLabResult;
 use App\Models\PatientMedication;
@@ -76,6 +81,8 @@ class PatientController extends Controller
             'patientMedications' => fn ($query) => $query->latest(),
             'patientDiagnoses' => fn ($query) => $query->latest(),
             'patientLabResults' => fn ($query) => $query->latest(),
+            'patientAllergies' => fn ($query) => $query->latest(),
+            'allergiesReviewedBy:id,first_name,last_name',
         ]);
 
         $documents = $patient->documents->map(fn (Document $document) => [
@@ -114,6 +121,23 @@ class PatientController extends Controller
             'created_at' => $diagnosis->created_at->toDateString(),
         ]);
 
+        $allergies = $patient->patientAllergies->map(fn (PatientAllergy $allergy) => [
+            'id' => $allergy->id,
+            'allergen' => $allergy->allergen,
+            'category' => $allergy->category->value,
+            'category_label' => $allergy->category->label(),
+            'reactions' => $allergy->reactions,
+            'reaction_labels' => $allergy->reactionLabels(),
+            'severity' => $allergy->severity->value,
+            'severity_label' => $allergy->severity->label(),
+            'is_critical' => $allergy->severity->isCritical(),
+            'status' => $allergy->status->value,
+            'status_label' => $allergy->status->label(),
+            'onset_on' => $allergy->onset_on?->toDateString(),
+            'notes' => $allergy->notes,
+            'created_at' => $allergy->created_at->toDateString(),
+        ]);
+
         $labResults = $patient->patientLabResults->map(fn (PatientLabResult $result) => [
             'id' => $result->id,
             'name' => $result->name,
@@ -144,6 +168,12 @@ class PatientController extends Controller
             'frequency_options' => Frequency::values(),
             'patient_diagnoses' => $diagnoses,
             'diagnosis_status_options' => DiagnosisStatus::values(),
+            'patient_allergies' => $allergies,
+            'allergy_banner' => $patient->allergyBanner(),
+            'allergen_category_options' => AllergenCategory::values(),
+            'allergy_reaction_options' => AllergyReaction::values(),
+            'allergy_severity_options' => AllergySeverity::values(),
+            'allergy_status_options' => AllergyStatus::values(),
             'lab_results' => $labResults,
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,

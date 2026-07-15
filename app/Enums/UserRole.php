@@ -15,7 +15,7 @@ enum UserRole: string
      *
      * @var list<string>
      */
-    private const RESOURCES = ['patients', 'appointments', 'discussions', 'documents', 'contacts', 'notes', 'encounter_notes', 'users', 'medications', 'diagnoses', 'lab_orders'];
+    private const RESOURCES = ['patients', 'appointments', 'discussions', 'documents', 'contacts', 'notes', 'encounter_notes', 'users', 'medications', 'diagnoses', 'lab_orders', 'allergens'];
 
     /**
      * Actions available for every guarded resource.
@@ -91,6 +91,7 @@ enum UserRole: string
                 'medications' => ['view', 'create', 'update', 'delete'],
                 'diagnoses' => ['view', 'create', 'update', 'delete'],
                 'lab_orders' => ['view', 'create', 'update', 'delete'],
+                'allergens' => ['view', 'create', 'update', 'delete'],
             ],
             self::Staff => [
                 'patients' => ['view'],
@@ -103,6 +104,7 @@ enum UserRole: string
                 'medications' => ['view', 'create', 'update', 'delete'],
                 'diagnoses' => ['view', 'create', 'update', 'delete'],
                 'lab_orders' => ['view', 'create', 'update', 'delete'],
+                'allergens' => ['view', 'create', 'update', 'delete'],
             ],
         };
     }

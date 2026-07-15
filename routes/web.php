@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AllergenController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AppointmentRequestReviewController;
 use App\Http\Controllers\AuditLogController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\LabReferenceRangeController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PatientAllergyController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientDiagnosisController;
 use App\Http\Controllers\PatientLabResultController;
@@ -63,6 +65,7 @@ Route::middleware('auth')->group(function () {
         ->name('patients.documents.download');
     Route::get('/medications/search', [MedicationController::class, 'search'])->name('medications.search');
     Route::get('/diagnoses/search', [DiagnosisController::class, 'search'])->name('diagnoses.search');
+    Route::get('/allergens/search', [AllergenController::class, 'search'])->name('allergens.search');
     Route::get('/lab-orders/search', [LabOrderController::class, 'search'])->name('lab-orders.search');
     Route::post('/patients/{patient}/medications', [PatientMedicationController::class, 'store'])
         ->name('patients.medications.store');
@@ -74,6 +77,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/patients/{patient}/diagnoses/{patient_diagnosis}', [PatientDiagnosisController::class, 'destroy'])
         ->scopeBindings()
         ->name('patients.diagnoses.destroy');
+    Route::post('/patients/{patient}/allergies', [PatientAllergyController::class, 'store'])
+        ->name('patients.allergies.store');
+    Route::post('/patients/{patient}/allergies/review', [PatientAllergyController::class, 'review'])
+        ->name('patients.allergies.review');
+    Route::delete('/patients/{patient}/allergies/{patient_allergy}', [PatientAllergyController::class, 'destroy'])
+        ->scopeBindings()
+        ->name('patients.allergies.destroy');
     Route::get('/patients/{patient}/lab-results/reference-range', [PatientLabResultController::class, 'referenceRange'])
         ->name('patients.lab-results.reference-range');
     Route::post('/patients/{patient}/lab-results', [PatientLabResultController::class, 'store'])
@@ -87,6 +97,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('medications', MedicationController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('diagnoses', DiagnosisController::class)
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::resource('allergens', AllergenController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('lab-orders', LabOrderController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])

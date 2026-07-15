@@ -122,6 +122,42 @@ return [
         'Ruled Out' => 'Ruled Out',
     ],
 
+    'allergen_category' => [
+        'Drug' => 'Drug',
+        'Food' => 'Food',
+        'Environmental' => 'Environmental',
+        'Other' => 'Other',
+    ],
+
+    'allergy_severity' => [
+        'Mild' => 'Mild',
+        'Moderate' => 'Moderate',
+        'Severe' => 'Severe',
+        'Life-Threatening' => 'Life-Threatening',
+    ],
+
+    'allergy_status' => [
+        'Active' => 'Active',
+        'Inactive' => 'Inactive',
+        'Resolved' => 'Resolved',
+        'Entered In Error' => 'Entered in Error',
+    ],
+
+    'allergy_reaction' => [
+        'Anaphylaxis' => 'Anaphylaxis',
+        'Hives' => 'Hives',
+        'Rash' => 'Rash',
+        'Itching' => 'Itching',
+        'Swelling' => 'Swelling',
+        'Shortness Of Breath' => 'Shortness of Breath',
+        'Wheezing' => 'Wheezing',
+        'Nausea' => 'Nausea',
+        'Vomiting' => 'Vomiting',
+        'Diarrhea' => 'Diarrhea',
+        'Dizziness' => 'Dizziness',
+        'Other' => 'Other',
+    ],
+
     'dose_form' => [
         'Tablet' => 'Tablet',
         'Capsule' => 'Capsule',

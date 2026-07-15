@@ -15,6 +15,7 @@ use Database\Factories\PatientFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -148,6 +149,81 @@ class Patient extends Authenticatable implements HasMedia, LinksActivityToPatien
     public function patientDiagnoses(): HasMany
     {
         return $this->hasMany(PatientDiagnosis::class, 'patient_id');
+    }
+
+    public function patientAllergies(): HasMany
+    {
+        return $this->hasMany(PatientAllergy::class, 'patient_id');
+    }
+
+    /**
+     * The staff member who last reviewed this patient's allergy list.
+     */
+    public function allergiesReviewedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'allergies_reviewed_by');
+    }
+
+    /**
+     * Stamp this patient's allergy list as reviewed just now by the given user.
+     * Called both when an allergy is recorded and when staff explicitly confirm
+     * the patient has no known allergies.
+     */
+    public function markAllergiesReviewedBy(User $user): void
+    {
+        $this->forceFill([
+            'allergies_reviewed_at' => now(),
+            'allergies_reviewed_by' => $user->id,
+        ])->save();
+    }
+
+    /**
+     * Whether staff have confirmed this patient has no known allergies, as
+     * opposed to nobody having asked yet. Both cases show an empty list, but
+     * only one of them is clinically meaningful.
+     */
+    public function hasNoKnownAllergies(): bool
+    {
+        return $this->allergies_reviewed_at !== null
+            && $this->patientAllergies()->current()->doesntExist();
+    }
+
+    /**
+     * Build the always-visible allergy banner payload for the chart: the current
+     * allergies worst-first, plus the review state behind the NKDA distinction.
+     *
+     * @return array{
+     *     allergies: list<array{id: int, allergen: string, severity: string, severity_label: string, is_critical: bool}>,
+     *     is_critical: bool,
+     *     reviewed_at: string|null,
+     *     reviewed_by: string|null,
+     *     no_known_allergies: bool
+     * }
+     */
+    public function allergyBanner(): array
+    {
+        $current = $this->patientAllergies
+            ->filter(fn (PatientAllergy $allergy): bool => $allergy->status->isCurrent())
+            ->sortBy(fn (PatientAllergy $allergy): int => $allergy->severity->rank())
+            ->values();
+
+        $reviewer = $this->allergiesReviewedBy;
+
+        return [
+            'allergies' => $current->map(fn (PatientAllergy $allergy): array => [
+                'id' => $allergy->id,
+                'allergen' => $allergy->allergen,
+                'severity' => $allergy->severity->value,
+                'severity_label' => $allergy->severity->label(),
+                'is_critical' => $allergy->severity->isCritical(),
+            ])->all(),
+            'is_critical' => $current->contains(fn (PatientAllergy $allergy): bool => $allergy->severity->isCritical()),
+            'reviewed_at' => $this->allergies_reviewed_at?->toDateString(),
+            'reviewed_by' => $reviewer !== null
+                ? trim("{$reviewer->first_name} {$reviewer->last_name}")
+                : null,
+            'no_known_allergies' => $this->allergies_reviewed_at !== null && $current->isEmpty(),
+        ];
     }
 
     public function patientLabResults(): HasMany
@@ -346,6 +422,7 @@ class Patient extends Authenticatable implements HasMedia, LinksActivityToPatien
             'password' => 'hashed',
             'email_verified_at' => 'datetime',
             'date_of_birth' => 'date',
+            'allergies_reviewed_at' => 'datetime',
             'gender_at_birth' => GenderAtBirth::class,
             'gender_identity' => GenderIdentity::class,
             'two_factor_secret' => 'encrypted',
