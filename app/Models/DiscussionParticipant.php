@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\LinksActivityToPatient;
 use Database\Factories\DiscussionParticipantFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
-class DiscussionParticipant extends Model
+class DiscussionParticipant extends Model implements LinksActivityToPatient
 {
     /** @use HasFactory<DiscussionParticipantFactory> */
     use HasFactory, LogsActivity, SoftDeletes;
@@ -52,5 +53,10 @@ class DiscussionParticipant extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnlyDirty()->logFillable();
+    }
+
+    public function auditPatientId(): ?int
+    {
+        return Discussion::withTrashed()->find($this->discussion_id)?->auditPatientId();
     }
 }
