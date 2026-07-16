@@ -18,6 +18,7 @@ import AllergiesBlock from '@/Components/AllergiesBlock.vue'
 import AllergyBanner from '@/Components/AllergyBanner.vue'
 import VaccinesBlock from '@/Components/VaccinesBlock.vue'
 import LabResultsBlock from '@/Components/LabResultsBlock.vue'
+import VitalsBlock from '@/Components/VitalsBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
 import UserPopover from '@/Components/UserPopover.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
@@ -114,6 +115,26 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    vitals: {
+        type: Array,
+        default: () => [],
+    },
+    vital_types: {
+        type: Array,
+        default: () => [],
+    },
+    body_position_options: {
+        type: Array,
+        default: () => [],
+    },
+    temperature_site_options: {
+        type: Array,
+        default: () => [],
+    },
+    oxygen_delivery_options: {
+        type: Array,
+        default: () => [],
+    },
     diagnosis_status_options: {
         type: Array,
         default: () => [],
@@ -179,17 +200,23 @@ const records_tabs = [
     { key: 'documents', label: 'patients.show.tab_documents', testid: 'records-tab-documents' },
 ]
 
+const clinical_tabs = [
+    { key: 'vitals', label: 'patients.show.tab_vitals', testid: 'records-tab-vitals' },
+    { key: 'allergies', label: 'patients.show.tab_allergies', testid: 'records-tab-allergies' },
+    { key: 'vaccines', label: 'patients.show.tab_vaccines', testid: 'records-tab-vaccines' },
+]
+
 const care_tabs = [
     { key: 'medications', label: 'patients.show.tab_medications', testid: 'records-tab-medications' },
     { key: 'diagnoses', label: 'patients.show.tab_diagnoses', testid: 'records-tab-diagnoses' },
-    { key: 'allergies', label: 'patients.show.tab_allergies', testid: 'records-tab-allergies' },
-    { key: 'vaccines', label: 'patients.show.tab_vaccines', testid: 'records-tab-vaccines' },
     { key: 'lab_results', label: 'patients.show.tab_lab_results', testid: 'records-tab-lab-results' },
 ]
 
 const active_tab = ref(primary_tabs.some((tab) => tab.key === initial_tab) ? initial_tab : 'demographics')
 
 const records_tab = ref('appointments')
+
+const clinical_tab = ref('vitals')
 
 const care_tab = ref('medications')
 
@@ -474,6 +501,44 @@ function confirmDeletePatient() {
         </div>
 
         <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+            <TabBar v-model="clinical_tab" :tabs="clinical_tabs" />
+
+            <VitalsBlock
+                v-if="clinical_tab === 'vitals'"
+                :patient-id="patient.id"
+                :vitals="vitals"
+                :vital-types="vital_types"
+                :position-options="body_position_options"
+                :temperature-site-options="temperature_site_options"
+                :oxygen-delivery-options="oxygen_delivery_options"
+                :staff-options="owner_options"
+                flat
+            />
+
+            <AllergiesBlock
+                v-if="clinical_tab === 'allergies'"
+                :patient-id="patient.id"
+                :allergies="patient_allergies"
+                :category-options="allergen_category_options"
+                :reaction-options="allergy_reaction_options"
+                :severity-options="allergy_severity_options"
+                :status-options="allergy_status_options"
+                flat
+            />
+
+            <VaccinesBlock
+                v-if="clinical_tab === 'vaccines'"
+                :patient-id="patient.id"
+                :vaccines="patient_vaccines"
+                :status-options="vaccine_status_options"
+                :route-options="vaccine_route_options"
+                :site-options="vaccine_site_options"
+                :staff-options="owner_options"
+                flat
+            />
+        </div>
+
+        <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
             <TabBar v-model="care_tab" :tabs="care_tabs" />
 
             <MedicationsBlock
@@ -490,28 +555,6 @@ function confirmDeletePatient() {
                 :patient-id="patient.id"
                 :diagnoses="patient_diagnoses"
                 :status-options="diagnosis_status_options"
-                flat
-            />
-
-            <AllergiesBlock
-                v-if="care_tab === 'allergies'"
-                :patient-id="patient.id"
-                :allergies="patient_allergies"
-                :category-options="allergen_category_options"
-                :reaction-options="allergy_reaction_options"
-                :severity-options="allergy_severity_options"
-                :status-options="allergy_status_options"
-                flat
-            />
-
-            <VaccinesBlock
-                v-if="care_tab === 'vaccines'"
-                :patient-id="patient.id"
-                :vaccines="patient_vaccines"
-                :status-options="vaccine_status_options"
-                :route-options="vaccine_route_options"
-                :site-options="vaccine_site_options"
-                :staff-options="owner_options"
                 flat
             />
 

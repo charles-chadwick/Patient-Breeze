@@ -32,6 +32,11 @@ return [
         'conflict' => 'The requested provider now has a conflicting appointment at that time.',
     ],
 
+    'vitals' => [
+        'added' => 'Vitals recorded successfully.',
+        'removed' => 'Vitals removed successfully.',
+    ],
+
     'contacts' => [
         'created' => 'Contact added successfully.',
         'updated' => 'Contact updated successfully.',

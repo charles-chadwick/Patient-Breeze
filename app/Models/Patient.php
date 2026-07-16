@@ -236,6 +236,11 @@ class Patient extends Authenticatable implements HasMedia, LinksActivityToPatien
         return $this->hasMany(PatientLabResult::class, 'patient_id');
     }
 
+    public function patientVitals(): HasMany
+    {
+        return $this->hasMany(PatientVitals::class, 'patient_id');
+    }
+
     /**
      * The patient's current age in whole years, or null when no date of birth is set.
      */

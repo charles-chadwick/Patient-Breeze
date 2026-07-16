@@ -8,6 +8,7 @@ use App\Enums\AllergySeverity;
 use App\Enums\AllergyStatus;
 use App\Enums\AppointmentRole;
 use App\Enums\AppointmentStatus;
+use App\Enums\BodyPosition;
 use App\Enums\ContactType;
 use App\Enums\DiagnosisStatus;
 use App\Enums\DiscussionType;
@@ -16,9 +17,12 @@ use App\Enums\DoseForm;
 use App\Enums\EncounterNoteType;
 use App\Enums\Frequency;
 use App\Enums\NoteType;
+use App\Enums\OxygenDelivery;
+use App\Enums\TemperatureSite;
 use App\Enums\VaccineRoute;
 use App\Enums\VaccineSite;
 use App\Enums\VaccineStatus;
+use App\Enums\VitalType;
 use App\Models\Document;
 use App\Models\EncounterNote;
 use App\Models\Patient;
@@ -27,6 +31,7 @@ use App\Models\PatientDiagnosis;
 use App\Models\PatientLabResult;
 use App\Models\PatientMedication;
 use App\Models\PatientVaccine;
+use App\Models\PatientVitals;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -59,6 +64,9 @@ class BuildPatientChartAction
             'patientVaccines' => fn ($query) => $query->orderBy('administered_on', 'desc'),
             'patientVaccines.administeredBy.media',
             'patientVaccines.administeredBy.roles',
+            'patientVitals' => fn ($query) => $query->orderBy('measured_at', 'desc'),
+            'patientVitals.recordedBy.media',
+            'patientVitals.recordedBy.roles',
         ]);
 
         return [
@@ -85,6 +93,11 @@ class BuildPatientChartAction
             'vaccine_route_options' => VaccineRoute::values(),
             'vaccine_site_options' => VaccineSite::values(),
             'lab_results' => $this->labResults($patient),
+            'vitals' => $this->vitals($patient),
+            'vital_types' => $this->vitalTypeMeta(),
+            'body_position_options' => BodyPosition::values(),
+            'temperature_site_options' => TemperatureSite::values(),
+            'oxygen_delivery_options' => OxygenDelivery::values(),
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),
@@ -224,6 +237,55 @@ class BuildPatientChartAction
             'collected_at' => $result->collected_at?->toDateString(),
             'notes' => $result->notes,
             'created_at' => $result->created_at->toDateString(),
+        ]);
+    }
+
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    private function vitals(Patient $patient): Collection
+    {
+        return $patient->patientVitals->map(fn (PatientVitals $vitals) => [
+            'id' => $vitals->id,
+            'measured_at' => $vitals->measured_at->toIso8601String(),
+            'measured_on' => $vitals->measured_at->toDateString(),
+            'systolic' => $vitals->systolic,
+            'diastolic' => $vitals->diastolic,
+            'blood_pressure' => $vitals->bloodPressureLabel(),
+            'position' => $vitals->position?->value,
+            'position_label' => $vitals->position?->label(),
+            'heart_rate' => $vitals->heart_rate,
+            'respiratory_rate' => $vitals->respiratory_rate,
+            'temperature' => $vitals->temperature,
+            'temperature_site' => $vitals->temperature_site?->value,
+            'temperature_site_label' => $vitals->temperature_site?->label(),
+            'oxygen_saturation' => $vitals->oxygen_saturation,
+            'oxygen_delivery' => $vitals->oxygen_delivery?->value,
+            'oxygen_delivery_label' => $vitals->oxygen_delivery?->label(),
+            'weight' => $vitals->weight,
+            'height' => $vitals->height,
+            'bmi' => $vitals->bmi,
+            'pain_score' => $vitals->pain_score,
+            'abnormal_flags' => $vitals->abnormalFlags(),
+            'recorded_by' => $vitals->recordedBy,
+            'notes' => $vitals->notes,
+            'created_at' => $vitals->created_at->toDateString(),
+        ]);
+    }
+
+    /**
+     * The flowsheet row definitions: each vital type with its label, unit, and
+     * the `vitals` payload key its reading is found under.
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    private function vitalTypeMeta(): Collection
+    {
+        return collect(VitalType::flowsheetOrder())->map(fn (VitalType $type): array => [
+            'value' => $type->value,
+            'label' => $type->label(),
+            'unit' => $type->unit(),
+            'column' => $type->column(),
         ]);
     }
 

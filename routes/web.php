@@ -26,6 +26,7 @@ use App\Http\Controllers\PatientDiagnosisController;
 use App\Http\Controllers\PatientLabResultController;
 use App\Http\Controllers\PatientMedicationController;
 use App\Http\Controllers\PatientVaccineController;
+use App\Http\Controllers\PatientVitalsController;
 use App\Http\Controllers\Portal\AppointmentRequestController as PortalAppointmentRequestController;
 use App\Http\Controllers\Portal\DocumentController as PortalDocumentController;
 use App\Http\Controllers\Portal\MessageController;
@@ -99,6 +100,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/patients/{patient}/lab-results/{patient_lab_result}', [PatientLabResultController::class, 'destroy'])
         ->scopeBindings()
         ->name('patients.lab-results.destroy');
+    Route::post('/patients/{patient}/vitals', [PatientVitalsController::class, 'store'])
+        ->name('patients.vitals.store');
+    Route::delete('/patients/{patient}/vitals/{patient_vitals}', [PatientVitalsController::class, 'destroy'])
+        ->scopeBindings()
+        ->name('patients.vitals.destroy');
     Route::prefix('admin')->group(function () {
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
         Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);

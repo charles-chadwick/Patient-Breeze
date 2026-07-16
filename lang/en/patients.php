@@ -40,6 +40,7 @@ return [
         'tab_discussions' => 'Discussions',
         'tab_history' => 'History',
         'tab_appointments' => 'Appointments',
+        'tab_vitals' => 'Vitals',
         'tab_medications' => 'Medications',
         'tab_diagnoses' => 'Diagnoses',
         'tab_allergies' => 'Allergies',

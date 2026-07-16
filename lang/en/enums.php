@@ -148,6 +148,41 @@ return [
         'Nasal' => 'Nasal',
     ],
 
+    'vital_type' => [
+        'Systolic' => 'Systolic',
+        'Diastolic' => 'Diastolic',
+        'Heart Rate' => 'Heart Rate',
+        'Respiratory Rate' => 'Respiratory Rate',
+        'Temperature' => 'Temperature',
+        'Oxygen Saturation' => 'O₂ Saturation',
+        'Weight' => 'Weight',
+        'Height' => 'Height',
+        'Pain Score' => 'Pain Score',
+    ],
+
+    'temperature_site' => [
+        'Oral' => 'Oral',
+        'Axillary' => 'Axillary',
+        'Temporal' => 'Temporal',
+        'Rectal' => 'Rectal',
+        'Tympanic' => 'Tympanic',
+    ],
+
+    'body_position' => [
+        'Sitting' => 'Sitting',
+        'Standing' => 'Standing',
+        'Supine' => 'Supine',
+    ],
+
+    'oxygen_delivery' => [
+        'Room Air' => 'Room Air',
+        'Nasal Cannula' => 'Nasal Cannula',
+        'Face Mask' => 'Face Mask',
+        'Non-Rebreather' => 'Non-Rebreather',
+        'High-Flow' => 'High-Flow',
+        'Ventilator' => 'Ventilator',
+    ],
+
     'allergen_category' => [
         'Drug' => 'Drug',
         'Food' => 'Food',

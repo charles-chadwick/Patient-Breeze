@@ -184,6 +184,10 @@ return [
         ],
     ],
 
+    'vitals' => [
+        'at_least_one' => 'Record at least one measurement.',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
