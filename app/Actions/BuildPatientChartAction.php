@@ -16,8 +16,11 @@ use App\Enums\DocumentType;
 use App\Enums\DoseForm;
 use App\Enums\EncounterNoteType;
 use App\Enums\Frequency;
+use App\Enums\InsurancePlanType;
+use App\Enums\InsurancePriority;
 use App\Enums\NoteType;
 use App\Enums\OxygenDelivery;
+use App\Enums\SubscriberRelationship;
 use App\Enums\TemperatureSite;
 use App\Enums\VaccineRoute;
 use App\Enums\VaccineSite;
@@ -28,6 +31,7 @@ use App\Models\EncounterNote;
 use App\Models\Patient;
 use App\Models\PatientAllergy;
 use App\Models\PatientDiagnosis;
+use App\Models\PatientInsurance;
 use App\Models\PatientLabResult;
 use App\Models\PatientMedication;
 use App\Models\PatientVaccine;
@@ -67,6 +71,8 @@ class BuildPatientChartAction
             'patientVitals' => fn ($query) => $query->orderBy('measured_at', 'desc'),
             'patientVitals.recordedBy.media',
             'patientVitals.recordedBy.roles',
+            'patientInsurances' => fn ($query) => $query->orderBy('priority')->latest(),
+            'patientInsurances.insuranceCompany',
         ]);
 
         return [
@@ -98,6 +104,10 @@ class BuildPatientChartAction
             'body_position_options' => BodyPosition::values(),
             'temperature_site_options' => TemperatureSite::values(),
             'oxygen_delivery_options' => OxygenDelivery::values(),
+            'insurances' => $this->insurances($patient),
+            'insurance_plan_type_options' => InsurancePlanType::values(),
+            'insurance_priority_options' => InsurancePriority::values(),
+            'subscriber_relationship_options' => SubscriberRelationship::values(),
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,
             'discussion_types' => DiscussionType::values(),
@@ -286,6 +296,34 @@ class BuildPatientChartAction
             'label' => $type->label(),
             'unit' => $type->unit(),
             'column' => $type->column(),
+        ]);
+    }
+
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    private function insurances(Patient $patient): Collection
+    {
+        return $patient->patientInsurances->map(fn (PatientInsurance $insurance) => [
+            'id' => $insurance->id,
+            'insurance_company_id' => $insurance->insurance_company_id,
+            'company_name' => $insurance->insuranceCompany?->name,
+            'company_payer_id' => $insurance->insuranceCompany?->payer_id,
+            'company_phone' => $insurance->insuranceCompany?->phone,
+            'member_id' => $insurance->member_id,
+            'group_number' => $insurance->group_number,
+            'plan_type' => $insurance->plan_type?->value,
+            'plan_type_label' => $insurance->plan_type?->label(),
+            'priority' => $insurance->priority->value,
+            'priority_label' => $insurance->priority->label(),
+            'subscriber_name' => $insurance->subscriber_name,
+            'relationship_to_subscriber' => $insurance->relationship_to_subscriber->value,
+            'relationship_to_subscriber_label' => $insurance->relationship_to_subscriber->label(),
+            'effective_on' => $insurance->effective_on?->toDateString(),
+            'terminates_on' => $insurance->terminates_on?->toDateString(),
+            'is_active' => $insurance->isActive(),
+            'notes' => $insurance->notes,
+            'created_at' => $insurance->created_at->toDateString(),
         ]);
     }
 

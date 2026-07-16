@@ -19,6 +19,7 @@ import AllergyBanner from '@/Components/AllergyBanner.vue'
 import VaccinesBlock from '@/Components/VaccinesBlock.vue'
 import LabResultsBlock from '@/Components/LabResultsBlock.vue'
 import VitalsBlock from '@/Components/VitalsBlock.vue'
+import InsuranceBlock from '@/Components/InsuranceBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
 import UserPopover from '@/Components/UserPopover.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
@@ -132,6 +133,22 @@ const props = defineProps({
         default: () => [],
     },
     oxygen_delivery_options: {
+        type: Array,
+        default: () => [],
+    },
+    insurances: {
+        type: Array,
+        default: () => [],
+    },
+    insurance_plan_type_options: {
+        type: Array,
+        default: () => [],
+    },
+    insurance_priority_options: {
+        type: Array,
+        default: () => [],
+    },
+    subscriber_relationship_options: {
         type: Array,
         default: () => [],
     },
@@ -300,6 +317,17 @@ function confirmDeletePatient() {
             <TabBar v-model="active_tab" :tabs="primary_tabs" />
 
             <PatientCard v-if="active_tab === 'demographics'" :patient="patient" flat />
+
+            <InsuranceBlock
+                v-if="active_tab === 'demographics'"
+                class="border-t border-border"
+                :patient-id="patient.id"
+                :insurances="insurances"
+                :plan-type-options="insurance_plan_type_options"
+                :priority-options="insurance_priority_options"
+                :relationship-options="subscriber_relationship_options"
+                flat
+            />
 
             <ContactsTab
                 v-if="active_tab === 'contacts'"

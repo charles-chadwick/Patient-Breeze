@@ -20,6 +20,7 @@ return [
     'allergens' => 'Allergens',
     'vaccines' => 'Vaccines',
     'lab_orders' => 'Lab Orders',
+    'insurance_companies' => 'Insurance Companies',
     'audit_log' => 'Audit Log',
     'settings' => 'Settings',
 

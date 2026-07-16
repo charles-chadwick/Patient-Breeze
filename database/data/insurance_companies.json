@@ -1,0 +1,122 @@
+[
+    {
+        "name": "UnitedHealthcare",
+        "payer_id": "87726",
+        "address_line1": "9700 Health Care Lane",
+        "city": "Minnetonka",
+        "state": "MN",
+        "postal_code": "55343",
+        "phone": "(800) 328-5979",
+        "website": "https://www.uhc.com"
+    },
+    {
+        "name": "Anthem Blue Cross Blue Shield",
+        "payer_id": "00060",
+        "address_line1": "220 Virginia Avenue",
+        "city": "Indianapolis",
+        "state": "IN",
+        "postal_code": "46204",
+        "phone": "(833) 848-8730",
+        "website": "https://www.anthem.com"
+    },
+    {
+        "name": "Aetna",
+        "payer_id": "60054",
+        "address_line1": "151 Farmington Avenue",
+        "city": "Hartford",
+        "state": "CT",
+        "postal_code": "06156",
+        "phone": "(800) 872-3862",
+        "website": "https://www.aetna.com"
+    },
+    {
+        "name": "Cigna Healthcare",
+        "payer_id": "62308",
+        "address_line1": "900 Cottage Grove Road",
+        "city": "Bloomfield",
+        "state": "CT",
+        "postal_code": "06002",
+        "phone": "(800) 997-1654",
+        "website": "https://www.cigna.com"
+    },
+    {
+        "name": "Humana",
+        "payer_id": "61101",
+        "address_line1": "500 West Main Street",
+        "city": "Louisville",
+        "state": "KY",
+        "postal_code": "40202",
+        "phone": "(800) 448-6262",
+        "website": "https://www.humana.com"
+    },
+    {
+        "name": "Kaiser Permanente",
+        "payer_id": "94135",
+        "address_line1": "One Kaiser Plaza",
+        "city": "Oakland",
+        "state": "CA",
+        "postal_code": "94612",
+        "phone": "(800) 464-4000",
+        "website": "https://www.kp.org"
+    },
+    {
+        "name": "Centene / Ambetter",
+        "payer_id": "68069",
+        "address_line1": "7700 Forsyth Boulevard",
+        "city": "St. Louis",
+        "state": "MO",
+        "postal_code": "63105",
+        "phone": "(833) 693-3517",
+        "website": "https://www.ambetterhealth.com"
+    },
+    {
+        "name": "Molina Healthcare",
+        "payer_id": "38333",
+        "address_line1": "200 Oceangate",
+        "city": "Long Beach",
+        "state": "CA",
+        "postal_code": "90802",
+        "phone": "(888) 665-4621",
+        "website": "https://www.molinahealthcare.com"
+    },
+    {
+        "name": "Blue Cross Blue Shield of Texas",
+        "payer_id": "84980",
+        "address_line1": "1001 East Lookout Drive",
+        "city": "Richardson",
+        "state": "TX",
+        "postal_code": "75082",
+        "phone": "(800) 521-2227",
+        "website": "https://www.bcbstx.com"
+    },
+    {
+        "name": "Medicare",
+        "payer_id": "00120",
+        "address_line1": "7500 Security Boulevard",
+        "city": "Baltimore",
+        "state": "MD",
+        "postal_code": "21244",
+        "phone": "(800) 633-4227",
+        "website": "https://www.medicare.gov"
+    },
+    {
+        "name": "TRICARE",
+        "payer_id": "99726",
+        "address_line1": "16401 East Centretech Parkway",
+        "city": "Aurora",
+        "state": "CO",
+        "postal_code": "80011",
+        "phone": "(844) 866-9378",
+        "website": "https://www.tricare.mil"
+    },
+    {
+        "name": "Oscar Health",
+        "payer_id": "OSCAR",
+        "address_line1": "75 Varick Street",
+        "city": "New York",
+        "state": "NY",
+        "postal_code": "10013",
+        "phone": "(855) 672-2788",
+        "website": "https://www.hioscar.com"
+    }
+]

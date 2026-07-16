@@ -183,6 +183,30 @@ return [
         'Ventilator' => 'Ventilator',
     ],
 
+    'insurance_priority' => [
+        'Primary' => 'Primary',
+        'Secondary' => 'Secondary',
+        'Tertiary' => 'Tertiary',
+    ],
+
+    'insurance_plan_type' => [
+        'PPO' => 'PPO',
+        'HMO' => 'HMO',
+        'EPO' => 'EPO',
+        'POS' => 'POS',
+        'HDHP' => 'HDHP',
+        'Medicare' => 'Medicare',
+        'Medicaid' => 'Medicaid',
+        'Other' => 'Other',
+    ],
+
+    'subscriber_relationship' => [
+        'Self' => 'Self',
+        'Spouse' => 'Spouse',
+        'Child' => 'Child',
+        'Other' => 'Other',
+    ],
+
     'allergen_category' => [
         'Drug' => 'Drug',
         'Food' => 'Food',

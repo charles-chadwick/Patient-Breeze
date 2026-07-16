@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
-import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon, Pill, Stethoscope, TestTubes, TriangleAlert, Syringe, FileSignature, ScrollText } from 'lucide-vue-next'
+import { LayoutDashboard, HeartPulse, CalendarDays, Users, Settings, Menu, X, LogOut, Inbox, ChevronUp, ChevronDown, ShieldCheck, Monitor, Sun, Moon, Pill, Stethoscope, TestTubes, TriangleAlert, Syringe, FileSignature, ScrollText, CreditCard } from 'lucide-vue-next'
 import ErrorModal from '@/Components/ErrorModal.vue'
 import NotificationBell from '@/Components/NotificationBell.vue'
 import Toaster from '@/Components/Toaster.vue'
@@ -45,6 +45,7 @@ const nav_sections = computed(() => [
             { label: trans('nav.allergens'), route: 'allergens.index', icon: TriangleAlert },
             { label: trans('nav.vaccines'), route: 'vaccines.index', icon: Syringe },
             { label: trans('nav.lab_orders'), route: 'lab-orders.index', icon: TestTubes },
+            { label: trans('nav.insurance_companies'), route: 'insurance-companies.index', icon: CreditCard },
             { label: trans('nav.audit_log'), route: 'audit-log.index', icon: ScrollText },
         ],
     },

@@ -118,6 +118,17 @@ return [
         'deleted' => 'Vaccine deleted successfully.',
     ],
 
+    'insurance_companies' => [
+        'created' => 'Insurance company created successfully.',
+        'updated' => 'Insurance company updated successfully.',
+        'deleted' => 'Insurance company deleted successfully.',
+    ],
+
+    'patient_insurances' => [
+        'added' => 'Insurance added successfully.',
+        'removed' => 'Insurance removed successfully.',
+    ],
+
     'lab_orders' => [
         'created' => 'Lab order created successfully.',
         'updated' => 'Lab order updated successfully.',

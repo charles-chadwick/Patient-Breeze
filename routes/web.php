@@ -15,6 +15,7 @@ use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionPostController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EncounterNoteController;
+use App\Http\Controllers\InsuranceCompanyController;
 use App\Http\Controllers\LabOrderController;
 use App\Http\Controllers\LabReferenceRangeController;
 use App\Http\Controllers\MedicationController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientAllergyController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientDiagnosisController;
+use App\Http\Controllers\PatientInsuranceController;
 use App\Http\Controllers\PatientLabResultController;
 use App\Http\Controllers\PatientMedicationController;
 use App\Http\Controllers\PatientVaccineController;
@@ -71,6 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/allergens/search', [AllergenController::class, 'search'])->name('allergens.search');
     Route::get('/vaccines/search', [VaccineController::class, 'search'])->name('vaccines.search');
     Route::get('/lab-orders/search', [LabOrderController::class, 'search'])->name('lab-orders.search');
+    Route::get('/insurance-companies/search', [InsuranceCompanyController::class, 'search'])->name('insurance-companies.search');
     Route::post('/patients/{patient}/medications', [PatientMedicationController::class, 'store'])
         ->name('patients.medications.store');
     Route::delete('/patients/{patient}/medications/{patient_medication}', [PatientMedicationController::class, 'destroy'])
@@ -105,6 +108,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/patients/{patient}/vitals/{patient_vitals}', [PatientVitalsController::class, 'destroy'])
         ->scopeBindings()
         ->name('patients.vitals.destroy');
+    Route::post('/patients/{patient}/insurances', [PatientInsuranceController::class, 'store'])
+        ->name('patients.insurances.store');
+    Route::delete('/patients/{patient}/insurances/{patient_insurance}', [PatientInsuranceController::class, 'destroy'])
+        ->scopeBindings()
+        ->name('patients.insurances.destroy');
     Route::prefix('admin')->group(function () {
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
         Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
@@ -116,6 +124,9 @@ Route::middleware('auth')->group(function () {
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('vaccines', VaccineController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::resource('insurance-companies', InsuranceCompanyController::class)
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
+            ->parameters(['insurance-companies' => 'insuranceCompany']);
         Route::resource('lab-orders', LabOrderController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
             ->parameters(['lab-orders' => 'labOrder']);
