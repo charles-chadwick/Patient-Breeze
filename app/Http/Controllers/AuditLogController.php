@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\QueryAuditLogAction;
 use App\Enums\UserRole;
 use App\Models\Patient;
 use App\Models\User;
 use App\Support\ActivityPresenter;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,6 +18,8 @@ use function Spatie\LaravelPdf\Support\pdf;
 
 class AuditLogController extends Controller
 {
+    public function __construct(private QueryAuditLogAction $auditLog) {}
+
     /**
      * Roles allowed to view and export the audit log.
      *
@@ -40,9 +42,9 @@ class AuditLogController extends Controller
         $this->authorizeAccess($request);
 
         $filters = $this->filters($request);
-        $patient = $this->resolvePatient($filters['patient_id']);
+        $patient = $this->auditLog->resolvePatient($filters['patient_id']);
 
-        $activities = $this->query($filters)
+        $activities = $this->auditLog->query($filters)
             ->paginate(20)
             ->withQueryString()
             ->through(fn (Activity $activity) => ActivityPresenter::present($activity));
@@ -51,21 +53,8 @@ class AuditLogController extends Controller
             'activities' => $activities,
             'filters' => $filters,
             'patient' => $this->presentPatient($patient),
-            'causer_options' => User::orderBy('first_name')->orderBy('last_name')
-                ->get(['id', 'first_name', 'last_name'])
-                ->map(fn (User $user): array => [
-                    'id' => $user->id,
-                    'name' => trim("{$user->first_name} {$user->last_name}"),
-                ]),
-            'subject_options' => Activity::query()
-                ->whereNotNull('subject_type')
-                ->distinct()
-                ->orderBy('subject_type')
-                ->pluck('subject_type')
-                ->map(fn (string $type): array => [
-                    'value' => $type,
-                    'key' => class_basename($type),
-                ]),
+            'causer_options' => $this->auditLog->causerOptions(),
+            'subject_options' => $this->auditLog->subjectOptions(),
             'event_options' => ['created', 'updated', 'deleted'],
         ]);
     }
@@ -75,9 +64,9 @@ class AuditLogController extends Controller
         $this->authorizeAccess($request);
 
         $filters = $this->filters($request);
-        $patient = $this->resolvePatient($filters['patient_id']);
+        $patient = $this->auditLog->resolvePatient($filters['patient_id']);
 
-        $activities = $this->query($filters)
+        $activities = $this->auditLog->query($filters)
             ->limit(self::EXPORT_LIMIT + 1)
             ->get()
             ->map(fn (Activity $activity) => ActivityPresenter::present($activity));
@@ -124,30 +113,6 @@ class AuditLogController extends Controller
             'date_to' => $request->date('date_to')?->toDateString(),
             'patient_id' => $request->integer('patient_id') ?: null,
         ];
-    }
-
-    /**
-     * @param  array{causer_id: int|null, subject_type: string|null, event: string|null, date_from: string|null, date_to: string|null, patient_id: int|null}  $filters
-     * @return Builder<Activity>
-     */
-    private function query(array $filters): Builder
-    {
-        return Activity::query()
-            ->with('causer')
-            ->when($filters['patient_id'], fn (Builder $query, int $id) => $query->where('patient_id', $id))
-            ->when($filters['causer_id'], fn (Builder $query, int $id) => $query
-                ->where('causer_type', User::class)
-                ->where('causer_id', $id))
-            ->when($filters['subject_type'], fn (Builder $query, string $type) => $query->where('subject_type', $type))
-            ->when($filters['event'], fn (Builder $query, string $value) => $query->where('event', $value))
-            ->when($filters['date_from'], fn (Builder $query, string $date) => $query->whereDate('created_at', '>=', $date))
-            ->when($filters['date_to'], fn (Builder $query, string $date) => $query->whereDate('created_at', '<=', $date))
-            ->latest();
-    }
-
-    private function resolvePatient(?int $patient_id): ?Patient
-    {
-        return $patient_id ? Patient::find($patient_id) : null;
     }
 
     /**

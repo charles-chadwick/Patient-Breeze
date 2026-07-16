@@ -6,7 +6,6 @@ use App\Enums\GenderAtBirth;
 use App\Http\Requests\StoreLabOrderRequest;
 use App\Http\Requests\UpdateLabOrderRequest;
 use App\Models\LabOrder;
-use App\Models\LabReferenceRange;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -55,26 +54,9 @@ class LabOrderController extends Controller
     {
         $this->authorize('update', $labOrder);
 
-        $referenceRanges = $labOrder->referenceRanges()
-            ->orderByRaw('gender_at_birth is null')
-            ->orderBy('gender_at_birth')
-            ->orderByRaw('min_age is null')
-            ->orderBy('min_age')
-            ->get()
-            ->map(fn (LabReferenceRange $range): array => [
-                'id' => $range->id,
-                'gender_at_birth' => $range->gender_at_birth?->value,
-                'min_age' => $range->min_age,
-                'max_age' => $range->max_age,
-                'low_value' => $range->getRawOriginal('low_value'),
-                'high_value' => $range->getRawOriginal('high_value'),
-                'unit' => $range->unit,
-                'label' => $range->label(),
-            ]);
-
         return Inertia::render('LabOrders/Form', [
             'lab_order' => $labOrder,
-            'reference_ranges' => $referenceRanges,
+            'reference_ranges' => $labOrder->orderedReferenceRanges(),
             'gender_at_birth_options' => array_column(GenderAtBirth::cases(), 'value'),
         ]);
     }

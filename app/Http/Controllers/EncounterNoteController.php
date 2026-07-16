@@ -6,7 +6,6 @@ use App\Actions\CoSignEncounterNoteAction;
 use App\Actions\CreateEncounterNoteAction;
 use App\Actions\SignEncounterNoteAction;
 use App\Actions\UnsignEncounterNoteAction;
-use App\Enums\EncounterNoteStatus;
 use App\Http\Requests\StoreEncounterNoteRequest;
 use App\Http\Requests\UpdateEncounterNoteRequest;
 use App\Models\EncounterNote;
@@ -25,18 +24,8 @@ class EncounterNoteController extends Controller
     {
         $this->authorize('viewAny', EncounterNote::class);
 
-        $notes = EncounterNote::query()
-            ->where('status', EncounterNoteStatus::Signed)
-            ->with([
-                'patient:id,first_name,last_name',
-                'signer:id,first_name,last_name',
-            ])
-            ->orderBy('signed_at')
-            ->paginate(15)
-            ->withQueryString();
-
         return Inertia::render('EncounterNotes/Index', [
-            'notes' => $notes,
+            'notes' => EncounterNote::awaitingCoSignature(),
         ]);
     }
 

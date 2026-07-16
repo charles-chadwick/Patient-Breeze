@@ -86,6 +86,32 @@ class LabOrder extends Model
             ->first();
     }
 
+    /**
+     * This test's reference ranges ordered from most general to most specific
+     * and shaped for the lab order form's ranges table.
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function orderedReferenceRanges(): Collection
+    {
+        return $this->referenceRanges()
+            ->orderByRaw('gender_at_birth is null')
+            ->orderBy('gender_at_birth')
+            ->orderByRaw('min_age is null')
+            ->orderBy('min_age')
+            ->get()
+            ->map(fn (LabReferenceRange $range): array => [
+                'id' => $range->id,
+                'gender_at_birth' => $range->gender_at_birth?->value,
+                'min_age' => $range->min_age,
+                'max_age' => $range->max_age,
+                'low_value' => $range->getRawOriginal('low_value'),
+                'high_value' => $range->getRawOriginal('high_value'),
+                'unit' => $range->unit,
+                'label' => $range->label(),
+            ]);
+    }
+
     public function scopeMatchingSearch(Builder $query, string $search): void
     {
         $query->where(fn (Builder $query) => $query

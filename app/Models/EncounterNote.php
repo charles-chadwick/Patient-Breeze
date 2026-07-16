@@ -8,6 +8,8 @@ use App\Enums\EncounterNoteType;
 use App\Models\Concerns\Searchable;
 use App\Models\Concerns\Sortable;
 use Database\Factories\EncounterNoteFactory;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -71,6 +73,26 @@ class EncounterNote extends Model implements LinksActivityToPatient
     public function isEditable(): bool
     {
         return $this->status === EncounterNoteStatus::Unsigned;
+    }
+
+    /**
+     * The cross-patient worklist of signed notes awaiting co-signature, paginated
+     * for the co-sign queue with the patient and signer eager-loaded.
+     *
+     * @param  Builder<EncounterNote>  $query
+     * @return LengthAwarePaginator<int, EncounterNote>
+     */
+    public function scopeAwaitingCoSignature(Builder $query): LengthAwarePaginator
+    {
+        return $query
+            ->where('status', EncounterNoteStatus::Signed)
+            ->with([
+                'patient:id,first_name,last_name',
+                'signer:id,first_name,last_name',
+            ])
+            ->orderBy('signed_at')
+            ->paginate(15)
+            ->withQueryString();
     }
 
     protected function casts(): array

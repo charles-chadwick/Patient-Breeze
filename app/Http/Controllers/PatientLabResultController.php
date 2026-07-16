@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\RecordPatientLabResultAction;
 use App\Http\Requests\StorePatientLabResultRequest;
 use App\Models\LabOrder;
 use App\Models\Patient;
@@ -12,28 +13,9 @@ use Illuminate\Http\Request;
 
 class PatientLabResultController extends Controller
 {
-    public function store(StorePatientLabResultRequest $request, Patient $patient): RedirectResponse
+    public function store(StorePatientLabResultRequest $request, Patient $patient, RecordPatientLabResultAction $recordLabResult): RedirectResponse
     {
-        $validated = $request->validated();
-
-        $labOrder = LabOrder::findOrFail($validated['lab_order_id']);
-        $range = $labOrder->resolveReferenceRangeFor($patient);
-
-        $patient->patientLabResults()->create([
-            'lab_order_id' => $labOrder->id,
-            'name' => $labOrder->name,
-            'performing_lab' => $labOrder->performing_lab,
-            'cpt_code' => $labOrder->cpt_code,
-            'value' => $validated['value'],
-            'unit' => $validated['unit'] ?? $range?->unit,
-            // Snapshot the exact stored strings so representations like "12.0" survive.
-            'reference_low' => $range?->getRawOriginal('low_value'),
-            'reference_high' => $range?->getRawOriginal('high_value'),
-            'reference_gender' => $range?->gender_at_birth?->value,
-            'reference_age' => $patient->currentAge(),
-            'collected_at' => $validated['collected_at'] ?? null,
-            'notes' => $validated['notes'] ?? null,
-        ]);
+        $recordLabResult->execute($patient, $request->validated());
 
         return redirect()->route('patients.show', $patient)
             ->with('success', __('flash.lab_results.added'));
