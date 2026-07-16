@@ -180,15 +180,19 @@ class User extends Authenticatable implements HasMedia
      * All users as `{id, name}` options ordered by name, for the simple
      * user-select dropdowns (chart owner, audit-log causer filter, ...).
      *
+     * Uses the base query so the dropdown does not hydrate a full User model
+     * per row — only the id and name are ever needed.
+     *
      * @param  Builder<User>  $query
      * @return Collection<int, array{id: int, name: string}>
      */
     public function scopeNameOptions(Builder $query): Collection
     {
         return $query->orderBy('first_name')->orderBy('last_name')
+            ->toBase()
             ->get(['id', 'first_name', 'last_name'])
-            ->map(fn (User $user): array => [
-                'id' => $user->id,
+            ->map(fn (object $user): array => [
+                'id' => (int) $user->id,
                 'name' => trim("{$user->first_name} {$user->last_name}"),
             ]);
     }
