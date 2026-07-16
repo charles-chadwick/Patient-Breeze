@@ -102,6 +102,17 @@ return [
         'deleted' => 'Allergen deleted successfully.',
     ],
 
+    'vaccines' => [
+        'added' => 'Vaccine recorded successfully.',
+        'removed' => 'Vaccine record removed successfully.',
+    ],
+
+    'vaccine_catalog' => [
+        'created' => 'Vaccine created successfully.',
+        'updated' => 'Vaccine updated successfully.',
+        'deleted' => 'Vaccine deleted successfully.',
+    ],
+
     'lab_orders' => [
         'created' => 'Lab order created successfully.',
         'updated' => 'Lab order updated successfully.',

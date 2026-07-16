@@ -25,12 +25,14 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientDiagnosisController;
 use App\Http\Controllers\PatientLabResultController;
 use App\Http\Controllers\PatientMedicationController;
+use App\Http\Controllers\PatientVaccineController;
 use App\Http\Controllers\Portal\AppointmentRequestController as PortalAppointmentRequestController;
 use App\Http\Controllers\Portal\DocumentController as PortalDocumentController;
 use App\Http\Controllers\Portal\MessageController;
 use App\Http\Controllers\PortalQueueController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VaccineController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -66,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/medications/search', [MedicationController::class, 'search'])->name('medications.search');
     Route::get('/diagnoses/search', [DiagnosisController::class, 'search'])->name('diagnoses.search');
     Route::get('/allergens/search', [AllergenController::class, 'search'])->name('allergens.search');
+    Route::get('/vaccines/search', [VaccineController::class, 'search'])->name('vaccines.search');
     Route::get('/lab-orders/search', [LabOrderController::class, 'search'])->name('lab-orders.search');
     Route::post('/patients/{patient}/medications', [PatientMedicationController::class, 'store'])
         ->name('patients.medications.store');
@@ -84,6 +87,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/patients/{patient}/allergies/{patient_allergy}', [PatientAllergyController::class, 'destroy'])
         ->scopeBindings()
         ->name('patients.allergies.destroy');
+    Route::post('/patients/{patient}/vaccines', [PatientVaccineController::class, 'store'])
+        ->name('patients.vaccines.store');
+    Route::delete('/patients/{patient}/vaccines/{patient_vaccine}', [PatientVaccineController::class, 'destroy'])
+        ->scopeBindings()
+        ->name('patients.vaccines.destroy');
     Route::get('/patients/{patient}/lab-results/reference-range', [PatientLabResultController::class, 'referenceRange'])
         ->name('patients.lab-results.reference-range');
     Route::post('/patients/{patient}/lab-results', [PatientLabResultController::class, 'store'])
@@ -99,6 +107,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('diagnoses', DiagnosisController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('allergens', AllergenController::class)
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::resource('vaccines', VaccineController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('lab-orders', LabOrderController::class)
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])

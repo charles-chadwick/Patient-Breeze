@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             MedicationSeeder::class,
             DiagnosisSeeder::class,
             AllergenSeeder::class,
+            VaccineSeeder::class,
             LabOrderSeeder::class,
             LabPanelSeeder::class,
             LabReferenceRangeSeeder::class,

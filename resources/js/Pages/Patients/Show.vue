@@ -16,6 +16,7 @@ import MedicationsBlock from '@/Components/MedicationsBlock.vue'
 import DiagnosesBlock from '@/Components/DiagnosesBlock.vue'
 import AllergiesBlock from '@/Components/AllergiesBlock.vue'
 import AllergyBanner from '@/Components/AllergyBanner.vue'
+import VaccinesBlock from '@/Components/VaccinesBlock.vue'
 import LabResultsBlock from '@/Components/LabResultsBlock.vue'
 import AppointmentModal from '@/Components/AppointmentModal.vue'
 import UserPopover from '@/Components/UserPopover.vue'
@@ -93,6 +94,22 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    patient_vaccines: {
+        type: Array,
+        default: () => [],
+    },
+    vaccine_status_options: {
+        type: Array,
+        default: () => [],
+    },
+    vaccine_route_options: {
+        type: Array,
+        default: () => [],
+    },
+    vaccine_site_options: {
+        type: Array,
+        default: () => [],
+    },
     lab_results: {
         type: Array,
         default: () => [],
@@ -166,6 +183,7 @@ const care_tabs = [
     { key: 'medications', label: 'patients.show.tab_medications', testid: 'records-tab-medications' },
     { key: 'diagnoses', label: 'patients.show.tab_diagnoses', testid: 'records-tab-diagnoses' },
     { key: 'allergies', label: 'patients.show.tab_allergies', testid: 'records-tab-allergies' },
+    { key: 'vaccines', label: 'patients.show.tab_vaccines', testid: 'records-tab-vaccines' },
     { key: 'lab_results', label: 'patients.show.tab_lab_results', testid: 'records-tab-lab-results' },
 ]
 
@@ -483,6 +501,17 @@ function confirmDeletePatient() {
                 :reaction-options="allergy_reaction_options"
                 :severity-options="allergy_severity_options"
                 :status-options="allergy_status_options"
+                flat
+            />
+
+            <VaccinesBlock
+                v-if="care_tab === 'vaccines'"
+                :patient-id="patient.id"
+                :vaccines="patient_vaccines"
+                :status-options="vaccine_status_options"
+                :route-options="vaccine_route_options"
+                :site-options="vaccine_site_options"
+                :staff-options="owner_options"
                 flat
             />
 

@@ -122,6 +122,32 @@ return [
         'Ruled Out' => 'Ruled Out',
     ],
 
+    'vaccine_status' => [
+        'Completed' => 'Completed',
+        'Not Administered' => 'Not Administered',
+        'Refused' => 'Refused',
+        'Entered In Error' => 'Entered in Error',
+    ],
+
+    'vaccine_route' => [
+        'Intramuscular' => 'Intramuscular',
+        'Subcutaneous' => 'Subcutaneous',
+        'Intradermal' => 'Intradermal',
+        'Oral' => 'Oral',
+        'Intranasal' => 'Intranasal',
+    ],
+
+    'vaccine_site' => [
+        'Left Deltoid' => 'Left Deltoid',
+        'Right Deltoid' => 'Right Deltoid',
+        'Left Thigh' => 'Left Thigh',
+        'Right Thigh' => 'Right Thigh',
+        'Left Gluteus' => 'Left Gluteus',
+        'Right Gluteus' => 'Right Gluteus',
+        'Oral' => 'Oral',
+        'Nasal' => 'Nasal',
+    ],
+
     'allergen_category' => [
         'Drug' => 'Drug',
         'Food' => 'Food',

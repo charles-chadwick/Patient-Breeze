@@ -43,6 +43,7 @@ return [
         'tab_medications' => 'Medications',
         'tab_diagnoses' => 'Diagnoses',
         'tab_allergies' => 'Allergies',
+        'tab_vaccines' => 'Vaccines',
         'tab_lab_results' => 'Lab Results',
         'tab_documents' => 'Documents',
         'appointments_heading' => 'Appointments',

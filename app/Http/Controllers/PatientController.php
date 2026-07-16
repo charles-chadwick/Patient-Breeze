@@ -21,6 +21,9 @@ use App\Enums\Frequency;
 use App\Enums\GenderAtBirth;
 use App\Enums\GenderIdentity;
 use App\Enums\NoteType;
+use App\Enums\VaccineRoute;
+use App\Enums\VaccineSite;
+use App\Enums\VaccineStatus;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Document;
@@ -30,6 +33,7 @@ use App\Models\PatientAllergy;
 use App\Models\PatientDiagnosis;
 use App\Models\PatientLabResult;
 use App\Models\PatientMedication;
+use App\Models\PatientVaccine;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -83,6 +87,9 @@ class PatientController extends Controller
             'patientLabResults' => fn ($query) => $query->latest(),
             'patientAllergies' => fn ($query) => $query->latest(),
             'allergiesReviewedBy:id,first_name,last_name',
+            'patientVaccines' => fn ($query) => $query->orderBy('administered_on', 'desc'),
+            'patientVaccines.administeredBy.media',
+            'patientVaccines.administeredBy.roles',
         ]);
 
         $documents = $patient->documents->map(fn (Document $document) => [
@@ -138,6 +145,29 @@ class PatientController extends Controller
             'created_at' => $allergy->created_at->toDateString(),
         ]);
 
+        $vaccines = $patient->patientVaccines->map(fn (PatientVaccine $vaccine) => [
+            'id' => $vaccine->id,
+            'vaccine' => $vaccine->vaccine,
+            'cvx_code' => $vaccine->cvx_code,
+            'administered_on' => $vaccine->administered_on->toDateString(),
+            'dose_number' => $vaccine->dose_number,
+            'status' => $vaccine->status->value,
+            'status_label' => $vaccine->status->label(),
+            'is_administered' => $vaccine->status->isAdministered(),
+            'route' => $vaccine->route?->value,
+            'route_label' => $vaccine->route?->label(),
+            'site' => $vaccine->site?->value,
+            'site_label' => $vaccine->site?->label(),
+            'dose_amount' => $vaccine->dose_amount,
+            'manufacturer' => $vaccine->manufacturer,
+            'lot_number' => $vaccine->lot_number,
+            'expires_on' => $vaccine->expires_on?->toDateString(),
+            'was_expired_when_administered' => $vaccine->wasExpiredWhenAdministered(),
+            'administered_by' => $vaccine->administeredBy,
+            'notes' => $vaccine->notes,
+            'created_at' => $vaccine->created_at->toDateString(),
+        ]);
+
         $labResults = $patient->patientLabResults->map(fn (PatientLabResult $result) => [
             'id' => $result->id,
             'name' => $result->name,
@@ -174,6 +204,10 @@ class PatientController extends Controller
             'allergy_reaction_options' => AllergyReaction::values(),
             'allergy_severity_options' => AllergySeverity::values(),
             'allergy_status_options' => AllergyStatus::values(),
+            'patient_vaccines' => $vaccines,
+            'vaccine_status_options' => VaccineStatus::values(),
+            'vaccine_route_options' => VaccineRoute::values(),
+            'vaccine_site_options' => VaccineSite::values(),
             'lab_results' => $labResults,
             'contact_types' => ContactType::values(),
             'contactable_type' => Patient::class,

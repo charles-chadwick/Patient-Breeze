@@ -18,6 +18,7 @@ return [
     'medications' => 'Medications',
     'diagnoses' => 'Diagnoses',
     'allergens' => 'Allergens',
+    'vaccines' => 'Vaccines',
     'lab_orders' => 'Lab Orders',
     'audit_log' => 'Audit Log',
     'settings' => 'Settings',
