@@ -246,10 +246,11 @@ class BuildPatientChartAction
     {
         return $patient->appointments()
             ->orderBy('date', 'desc')
+            ->toBase()
             ->get(['id', 'date', 'reason'])
-            ->map(fn ($appointment) => [
-                'id' => $appointment->id,
-                'date' => $appointment->date->toDateString(),
+            ->map(fn (object $appointment): array => [
+                'id' => (int) $appointment->id,
+                'date' => $appointment->date,
                 'reason' => $appointment->reason,
             ]);
     }
