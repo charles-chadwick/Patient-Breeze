@@ -186,12 +186,22 @@ function clearFilters () {
 
       </div>
 
+      <!-- Search spans every date, so the day/week range no longer applies -->
+      <p
+          v-if="search"
+          class="mb-4 text-sm text-muted-foreground"
+      >
+        {{ $t('appointments.index.search_all_dates') }}
+      </p>
+
       <!-- Empty state -->
       <div
           v-if="appointmentsByDate.length === 0"
           class="rounded-xl border border-border bg-card px-6 py-14 text-center shadow-sm"
       >
-        <p class="text-sm text-muted-foreground">{{ $t('appointments.index.empty') }}</p>
+        <p class="text-sm text-muted-foreground">
+          {{ search ? $t('appointments.index.empty_search') : $t('appointments.index.empty') }}
+        </p>
       </div>
 
       <!-- Grouped appointment list -->

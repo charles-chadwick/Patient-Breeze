@@ -3,7 +3,7 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Link, setLayoutProps } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
-import { Inbox } from 'lucide-vue-next'
+import { CalendarDays, Inbox } from 'lucide-vue-next'
 import { formatDate, DATE_SHORT } from '@/lib/utils'
 
 defineOptions({ layout: DashboardLayout })
@@ -13,7 +13,25 @@ setLayoutProps({ title: computed(() => trans('nav.dashboard')) })
 const props = defineProps({
     stats: { type: Object, required: true },
     portal_queue: { type: Array, required: true },
+    todays_appointments: { type: Array, default: () => [] },
+    can_view_appointments: { type: Boolean, default: false },
 })
+
+// Mirrors the status pill palette used on the Appointments page.
+const status_classes = {
+    Scheduled: 'bg-cerulean-100 text-cerulean-700',
+    Confirmed: 'bg-tropical-teal-100 text-tropical-teal-700',
+    Completed: 'bg-muted text-muted-foreground',
+    Cancelled: 'bg-vibrant-coral-100 text-vibrant-coral-700',
+    Rescheduled: 'bg-light-yellow-100 text-light-yellow-700',
+    NoShow: 'bg-soft-apricot-100 text-soft-apricot-700',
+}
+
+function formatTime (time) {
+    return time?.slice(0, 5) ?? ''
+}
+
+const has_appointments = computed(() => props.todays_appointments.length > 0)
 
 // Computed so labels re-evaluate once the async language file has loaded.
 const stat_cards = computed(() => [
@@ -73,6 +91,62 @@ onBeforeUnmount(() => {
                     {{ card.key === 'portal_queue_unread' ? live_unread : props.stats[card.key] }}
                 </p>
             </div>
+        </div>
+
+        <!-- Today's Appointments -->
+        <div v-if="can_view_appointments" class="rounded-xl border border-border bg-card shadow-sm">
+            <div class="flex items-center justify-between border-b border-border px-6 py-4">
+                <div class="flex items-center gap-2">
+                    <CalendarDays class="size-5 text-primary" />
+                    <h2 class="text-base font-bold text-foreground">{{ $t('dashboard.todays_appointments.heading') }}</h2>
+                </div>
+                <Link
+                    :href="route('appointments.index', { view: 'day' })"
+                    class="text-sm font-semibold text-primary hover:underline"
+                >
+                    {{ $t('dashboard.todays_appointments.view_all') }}
+                </Link>
+            </div>
+            <p v-if="!has_appointments" class="px-6 py-8 text-sm text-muted-foreground">
+                {{ $t('dashboard.todays_appointments.empty') }}
+            </p>
+            <ul v-else class="divide-y divide-border">
+                <li
+                    v-for="appointment in props.todays_appointments"
+                    :key="appointment.id"
+                    class="flex items-center gap-3 px-6 py-3"
+                >
+                    <img
+                        :src="appointment.patient.avatar_url"
+                        :alt="`${appointment.patient.first_name} ${appointment.patient.last_name}`"
+                        class="size-9 shrink-0 rounded-full object-cover"
+                    />
+                    <div class="min-w-0 flex-1">
+                        <Link
+                            :href="route('patients.show', appointment.patient.id)"
+                            class="text-sm font-semibold text-foreground hover:text-primary hover:underline"
+                        >
+                            {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
+                        </Link>
+                        <p class="mt-0.5 text-sm text-muted-foreground">
+                            {{ formatTime(appointment.start_time) }}–{{ formatTime(appointment.end_time) }}
+                            <span v-if="appointment.reason">· {{ appointment.reason }}</span>
+                        </p>
+                        <p class="mt-0.5 text-xs text-muted-foreground">
+                            <template v-if="appointment.users.length">
+                                {{ appointment.users.map((user) => `${user.first_name} ${user.last_name}`).join(', ') }}
+                            </template>
+                            <template v-else>{{ $t('dashboard.todays_appointments.no_staff') }}</template>
+                        </p>
+                    </div>
+                    <span
+                        class="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-bold"
+                        :class="status_classes[appointment.status] ?? 'bg-muted text-muted-foreground'"
+                    >
+                        {{ $t('enums.appointment_status.' + appointment.status) }}
+                    </span>
+                </li>
+            </ul>
         </div>
 
         <!-- Portal Queue -->

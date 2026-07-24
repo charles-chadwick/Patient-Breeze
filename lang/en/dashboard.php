@@ -14,6 +14,13 @@ return [
         'portal_queue_unread' => 'Portal Queue Unread',
     ],
 
+    'todays_appointments' => [
+        'heading' => "Today's Appointments",
+        'view_all' => 'View all',
+        'empty' => 'No appointments scheduled for today.',
+        'no_staff' => 'No staff assigned',
+    ],
+
     'portal_queue' => [
         'heading' => 'Portal Queue',
         'unread_badge' => ':count unread',

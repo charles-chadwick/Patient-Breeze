@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection as SupportCollection;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
@@ -98,14 +99,16 @@ class Appointment extends Model implements LinksActivityToPatient
         );
     }
 
-    public function scopeMatchingPatientName(Builder $query, string $search): void
+    public function scopeMatchingPatientNameOrMrn(Builder $query, string $search): void
     {
-        $query->whereHas('patient', fn (Builder $query) => $query->matchingName($search));
+        $query->whereHas('patient', fn (Builder $query) => $query->matchingNameOrMrn($search));
     }
 
     /**
      * Build the calendar listing (day/week range, search, staff filter) and its
-     * resolved query parameters. Only the staff currently applied to the filter
+     * resolved query parameters. A patient name/MRN search ignores the date
+     * range so matches from any date surface.
+     * Only the staff currently applied to the filter
      * are resolved for display; the picker searches the full list on demand.
      *
      * @return array{appointments: Collection<int, Appointment>, date: string, view: string, search: string, staff: list<int>, selected_staff: array<int, array{id: int, first_name: string, last_name: string, avatar_url: string}>}
@@ -123,8 +126,10 @@ class Appointment extends Model implements LinksActivityToPatient
 
         return [
             'appointments' => $query->with(['patient.media', 'users.media', 'users.roles'])
-                ->forDateRange($range_start, $range_end)
-                ->when($search, fn (Builder $query) => $query->matchingPatientName($search))
+                // A patient search spans every date; the day/week range only
+                // applies while browsing the calendar unfiltered.
+                ->when($search === '', fn (Builder $query) => $query->forDateRange($range_start, $range_end))
+                ->when($search, fn (Builder $query) => $query->matchingPatientNameOrMrn($search))
                 ->when($staff_ids, fn (Builder $query) => $query->whereHas(
                     'users',
                     fn (Builder $query) => $query->whereIn('users.id', $staff_ids)
@@ -150,6 +155,44 @@ class Appointment extends Model implements LinksActivityToPatient
                     ])
                     ->all(),
         ];
+    }
+
+    /**
+     * Build today's schedule for the staff dashboard widget.
+     *
+     * @return SupportCollection<int, array<string, mixed>>
+     */
+    public function scopeTodaysSchedule(Builder $query, int $limit = 10): SupportCollection
+    {
+        return $query->with([
+            'patient.media',
+            'users' => fn (BelongsToMany $query) => $query->orderByPivot('role'),
+            'users.media',
+        ])
+            ->forDate(today())
+            ->orderBy('start_time')
+            ->limit($limit)
+            ->get()
+            ->map(fn (Appointment $appointment): array => [
+                'id' => $appointment->id,
+                'start_time' => $appointment->start_time,
+                'end_time' => $appointment->end_time,
+                'status' => $appointment->status,
+                'reason' => $appointment->reason,
+                'patient' => [
+                    'id' => $appointment->patient->id,
+                    'first_name' => $appointment->patient->first_name,
+                    'last_name' => $appointment->patient->last_name,
+                    'mrn' => $appointment->patient->mrn,
+                    'avatar_url' => $appointment->patient->avatar_url,
+                ],
+                'users' => $appointment->users->map(fn (User $user): array => [
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'avatar_url' => $user->avatar_url,
+                ])->all(),
+            ]);
     }
 
     protected function casts(): array

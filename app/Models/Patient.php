@@ -399,6 +399,14 @@ class Patient extends Authenticatable implements HasMedia, LinksActivityToPatien
         );
     }
 
+    public function scopeMatchingNameOrMrn(Builder $query, string $search): void
+    {
+        $query->where(fn (Builder $query) => $query
+            ->matchingName($search)
+            ->orWhere('mrn', 'like', "%{$search}%")
+        );
+    }
+
     public static function generateMrn(): string
     {
         $max = static::withTrashed()->lockForUpdate()->max('mrn');

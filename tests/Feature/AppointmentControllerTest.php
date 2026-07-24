@@ -311,6 +311,31 @@ it('filters appointments by patient name search', function (): void {
         ->assertInertia(fn ($page) => $page->count('appointments', 1));
 });
 
+it('filters appointments by patient mrn search', function (): void {
+    $matching = Patient::factory()->create();
+    $other = Patient::factory()->create();
+    Appointment::factory()->forDate('2026-06-10')->create(['patient_id' => $matching->id]);
+    Appointment::factory()->forDate('2026-06-10')->create(['patient_id' => $other->id]);
+
+    $this->get(route('appointments.index', ['date' => '2026-06-10', 'view' => 'day', 'search' => $matching->mrn]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->count('appointments', 1)
+            ->where('appointments.0.patient.mrn', $matching->mrn)
+        );
+});
+
+it('searches across every date rather than the selected day or week', function (): void {
+    $matching = Patient::factory()->create(['first_name' => 'Zebediah', 'last_name' => 'Quincey']);
+    Appointment::factory()->forDate('2026-06-10')->create(['patient_id' => $matching->id]);
+    Appointment::factory()->forDate('2027-01-20')->create(['patient_id' => $matching->id]);
+    Appointment::factory()->forDate('2024-03-02')->create(['patient_id' => $matching->id]);
+
+    $this->get(route('appointments.index', ['date' => '2026-06-10', 'view' => 'day', 'search' => 'Zebediah']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->count('appointments', 3));
+});
+
 it('filters appointments by staff ids', function (): void {
     $staffA = User::factory()->withRole(UserRole::Staff)->create();
     $staffB = User::factory()->withRole(UserRole::Staff)->create();
