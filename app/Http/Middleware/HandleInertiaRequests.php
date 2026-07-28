@@ -57,8 +57,8 @@ class HandleInertiaRequests extends Middleware
                 'portal_two_factor_enabled' => fn () => (bool) $request->user('portal')?->hasEnabledTwoFactorAuthentication(),
             ],
             'flash' => [
-                'success' => fn () => $request->session()->get('success'),
-                'error' => fn () => $request->session()->get('error'),
+                'success' => fn () => $request->hasSession() ? $request->session()->get('success') : null,
+                'error' => fn () => $request->hasSession() ? $request->session()->get('error') : null,
             ],
             'notifications' => fn () => $this->notificationsFor($request->user('web')),
         ];
