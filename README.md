@@ -25,7 +25,7 @@ Install these before you start. Versions below are the minimums this project tar
 | **Node.js** | 20+ | (22/24 recommended) — ships with npm |
 | **MariaDB** or **MySQL** | 10.6+ / 8.0+ | any MySQL-compatible server |
 | **Google Chrome / Chromium** | current | only needed for PDF export |
-<repository-url> 
+
 Platform-specific ways to get these:
 
 - **macOS** — [Homebrew](https://brew.sh): `brew install php@8.4 composer node mariadb` plus Google Chrome (or use [Laravel Herd](https://herd.laravel.com), which bundles PHP, Composer, and Node).
@@ -85,7 +85,81 @@ php artisan migrate --seed
 
 This creates the schema and loads demo staff, patients, appointments, and clinical reference data (medications, vaccines, allergens, lab panels, etc.).
 
-### 6. (Optional) Configure PDF export
+### 6. Configure Reverb (real-time)
+
+Real-time features — the staff notification bell, the portal queue, and live discussion posts — are pushed over WebSockets by [Laravel Reverb](https://reverb.laravel.com). Reverb ships with the project (`laravel/reverb`), so there is nothing extra to install; you only need credentials.
+
+Generate a set of app credentials into your `.env`:
+
+```bash
+php artisan reverb:install
+```
+
+That fills in `REVERB_APP_ID`, `REVERB_APP_KEY`, and `REVERB_APP_SECRET` (which are empty in `.env.example`). If you'd rather set them by hand, any random values work locally — for example:
+
+```env
+BROADCAST_CONNECTION=reverb
+
+REVERB_APP_ID=123456
+REVERB_APP_KEY=local-key
+REVERB_APP_SECRET=local-secret
+REVERB_HOST="localhost"
+REVERB_PORT=8080
+REVERB_SCHEME=http
+REVERB_SERVER_HOST=0.0.0.0
+REVERB_SERVER_PORT=8080
+
+VITE_REVERB_APP_KEY="${REVERB_APP_KEY}"
+VITE_REVERB_HOST="${REVERB_HOST}"
+VITE_REVERB_PORT="${REVERB_PORT}"
+VITE_REVERB_SCHEME="${REVERB_SCHEME}"
+```
+
+How the two halves of the config differ:
+
+| Variable | Used by | Meaning |
+|----------|---------|---------|
+| `REVERB_SERVER_HOST` / `REVERB_SERVER_PORT` | the Reverb process | the interface and port the WebSocket server **binds** to |
+| `REVERB_HOST` / `REVERB_PORT` / `REVERB_SCHEME` | Laravel (server-side broadcasting) | where the app **connects** to publish events |
+| `VITE_REVERB_*` | the browser (Laravel Echo) | where the client **connects**; baked in at build time |
+
+Because the `VITE_*` values are compiled into the front-end bundle, **restart `npm run dev` (or re-run `npm run build`) after changing any `REVERB_*` value**.
+
+Two more things matter for events to actually arrive:
+
+- `BROADCAST_CONNECTION=reverb` must be set (`.env.example` already does this; the framework default is `null`, which silently drops everything).
+- Notifications are queued, so `php artisan queue:listen` needs to be running with `QUEUE_CONNECTION=database`.
+
+Start the server with:
+
+```bash
+php artisan reverb:start
+```
+
+`composer run dev` already starts it for you. Add `--debug` to watch connections and messages as they happen:
+
+```bash
+php artisan reverb:start --debug
+```
+
+<details>
+<summary>Running Reverb behind a domain or over HTTPS</summary>
+
+For anything other than plain `localhost`, keep the bind address and the public address separate — Reverb still binds locally while the browser talks to your domain over TLS (typically via an Nginx/Caddy reverse proxy that upgrades WebSocket connections):
+
+```env
+REVERB_SERVER_HOST=0.0.0.0
+REVERB_SERVER_PORT=8080
+
+REVERB_HOST=pb.example.com
+REVERB_PORT=443
+REVERB_SCHEME=https
+```
+
+Echo reads `VITE_REVERB_SCHEME` to decide whether to force TLS, so it must match. In production run Reverb under a process supervisor (Supervisor, systemd, or `php artisan reverb:restart` after deploys) rather than in a bare terminal.
+</details>
+
+### 7. (Optional) Configure PDF export
 
 PDF export needs a Chrome/Chromium binary. Point `.env` at it:
 
@@ -95,7 +169,7 @@ LARAVEL_PDF_CHROME_PATH=/usr/bin/google-chrome    # Linux
 # Windows: C:\Program Files\Google\Chrome\Application\chrome.exe
 ```
 
-### 7. Run the app
+### 8. Run the app
 
 The quickest way is the bundled `dev` script, which runs the web server, queue worker, log tailer, Reverb WebSocket server, and Vite together:
 
@@ -116,7 +190,7 @@ php artisan queue:listen   # background jobs (notifications, etc.)
 ```
 </details>
 
-### 8. Log in
+### 9. Log in
 
 Seeded staff accounts all use the password **`password`**. For example:
 
@@ -141,6 +215,14 @@ Password: password
 ## Troubleshooting
 
 - **`Unable to locate file in Vite manifest`** — run `npm run dev` (or `npm run build`).
-- **Real-time features not updating** — make sure `php artisan reverb:start` is running and the `REVERB_*` / `VITE_REVERB_*` values in `.env` are set.
+- **Real-time features not updating** — work through these in order:
+  1. Is `php artisan reverb:start` running? Re-run it with `--debug` to see whether events reach the server.
+  2. Is `BROADCAST_CONNECTION=reverb` set? The framework default is `null`, which discards every event silently.
+  3. Are `REVERB_APP_ID` / `REVERB_APP_KEY` / `REVERB_APP_SECRET` filled in? They're blank in `.env.example` — run `php artisan reverb:install`.
+  4. Did you restart Vite after editing `REVERB_*`? The `VITE_REVERB_*` values are compiled into the bundle at build time.
+  5. Is `php artisan queue:listen` running? Notifications are queued, so the bell stays quiet without a worker.
+  6. Still stuck? `php artisan config:clear` — a cached config will keep serving old broadcast settings.
+- **Browser console shows `WebSocket connection to 'ws://localhost:8080' failed`** — the Reverb server isn't running, or `VITE_REVERB_PORT` doesn't match `REVERB_SERVER_PORT`.
+- **403 from `/broadcasting/auth`** — you're not logged in, or the channel authorization in `routes/channels.php` rejected the user.
 - **Migration / DB connection errors** — confirm your database server is running and the `DB_*` credentials in `.env` match it.
 - **Windows line-ending or permission oddities** — develop inside **WSL2** for the smoothest experience.
